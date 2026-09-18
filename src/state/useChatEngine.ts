@@ -266,6 +266,133 @@ export function useChatEngine() {
         return;
       }
 
+      // SCENARIO: 3-Minute Leadership Standup & Meeting Prep
+      if (lower.includes('standup') || lower.includes('prep me') || lower.includes('meeting prep') || (lower.includes('meeting') && lower.includes('prep'))) {
+        const standupInsight: KeyInsight = {
+          headline: "Leadership Standup: $8.92B historical baseline with 49.2% North America concentration risk.",
+          narrative: "Synthesized 3 talking points across 9 active visual slices: Growth drivers, single-region concentration, and recommended international diversification.",
+          impact: 'positive',
+          metrics: [
+            { label: 'Verified Revenue', value: '$8,920.4M' },
+            { label: 'NA Risk Exposure', value: '49.2% ($4.39B)' },
+            { label: 'Publisher Lead', value: 'Nintendo (72% Share)' },
+          ]
+        };
+
+        setTurns(prev => prev.map(t => {
+          if (t.id !== asstTurnId) return t;
+          return {
+            ...t,
+            assistantData: {
+              ...t.assistantData!,
+              insight: standupInsight,
+              analyticalSummary: `**🎙️ 3-Minute Leadership Standup Briefing:**\n\n🟢 **1. The Growth Highlight (What's Working):**\n• **$8,920.4M** in verified catalog sales across 16,598 titles (+14.2% YoY).\n• **Nintendo Dominance**: Captures **72%** (18 of 25) of the bestselling games in history, anchored by *Wii Sports* (82.7M) and *Super Mario Bros.* (40.2M).\n• **Top Genres**: Action ($1,751.2M) and Sports ($1,330.9M) represent **34.7% ($3.08B)** of total revenue.\n\n🔴 **2. The Vulnerability (What Leadership Will Ask):**\n• **Single-Region Exposure**: **49.2%** of lifetime revenue relies on North America ($4,392.9M). Any US/NA consumer discretionary slowdown impacts nearly half our portfolio.\n• **Post-Peak Channel Shift**: Boxed physical title releases plummeted 57% between 2008 and 2015 as dollars moved to digital stores not tracked in physical sell-through.\n\n🔵 **3. Recommended Decision Point for Today's Call:**\n• Discuss prioritizing European localized publishing ($2,434.1M / 27.3% market share) and handheld RPG co-development in Japan to diversify away from North American dependence.`,
+              operationProgress: {
+                id: 'op-standup',
+                label: 'Synthesized 3-part meeting talking points',
+                status: 'completed',
+                durationMs: 34.2,
+              },
+              suggestions: [
+                { id: 'sug-std-1', label: 'Format for Microsoft Teams', prompt: 'Format this summary for Microsoft Teams' },
+                { id: 'sug-std-2', label: 'What are the top 3 drivers of Nintendo?', prompt: 'What are the top 3 drivers of Nintendo\'s dominance?' },
+                { id: 'sug-std-3', label: 'What is our revenue exposure outside NA?', prompt: 'What is our revenue exposure outside North America?' },
+              ]
+            }
+          };
+        }));
+
+        setIsExecuting(false);
+        return;
+      }
+
+      // SCENARIO: Microsoft Teams Channel Format
+      if (lower.includes('teams') || lower.includes('format for teams') || lower.includes('microsoft teams')) {
+        setTurns(prev => prev.map(t => {
+          if (t.id !== asstTurnId) return t;
+          return {
+            ...t,
+            assistantData: {
+              ...t.assistantData!,
+              analyticalSummary: `**📋 Formatted for Microsoft Teams Channel:**\n\n\`\`\`markdown\n**Executive Briefing: Video Game Sales Dashboard**\n• **Total Revenue**: $8,920.4M across 16,598 catalog titles (+14.2% YoY).\n• **Market Concentration**: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).\n• **Top Segments**: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).\n• **Regional Breakdown**: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).\n⚠️ **Watch-out**: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.\n🔗 [Open Dashboard](http://localhost:5173/)\n\`\`\`\n\n*Click "Copy for Teams" in the header or copy the block above to paste into your Teams channel.*`,
+              operationProgress: {
+                id: 'op-teams-card',
+                label: 'Formatted adaptive Teams card',
+                status: 'completed',
+                durationMs: 28.5,
+              },
+              suggestions: [
+                { id: 'sug-tm-1', label: 'Prep me for my 10 AM standup', prompt: 'Prep me for my 10 AM leadership standup' },
+                { id: 'sug-tm-2', label: 'What are top drivers of Nintendo?', prompt: 'What are the top 3 drivers of Nintendo\'s dominance?' },
+              ]
+            }
+          };
+        }));
+
+        setIsExecuting(false);
+        return;
+      }
+
+      // SCENARIO: Contextual "Explain This Chart"
+      if (lower.includes('explain chart') || lower.includes('explain:')) {
+        let chartTitle = 'Chart Analysis';
+        let chartSummary = '';
+
+        if (lower.includes('top 10 games') || lower.includes('games')) {
+          chartTitle = 'Top 10 Games (by Global Sales)';
+          chartSummary = `**Chart Breakdown: Top 10 Games (by Global Sales)**\n\n• **Core Finding**: *Wii Sports* holds the #1 position with **82.7M units**, followed by *Super Mario Bros.* (**40.2M units**). All 10 titles in this ranking crossed the 28M unit milestone.\n• **Business Takeaway**: Bundled hardware pack-ins (Wii Sports) created unbeatable distribution velocity. Every game in the top 10 is published by Nintendo.`;
+        } else if (lower.includes('publishers') || lower.includes('top 25')) {
+          chartTitle = 'Publishers of Top 25 Games';
+          chartSummary = `**Chart Breakdown: Publishers of Top 25 Games**\n\n• **Core Finding**: Nintendo dominates **72%** (18 of 25 titles). Take-Two Interactive holds **16%** (4 titles via Grand Theft Auto), and Activision holds **12%** (3 titles via Call of Duty).\n• **Business Takeaway**: Extreme publisher concentration: three publishers control 100% of the top 25 historical mega-hits.`;
+        } else if (lower.includes('consoles') || lower.includes('hit games') || lower.includes('treemap')) {
+          chartTitle = 'Top 10 Consoles, by # of Hit Games';
+          chartSummary = `**Chart Breakdown: Top 10 Consoles, by # of Hit Games**\n\n• **Core Finding**: Nintendo DS leads with **2,163 hit titles**, followed by Game Boy Advance (**822**) and GameCube (**556**).\n• **Business Takeaway**: Handheld consoles provided the highest volume of successful titles due to lower development budgets and massive device installation base.`;
+        } else if (lower.includes('genre')) {
+          chartTitle = 'Genre Sales Breakdown';
+          chartSummary = `**Chart Breakdown: Genre Sales Breakdown**\n\n• **Core Finding**: Action ($1,751.2M) and Sports ($1,330.9M) represent **34.7%** of cumulative industry software revenue.\n• **Business Takeaway**: Consumer demand heavily favors evergreen sports licenses and high-engagement action franchises.`;
+        } else if (lower.includes('trajectory') || lower.includes('annual sales')) {
+          chartTitle = 'Annual Sales Trajectory (1980 - 2020)';
+          chartSummary = `**Chart Breakdown: Annual Sales Trajectory**\n\n• **Core Finding**: Sales expanded rapidly from 1995 to reach an all-time physical peak in **2008 ($678.9M)**, followed by a gradual contraction to $158.4M by 2020.\n• **Business Takeaway**: The post-2008 decline reflects the digital revolution (mobile apps, digital downloads) rather than reduced gaming appetite.`;
+        } else if (lower.includes('regional') || lower.includes('market share')) {
+          chartTitle = 'Regional Sales Market Share';
+          chartSummary = `**Chart Breakdown: Regional Sales Market Share**\n\n• **Core Finding**: North America accounts for **49.2% ($4,392.9M)** of total revenue, Europe **27.3% ($2,434.1M)**, Japan **14.5% ($1,291.0M)**, and Other **9.0% ($797.8M)**.\n• **Business Takeaway**: Single-region concentration in North America creates macroeconomic exposure; international growth in Europe and Asia is essential for resilience.`;
+        } else if (lower.includes('platform') || lower.includes('na sales')) {
+          chartTitle = 'Top Platforms (by NA Sales)';
+          chartSummary = `**Chart Breakdown: Top Platforms (by NA Sales)**\n\n• **Core Finding**: Xbox 360 leads North America with **$601.0M**, edging out PlayStation 2 (**$582.9M**) and Wii (**$507.5M**).\n• **Business Takeaway**: Microsoft's Xbox 360 achieved market leadership in North America, while Sony maintained the broader global lead.`;
+        } else if (lower.includes('volume') || lower.includes('title volume')) {
+          chartTitle = 'Annual Title Volume';
+          chartSummary = `**Chart Breakdown: Annual Title Volume**\n\n• **Core Finding**: Annual title volume peaked in **2008–2009 with 1,428 simultaneous catalog releases**.\n• **Business Takeaway**: Represents the zenith of physical packaged retail distribution before digital store front consolidation.`;
+        } else {
+          chartTitle = 'Global Sales by Decade';
+          chartSummary = `**Chart Breakdown: Global Sales by Decade**\n\n• **Core Finding**: The **2000s represented 52% of all-time software sales ($4,640.2M)** across 9,198 titles, led by Action.\n• **Business Takeaway**: The 2000s was the golden era of console adoption across both living rooms and handhelds.`;
+        }
+
+        setTurns(prev => prev.map(t => {
+          if (t.id !== asstTurnId) return t;
+          return {
+            ...t,
+            assistantData: {
+              ...t.assistantData!,
+              analyticalSummary: chartSummary,
+              operationProgress: {
+                id: 'op-explain-chart',
+                label: `Analyzed ${chartTitle}`,
+                status: 'completed',
+                durationMs: 29.8,
+              },
+              suggestions: [
+                { id: 'sug-ex-1', label: 'Prep me for my 10 AM standup', prompt: 'Prep me for my 10 AM leadership standup' },
+                { id: 'sug-ex-2', label: 'Format for Microsoft Teams', prompt: 'Format this summary for Microsoft Teams' },
+                { id: 'sug-ex-3', label: 'What is our revenue exposure outside NA?', prompt: 'What is our revenue exposure outside North America?' },
+              ]
+            }
+          };
+        }));
+
+        setIsExecuting(false);
+        return;
+      }
+
       // QUESTION 1: Drivers of Nintendo's dominance
       if (lower.includes('nintendo') && (lower.includes('dominance') || lower.includes('driver') || lower.includes('top 3') || lower.includes('drivers'))) {
         const nintendoChart: ChartArtifact = {

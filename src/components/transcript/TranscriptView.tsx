@@ -19,6 +19,7 @@ interface TranscriptViewProps {
   onPinChartToDashboard?: (chart: ChartArtifact) => void;
   onApplyQuickFilter?: (filter: 'all' | 'na' | 'nintendo' | '2000s') => void;
   activeDashboardFilter?: string;
+  onOpenTeamsModal?: () => void;
 }
 
 export const TranscriptView: React.FC<TranscriptViewProps> = ({
@@ -36,10 +37,13 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
   onPinChartToDashboard,
   onApplyQuickFilter,
   activeDashboardFilter = 'all',
+  onOpenTeamsModal,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showScrollBottom, setShowScrollBottom] = useState(false);
   const [copiedSlack, setCopiedSlack] = useState(false);
+  const [copiedTeams, setCopiedTeams] = useState(false);
+  const [isMeetingPrepActive, setIsMeetingPrepActive] = useState(false);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -106,9 +110,9 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
               </div>
 
               {/* 2. Executive Summary & Visible Charts Digest Card */}
-              <div className="bg-white rounded-xl border border-zinc-200/90 shadow-2xs overflow-hidden">
-                {/* Header with 1-Click Copy for Slack / Email */}
-                <div className="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
+              <div className="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden">
+                {/* Header with Teams / Slack / Meeting Prep Actions */}
+                <div className="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     <span className="text-[11px] font-bold text-zinc-800 uppercase tracking-wide">
@@ -116,79 +120,157 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
                     </span>
                   </div>
 
-                  <button
-                    onClick={() => {
-                      const slackText = `*Executive Briefing — Video Game Sales Dashboard*
-• Total Historical Revenue: $8,920.4M across 16,598 titles (+14.2% YoY).
-• Market Leaders: Nintendo holds 72% of top 25 games; Action & Sports generate 34.7% of all genre revenue ($3.08B).
-• Regional Concentration: North America drives 49.2% ($4.39B) and Europe 27.3% ($2.43B).
-• Key Watch-out: Top 3 publishers generate 76.5% of sales; long-tail titles show revenue fragmentation.`;
-                      navigator.clipboard.writeText(slackText);
-                      setCopiedSlack(true);
-                      setTimeout(() => setCopiedSlack(false), 2000);
-                    }}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs"
-                    title="Copy formatted 3-bullet summary for Slack or Email"
-                  >
-                    {copiedSlack ? (
-                      <>
-                        <Check className="w-3 h-3 text-emerald-600" />
-                        <span className="text-emerald-700">Copied!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3 text-zinc-500" />
-                        <span>Copy for Slack</span>
-                      </>
+                  <div className="flex items-center gap-1.5">
+                    {/* Copy for MS Teams */}
+                    <button
+                      onClick={() => {
+                        const teamsText = `**Executive Briefing: Video Game Sales Dashboard**
+• **Total Revenue**: $8,920.4M across 16,598 catalog titles (+14.2% YoY).
+• **Market Concentration**: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).
+• **Top Segments**: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).
+• **Regional Breakdown**: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).
+⚠️ **Watch-out**: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.`;
+                        navigator.clipboard.writeText(teamsText);
+                        setCopiedTeams(true);
+                        setTimeout(() => setCopiedTeams(false), 2000);
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs"
+                      title="Copy formatted summary for Microsoft Teams"
+                    >
+                      {copiedTeams ? (
+                        <>
+                          <Check className="w-3 h-3 text-emerald-600" />
+                          <span className="text-emerald-700">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-[#464eb8] font-bold">T</span>
+                          <span>Copy for Teams</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* Preview Teams Card */}
+                    {onOpenTeamsModal && (
+                      <button
+                        onClick={onOpenTeamsModal}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#464eb8]/10 hover:bg-[#464eb8]/20 text-[#464eb8] text-[10px] font-semibold transition-colors"
+                        title="Preview how this update appears in Microsoft Teams"
+                      >
+                        <span>Preview</span>
+                      </button>
                     )}
-                  </button>
+
+                    {/* Toggle Meeting Prep Mode */}
+                    <button
+                      onClick={() => setIsMeetingPrepActive(!isMeetingPrepActive)}
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-semibold border transition-all ${
+                        isMeetingPrepActive
+                          ? 'bg-[#1e295b] text-white border-[#1e295b] shadow-2xs'
+                          : 'bg-white hover:bg-zinc-100 text-zinc-700 border-zinc-200 shadow-2xs'
+                      }`}
+                      title="Toggle 3-part meeting talking points"
+                    >
+                      <span>🎙️</span>
+                      <span>Meeting Prep</span>
+                    </button>
+                  </div>
                 </div>
 
-                <div className="p-4 space-y-3.5">
-                  {/* High-level Takeaway */}
-                  <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
-                    Across 9 dashboard visual slices and 16,598 catalog titles, <strong className="text-zinc-900 font-semibold">$8,920.4M</strong> in historical revenue is tracked. <strong className="text-zinc-900 font-semibold">Action & Sports</strong> account for 34.7% of all genre sales ($3.08B combined), while <strong className="text-zinc-900 font-semibold">North America</strong> accounts for nearly half (49.2%) of the global market.
-                  </p>
+                {isMeetingPrepActive ? (
+                  /* MEETING TALKING POINTS: STANDUP & LEADERSHIP READY */
+                  <div className="p-4 space-y-3 bg-amber-50/25 animate-in fade-in duration-150">
+                    <div className="flex items-center justify-between border-b border-amber-200/50 pb-2">
+                      <span className="text-[11px] font-bold text-zinc-900 uppercase tracking-wide flex items-center gap-1.5">
+                        <span>🎙️</span>
+                        <span>Meeting Talking Points (3-Part Executive Briefing)</span>
+                      </span>
+                      <span className="text-[10px] text-zinc-500 font-mono">Standup Ready</span>
+                    </div>
 
-                  {/* Visible Charts Digest Accordion */}
-                  <div className="space-y-2 pt-2 border-t border-zinc-100">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">
-                      Visible Charts Digest
-                    </span>
-                    <div className="grid grid-cols-1 gap-2 text-xs">
-                      <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
-                        <span className="text-sm">🏆</span>
+                    <div className="space-y-2.5 text-xs">
+                      {/* 1. The Highlight */}
+                      <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 flex items-start gap-2.5">
+                        <span className="text-base">🟢</span>
                         <div>
-                          <span className="font-semibold text-zinc-900">Top 10 Games & Publishers:</span>{' '}
-                          <span className="text-zinc-600">Wii Sports (82.7M) and Super Mario Bros. (40.2M) lead. Nintendo accounts for 72% of the top 25 bestselling releases.</span>
+                          <strong className="text-emerald-950 font-bold text-xs">The Growth Highlight:</strong>
+                          <p className="text-emerald-900 text-[11px] mt-0.5 leading-relaxed">
+                            Total catalog revenue stands at <strong>$8,920.4M</strong>. Nintendo controls <strong>72%</strong> of top 25 bestselling releases, while Action and Sports drive <strong>34.7% ($3.08B)</strong> of all genre volume.
+                          </p>
                         </div>
                       </div>
-                      <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
-                        <span className="text-sm">🎮</span>
+
+                      {/* 2. The Risk */}
+                      <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 flex items-start gap-2.5">
+                        <span className="text-base">🔴</span>
                         <div>
-                          <span className="font-semibold text-zinc-900">Platforms & Consoles:</span>{' '}
-                          <span className="text-zinc-600">Nintendo DS leads hit title volume (2,163), while Xbox 360 leads North American revenues ($601.0M).</span>
+                          <strong className="text-rose-950 font-bold text-xs">The Risk / Watch-Out:</strong>
+                          <p className="text-rose-900 text-[11px] mt-0.5 leading-relaxed">
+                            <strong>49.2%</strong> of all revenue ($4,392.9M) depends on North America. Post-2008 physical boxed sales contracted 62% as consumer dollars shifted toward uncaptured digital stores.
+                          </p>
                         </div>
                       </div>
-                      <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
-                        <span className="text-sm">📈</span>
+
+                      {/* 3. The Discussion Topic */}
+                      <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 flex items-start gap-2.5">
+                        <span className="text-base">🔵</span>
                         <div>
-                          <span className="font-semibold text-zinc-900">Trajectory & Decades:</span>{' '}
-                          <span className="text-zinc-600">Revenues peaked in 2008 ($678.9M across 1,428 titles). The 2000s represented 52% of all-time industry revenue ($4.64B).</span>
+                          <strong className="text-blue-950 font-bold text-xs">Strategic Meeting Question:</strong>
+                          <p className="text-blue-900 text-[11px] mt-0.5 leading-relaxed">
+                            Should publisher marketing budgets expand in Europe ($2.43B / 27.3%) and handheld RPG localization in Japan to hedge North American single-market concentration?
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
+                ) : (
+                  /* DEFAULT EXECUTIVE SUMMARY */
+                  <div className="p-4 space-y-3.5">
+                    {/* High-level Takeaway */}
+                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
+                      Across 9 dashboard visual slices and 16,598 catalog titles, <strong className="text-zinc-900 font-semibold">$8,920.4M</strong> in historical revenue is tracked. <strong className="text-zinc-900 font-semibold">Action & Sports</strong> account for 34.7% of all genre sales ($3.08B combined), while <strong className="text-zinc-900 font-semibold">North America</strong> accounts for nearly half (49.2%) of the global market.
+                    </p>
 
-                  {/* Concentration Takeaway */}
-                  <div className="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 text-[11px] text-zinc-700 flex items-start gap-2">
-                    <span className="text-zinc-500 font-bold mt-0.5">•</span>
-                    <div>
-                      <span className="font-semibold text-zinc-900">Macro Concentration:</span>{' '}
-                      <span>Top 3 publishers and top 2 regions (NA + Europe) generate over 76.5% of cumulative sales.</span>
+                    {/* Visible Charts Digest Accordion */}
+                    <div className="space-y-2 pt-2 border-t border-zinc-100">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">
+                        Visible Charts Digest
+                      </span>
+                      <div className="grid grid-cols-1 gap-2 text-xs">
+                        <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
+                          <span className="text-sm">🏆</span>
+                          <div>
+                            <span className="font-semibold text-zinc-900">Top 10 Games & Publishers:</span>{' '}
+                            <span className="text-zinc-600">Wii Sports (82.7M) and Super Mario Bros. (40.2M) lead. Nintendo accounts for 72% of the top 25 bestselling releases.</span>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
+                          <span className="text-sm">🎮</span>
+                          <div>
+                            <span className="font-semibold text-zinc-900">Platforms & Consoles:</span>{' '}
+                            <span className="text-zinc-600">Nintendo DS leads hit title volume (2,163), while Xbox 360 leads North American revenues ($601.0M).</span>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
+                          <span className="text-sm">📈</span>
+                          <div>
+                            <span className="font-semibold text-zinc-900">Trajectory & Decades:</span>{' '}
+                            <span className="text-zinc-600">Revenues peaked in 2008 ($678.9M across 1,428 titles). The 2000s represented 52% of all-time industry revenue ($4.64B).</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Concentration Takeaway */}
+                    <div className="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 text-[11px] text-zinc-700 flex items-start gap-2">
+                      <span className="text-zinc-500 font-bold mt-0.5">•</span>
+                      <div>
+                        <span className="font-semibold text-zinc-900">Macro Concentration:</span>{' '}
+                        <span>Top 3 publishers and top 2 regions (NA + Europe) generate over 76.5% of cumulative sales.</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* 3. One-Click Smart Business Slicing Chips */}
@@ -247,6 +329,16 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
                   Questions for executive review:
                 </span>
                 <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => onSelectPrompt("Prep me for my 10 AM leadership standup")}
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                  >
+                    <span className="flex items-center gap-1.5 font-semibold text-zinc-900">
+                      <span>🎙️</span>
+                      <span>Prep me for my 10 AM leadership standup</span>
+                    </span>
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 transition-colors flex-shrink-0 ml-2" />
+                  </button>
                   <button
                     onClick={() => onSelectPrompt("What are the top 3 drivers of Nintendo's dominance?")}
                     className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"

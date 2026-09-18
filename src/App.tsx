@@ -7,6 +7,7 @@ import { TranscriptView } from './components/transcript/TranscriptView';
 import { ArtifactPane } from './components/artifact/ArtifactPane';
 import { BusinessGlossaryModal } from './components/modals/BusinessGlossaryModal';
 import { IconToggleModal } from './components/modals/IconToggleModal';
+import { TeamsPreviewModal } from './components/modals/TeamsPreviewModal';
 import { 
   TOP_10_GAMES_DATA, 
   TOP_25_PUBLISHERS_DATA, 
@@ -29,7 +30,8 @@ import {
   X,
   Maximize2,
   Send,
-  ExternalLink
+  ExternalLink,
+  Lightbulb
 } from 'lucide-react';
 
 export default function App() {
@@ -37,6 +39,15 @@ export default function App() {
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'trends'>('overview');
   const [dashboardFilter, setDashboardFilter] = useState<'all' | 'na' | 'nintendo' | '2000s'>('all');
+  const [isTeamsModalOpen, setIsTeamsModalOpen] = useState(false);
+  const [focusedChart, setFocusedChart] = useState<string | null>(null);
+
+  const explainChart = (chartKey: string, promptText: string) => {
+    setIsAiOpen(true);
+    engine.setWorkspaceMode('docked');
+    setFocusedChart(chartKey);
+    engine.sendPrompt(promptText);
+  };
 
   const isFullscreen = engine.workspaceMode === 'fullscreen';
 
@@ -264,7 +275,11 @@ export default function App() {
                 {/* 1. TABLE: Top 10 Games (by Global Sales)                      */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === 'nintendo' ? 'border-purple-400 ring-2 ring-purple-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'table'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === 'nintendo'
+                    ? 'border-purple-400 ring-2 ring-purple-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -277,9 +292,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('table', 'Explain chart: Top 10 Games (by Global Sales)')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 overflow-y-auto">
@@ -322,7 +347,11 @@ export default function App() {
                 {/* 2. DONUT: Publishers of Top 25 Games                          */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === 'nintendo' ? 'border-purple-400 ring-2 ring-purple-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'publishers'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === 'nintendo'
+                    ? 'border-purple-400 ring-2 ring-purple-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -335,9 +364,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('publishers', 'Explain chart: Publishers of Top 25 Games')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 flex flex-col items-center justify-center p-3 relative">
@@ -391,7 +430,11 @@ export default function App() {
                 {/* 3. TREEMAP: Top 10 Consoles, by # of Hit Games                 */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === 'nintendo' ? 'border-purple-400 ring-2 ring-purple-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'consoles'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === 'nintendo'
+                    ? 'border-purple-400 ring-2 ring-purple-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -404,9 +447,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('consoles', 'Explain chart: Top 10 Consoles, by # of Hit Games')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 p-3 flex flex-col">
@@ -444,15 +497,29 @@ export default function App() {
                 {/* ------------------------------------------------------------- */}
                 {/* 4. HORIZONTAL BARS: Genre Sales Breakdown                     */}
                 {/* ------------------------------------------------------------- */}
-                <div className="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+                <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
+                  focusedChart === 'genres'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : 'border-zinc-200'
+                }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div>
                       <h3 className="text-xs font-bold text-zinc-900 tracking-tight">Genre Sales Breakdown</h3>
                       <span className="text-[10px] text-zinc-400 font-mono">SUM(global_sales) in $ Millions</span>
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('genres', 'Explain chart: Genre Sales Breakdown')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 p-3.5 flex flex-col justify-around text-xs">
@@ -477,7 +544,11 @@ export default function App() {
                 {/* 5. AREA TREND: Annual Sales Trajectory (1980 - 2020)          */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === '2000s' ? 'border-indigo-400 ring-2 ring-indigo-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'trends'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === '2000s'
+                    ? 'border-indigo-400 ring-2 ring-indigo-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -491,9 +562,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('trends', 'Explain chart: Annual Sales Trajectory')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 p-4 flex flex-col justify-between">
@@ -525,7 +606,11 @@ export default function App() {
                 {/* 6. DONUT: Regional Sales Market Share                          */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === 'na' ? 'border-blue-400 ring-2 ring-blue-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'regions'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === 'na'
+                    ? 'border-blue-400 ring-2 ring-blue-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -539,9 +624,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('regions', 'Explain chart: Regional Sales Market Share')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 flex flex-col items-center justify-center p-3 relative">
@@ -588,7 +683,11 @@ export default function App() {
                 {/* 7. BAR: Top 10 Platforms (by NA Sales)                        */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === 'na' ? 'border-blue-400 ring-2 ring-blue-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'platforms'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === 'na'
+                    ? 'border-blue-400 ring-2 ring-blue-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -602,9 +701,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('platforms', 'Explain chart: Top Platforms (by NA Sales)')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 p-3.5 flex flex-col justify-around text-xs">
@@ -629,7 +738,11 @@ export default function App() {
                 {/* 8. COMPOSITE: Annual Title Releases vs Peak Revenue           */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === '2000s' ? 'border-indigo-400 ring-2 ring-indigo-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'releases'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === '2000s'
+                    ? 'border-indigo-400 ring-2 ring-indigo-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -643,9 +756,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('releases', 'Explain chart: Annual Title Volume')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 p-3.5 flex flex-col justify-between">
@@ -678,7 +801,11 @@ export default function App() {
                 {/* 9. CARDS: Global Sales by Decade                              */}
                 {/* ------------------------------------------------------------- */}
                 <div className={`bg-white rounded-lg border shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200 ${
-                  dashboardFilter === '2000s' ? 'border-indigo-400 ring-2 ring-indigo-400/40 shadow-sm' : 'border-zinc-200'
+                  focusedChart === 'decades'
+                    ? 'ring-2 ring-[#1e295b] border-[#1e295b] shadow-md'
+                    : dashboardFilter === '2000s'
+                    ? 'border-indigo-400 ring-2 ring-indigo-400/40 shadow-sm'
+                    : 'border-zinc-200'
                 }`}>
                   <div className="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
                     <div className="flex items-center gap-2">
@@ -692,9 +819,19 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
-                      <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => explainChart('decades', 'Explain chart: Global Sales by Decade')}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors"
+                        title="Explain this chart in 2 bullet points"
+                      >
+                        <Lightbulb className="w-3 h-3 text-amber-500" />
+                        <span>Explain</span>
+                      </button>
+                      <button className="p-1 rounded text-zinc-400 hover:text-zinc-600" title="Options">
+                        <MoreVertical className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex-1 p-3.5 flex flex-col justify-between text-xs space-y-2">
@@ -827,6 +964,7 @@ export default function App() {
                 onRetry={(turnId, mode) => engine.handleRetry(turnId, mode)}
                 onApplyQuickFilter={(filter) => setDashboardFilter(filter)}
                 activeDashboardFilter={dashboardFilter}
+                onOpenTeamsModal={() => setIsTeamsModalOpen(true)}
               />
 
               {/* Composer Input Area */}
@@ -867,6 +1005,13 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* Microsoft Teams Preview Modal */}
+      <TeamsPreviewModal
+        isOpen={isTeamsModalOpen}
+        onClose={() => setIsTeamsModalOpen(false)}
+        dashboardTitle="Video Game Sales Dashboard"
+      />
 
       {/* Business Glossary Modal */}
       <BusinessGlossaryModal

@@ -1,4 +1,4 @@
-﻿# Ask Akashic BI — Superset Ask AI Copilot (End-User Scope)
+# Ask Akashic BI — Superset Ask AI Copilot (End-User Scope)
 
 [![Deploy to GitHub Pages](https://github.com/vemandhira99/Askai/actions/workflows/deploy.yml/badge.svg)](https://github.com/vemandhira99/Askai/actions/workflows/deploy.yml)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=flat-square)](https://vemandhira99.github.io/Askai/)
@@ -21,25 +21,39 @@ Based on executive feedback:
   - **30% (Right)**: The dedicated Ask AI copilot dock with zero horizontal clutter.
 - **Uncluttered Dashboard Toolbar**: Strictly **ONE `[ Ask AI ]` button** and `···` on the right side of the control strip, mirroring real Superset production deployments.
 
-### 2. Instant Executive 1-Minute Briefing
-On opening Ask AI:
-1. **Personalized Greeting**: Greets the logged-in user (`"Good morning, Veman 👋"`).
-2. **Executive Summary Card**: Synthesizes all 9 visible charts into high-level business takeaways ($8,920.4M total catalog revenue across 16,598 titles).
-3. **1-Click "Copy for Slack / Email"**: Formats the 3 core takeaways into markdown ready to paste directly into Slack channels or executive update emails.
+### 2. Microsoft Teams Native Sharing & Preview Modal
+End users in modern enterprises operate primarily inside **Microsoft Teams**. We provide:
+- **`[ 📋 Copy for Teams ]`**: Formats the executive briefing into an optimized adaptive markdown format designed for Teams channel posts.
+- **`[ Preview ]` Modal**: An authentic interactive Microsoft Teams channel message preview (sender chip, timestamps, KPI badges, risk callout, and 1-click clipboard copy) so users know exactly what their team will see before posting.
 
-### 3. Smart Dashboard Slicing
+### 3. 3-Minute Leadership Standup & Meeting Prep Mode
+End users frequently need to report numbers in daily standups or leadership meetings without reading full dashboards:
+- **`[ 🎙️ Meeting Prep ]` Toggle**: Instantly transforms the executive briefing into 3 structured talking points:
+  1. 🟢 **The Growth Highlight (What's Working)**: $8,920.4M total catalog volume, Nintendo 72% dominance, Action/Sports driving 34.7% ($3.08B).
+  2. 🔴 **The Risk / Vulnerability (What Leadership Will Ask)**: 49.2% single-market concentration in North America, post-2008 boxed title decline.
+  3. 🔵 **Strategic Meeting Question (Today's Action)**: European localized publishing expansion and handheld RPG co-development.
+- Includes pre-loaded suggestion: *"Prep me for my 10 AM leadership standup"*.
+
+### 4. In-Chart Contextual "Explain This Chart"
+Each of the 9 production Superset charts features a discrete **`[ 💡 Explain ]`** button in the card header:
+- Highlights the active chart with a deep navy focus ring (`ring-2 ring-[#1e295b]`).
+- Opens the Ask AI dock and outputs exactly **2 plain-English bullet points** (Core Finding & Business Takeaway).
+- Zero technical SQL exposure — 100% focused on business interpretation.
+
+### 5. Smart Dashboard Slicing
 Quick-filter chips inside the AI dock dynamically highlight relevant charts on the host dashboard:
 - **`🎮 Focus: Nintendo`**: Highlights Nintendo titles in the Top 10 table, Donut (72% share), and Consoles Treemap.
 - **`🌍 Focus: North America`**: Highlights NA platforms ($601M Xbox 360) and Regional Sales Share (49.2%).
 - **`📅 Focus: 2000s Boom`**: Highlights the 2008 peak ($678.9M) on the trajectory line and the 2000s decade card (52% of all-time sales).
 - **`Reset ✕`**: Restores the dashboard to baseline view.
 
-### 4. 4 Decision-Centric Questions for Executive Review
+### 6. Decision-Centric Questions for Executive Review
 Pre-configured high-impact questions tailored for strategy reviews:
-1. *"What are the top 3 drivers of Nintendo's dominance?"*
-2. *"Compare handheld consoles (DS / GBA) vs home consoles"*
-3. *"Why did sales decline after the 2008 peak?"*
-4. *"What is our revenue exposure outside North America?"*
+1. *"Prep me for my 10 AM leadership standup"*
+2. *"What are the top 3 drivers of Nintendo's dominance?"*
+3. *"Compare handheld consoles (DS / GBA) vs home consoles"*
+4. *"Why did sales decline after the 2008 peak?"*
+5. *"What is our revenue exposure outside North America?"*
 
 ---
 
