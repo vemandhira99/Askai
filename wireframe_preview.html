@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akashic BI — Superset Copilot & Executive Briefing Wireframe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    code, pre, .font-mono { font-family: 'JetBrains Mono', monospace; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+  </style>
+</head>
+<body class="bg-[#f1f5f9] text-zinc-900 antialiased h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP NAVBAR: AKASHIC BRANDING & USER (media_1789727091879.png)          -->
+  <!-- ========================================================================= -->
+  <nav id="topNav" class="h-11 bg-white border-b border-zinc-200 px-4 flex items-center justify-between z-30 flex-shrink-0 text-xs">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 font-bold tracking-tight text-zinc-900">
+        <div class="w-5 h-5 rounded bg-gradient-to-tr from-[#1e295b] to-[#3b82f6] flex items-center justify-center text-white shadow-2xs">
+          <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-current">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" fill="none" />
+          </svg>
+        </div>
+        <span class="text-[13px] tracking-wider font-extrabold text-zinc-900">
+          AKASH<span class="text-purple-600">İ</span>C
+        </span>
+      </div>
+
+      <span class="text-zinc-300">/</span>
+
+      <div class="flex items-center gap-1.5 text-zinc-600 font-medium">
+        <span class="hover:text-zinc-900 cursor-pointer transition-colors">Home</span>
+        <span class="text-zinc-400">&gt;</span>
+        <span class="text-zinc-900 font-semibold cursor-pointer">Akashic Business Intelligence</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 px-2 py-1 rounded hover:bg-zinc-100 cursor-pointer transition-colors">
+        <span class="text-xs font-medium text-zinc-700">Veman C</span>
+        <div class="w-6 h-6 rounded-full bg-purple-700 text-white flex items-center justify-center text-[10px] font-bold shadow-2xs">
+          VC
+        </div>
+        <span class="text-zinc-400 text-[10px]">▾</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- 2. SUBNAV BAR: DARK NAVY STRIP (media_1789727091879.png)                  -->
+  <!-- ========================================================================= -->
+  <div id="subNav" class="h-10 bg-[#1e295b] px-4 flex items-center justify-between text-white text-xs z-20 flex-shrink-0">
+    <div class="flex items-center gap-6 font-medium">
+      <button class="text-white font-semibold flex items-center gap-1 border-b-2 border-white py-2 transition-colors">
+        Dashboards
+      </button>
+      <button class="text-zinc-300 hover:text-white py-2 transition-colors">
+        Charts
+      </button>
+      <button class="text-zinc-300 hover:text-white py-2 transition-colors">
+        Datasets
+      </button>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button class="inline-flex items-center gap-1 bg-[#2b3975] hover:bg-[#35458c] text-white px-2.5 py-1 rounded text-xs font-medium transition-colors border border-white/10 shadow-2xs">
+        <span>+</span>
+        <span>New</span>
+      </button>
+      <button class="text-zinc-300 hover:text-white p-1 rounded transition-colors" title="Settings">
+        ⚙️
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. DASHBOARD CONTROL BAR: ONLY ONE ASK AI BUTTON & [...]                  -->
+  <!-- ========================================================================= -->
+  <div id="controlBar" class="h-12 bg-white border-b border-zinc-200 px-4 flex items-center justify-between z-10 flex-shrink-0 text-xs">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 font-bold text-zinc-900 text-sm cursor-pointer hover:text-blue-900 transition-colors">
+        <span>Video Game ...</span>
+        <span class="text-zinc-500 text-[10px]">▾</span>
+      </div>
+
+      <button class="text-zinc-400 hover:text-amber-500 transition-colors" title="Favorite dashboard">☆</button>
+      <button class="text-zinc-400 hover:text-zinc-700 transition-colors" title="Refresh data">↻</button>
+      <span class="text-zinc-300">|</span>
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 text-zinc-600 text-[11px] font-medium">
+        <span>👤</span>
+        <span>Not available</span>
+      </span>
+      <span class="inline-flex items-center gap-1 text-zinc-400 text-[11px]">
+        <span>✏️</span>
+        <span>10 days ago</span>
+      </span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button
+        onclick="toggleAi()"
+        id="btnRealAskAi"
+        class="px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] hover:bg-[#161f46] text-white"
+        title="Ask AI"
+      >
+        Ask AI
+      </button>
+      <button class="px-2.5 py-1.5 rounded-md border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-bold text-xs">···</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. MAIN WORKSPACE CONTAINER (70:30 SPLIT ON DEMAND)                        -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- HOST DASHBOARD VIEW (Full 9 Charts in 3x3 Grid) -->
+    <div id="hostDashboardPane" class="w-full flex flex-col h-full overflow-y-auto bg-[#f8fafc] transition-all duration-200 border-r border-zinc-200/80">
+      
+      <div class="bg-white px-5 pt-3 pb-2 border-b border-zinc-200 flex items-center gap-2 text-xs flex-shrink-0">
+        <button class="px-3.5 py-1 rounded-md font-semibold bg-[#1e295b] text-white shadow-2xs">Overview</button>
+        <button class="px-3.5 py-1 rounded-md font-semibold inline-flex items-center gap-1.5 bg-[#ede9fe] text-[#4338ca] hover:bg-[#e0e7ff] transition-colors">
+          <span>📊</span>
+          <span>Explore Trends</span>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-6">
+        <div class="space-y-1">
+          <h1 class="text-xl font-bold text-zinc-900 flex items-center gap-2">
+            <span>🎮</span>
+            <span>Video Game Sales</span>
+          </h1>
+          <p class="text-xs text-zinc-600 leading-relaxed">
+            This dashboard visualizes sales & platform data on video games that sold more than 100k copies. The data was last updated in early 2017.
+            <a href="#" class="text-blue-600 hover:underline font-medium ml-1">Original dataset ↗</a>
+          </p>
+        </div>
+
+        <!-- 9 CHARTS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+          <!-- 1. TABLE: Top 10 Games -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Top 10 Games (by Global Sales)</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-zinc-50 border-b border-zinc-100 sticky top-0">
+                  <tr>
+                    <th class="py-2 px-3 font-semibold text-[10px] text-zinc-500 uppercase tracking-wider w-16">Rank ▾</th>
+                    <th class="py-2 px-3 font-semibold text-[10px] text-zinc-500 uppercase tracking-wider">Name ▾</th>
+                    <th class="py-2 px-3 font-semibold text-[10px] text-zinc-500 uppercase tracking-wider text-right">Global_sa... ▾</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">1</td><td class="py-2 px-3 text-zinc-800 font-medium">Wii Sports</td><td class="py-2 px-3 text-right font-mono text-zinc-700">82.739997863</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">2</td><td class="py-2 px-3 text-zinc-800 font-medium">Super Mario Bros.</td><td class="py-2 px-3 text-right font-mono text-zinc-700">40.240001670</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">3</td><td class="py-2 px-3 text-zinc-800 font-medium">Mario Kart Wii</td><td class="py-2 px-3 text-right font-mono text-zinc-700">35.819999694</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">4</td><td class="py-2 px-3 text-zinc-800 font-medium">Wii Sports Resort</td><td class="py-2 px-3 text-right font-mono text-zinc-700">33.000000000</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">5</td><td class="py-2 px-3 text-zinc-800 font-medium">Pokemon Red / Blue</td><td class="py-2 px-3 text-right font-mono text-zinc-700">31.370000840</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">6</td><td class="py-2 px-3 text-zinc-800 font-medium">Tetris</td><td class="py-2 px-3 text-right font-mono text-zinc-700">30.260000230</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">7</td><td class="py-2 px-3 text-zinc-800 font-medium">New Super Mario Bros.</td><td class="py-2 px-3 text-right font-mono text-zinc-700">30.010000230</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">8</td><td class="py-2 px-3 text-zinc-800 font-medium">Wii Play</td><td class="py-2 px-3 text-right font-mono text-zinc-700">29.020000460</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">9</td><td class="py-2 px-3 text-zinc-800 font-medium">Duck Hunt</td><td class="py-2 px-3 text-right font-mono text-zinc-700">28.309999470</td></tr>
+                  <tr class="hover:bg-zinc-50/80"><td class="py-2 px-3 text-zinc-500 font-mono">10</td><td class="py-2 px-3 text-zinc-800 font-medium">New Super Mario Bros. Wii</td><td class="py-2 px-3 text-right font-mono text-zinc-700">28.620000840</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 2. DONUT: Publishers of Top 25 -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Publishers of Top 25 Games</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-center p-3 relative">
+              <svg viewBox="0 0 200 200" class="w-44 h-44 transform -rotate-90">
+                <circle cx="100" cy="100" r="68" fill="transparent" stroke="#c084fc" stroke-width="26" stroke-dasharray="427.2" stroke-dashoffset="119.6" />
+                <circle cx="100" cy="100" r="68" fill="transparent" stroke="#5eead4" stroke-width="26" stroke-dasharray="427.2" stroke-dashoffset="358.8" transform="rotate(259.2 100 100)" />
+                <circle cx="100" cy="100" r="68" fill="transparent" stroke="#cbd5e1" stroke-width="26" stroke-dasharray="427.2" stroke-dashoffset="375.9" transform="rotate(316.8 100 100)" />
+              </svg>
+              <div class="w-full space-y-1.5 pt-3 border-t border-zinc-100 px-3 text-[11px]">
+                <div class="flex justify-between"><span>● Nintendo</span><span class="font-mono font-semibold">18 (72%)</span></div>
+                <div class="flex justify-between"><span>● Take-Two Interactive</span><span class="font-mono font-semibold">4 (16%)</span></div>
+                <div class="flex justify-between"><span>● Activision</span><span class="font-mono font-semibold">3 (12%)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. TREEMAP: Top 10 Consoles -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Top 10 Consoles, by # of Hit Games</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 p-3 flex gap-1.5">
+              <div class="w-[52%] bg-[#5ec3d2] rounded-md p-3 text-zinc-900 shadow-2xs font-extrabold text-sm">DS: 2.16k</div>
+              <div class="w-[48%] flex flex-col gap-1.5">
+                <div class="h-[52%] flex gap-1.5">
+                  <div class="w-[58%] bg-[#9ddcb7] rounded-md p-2 text-xs font-bold">GBA: 822</div>
+                  <div class="w-[42%] bg-[#4bb56e] rounded-md p-2 text-white text-xs font-bold">GC: 556</div>
+                </div>
+                <div class="h-[48%] flex gap-1.5">
+                  <div class="w-[48%] bg-[#e2e8f0] rounded-md p-2 text-xs font-bold">3DS: 509</div>
+                  <div class="w-[28%] bg-[#4f555b] rounded-md p-1.5 text-white text-[11px] font-bold">2600: 133</div>
+                  <div class="w-[24%] bg-[#f4b971] rounded-md p-1.5 text-[11px] font-bold">GB: 98</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. HORIZONTAL BARS: Genre Breakdown -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Genre Sales Breakdown</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 p-3.5 flex flex-col justify-around text-xs">
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Action</span><span class="font-mono font-semibold">$1,751.2M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-[#1e295b]" style="width: 100%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Sports</span><span class="font-mono font-semibold">$1,330.9M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-[#1e295b]" style="width: 76%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Shooter</span><span class="font-mono font-semibold">$1,037.4M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-[#1e295b]" style="width: 59%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Role-Playing</span><span class="font-mono font-semibold">$927.4M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-[#1e295b]" style="width: 53%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Platform</span><span class="font-mono font-semibold">$831.3M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-[#1e295b]" style="width: 47%"></div></div></div>
+            </div>
+          </div>
+
+          <!-- 5. AREA: Sales Trajectory -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Annual Sales Trajectory</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 p-4 flex flex-col justify-between">
+              <svg viewBox="0 0 400 140" class="w-full h-44 overflow-visible pt-2">
+                <polygon points="0,120 40,105 80,85 120,70 160,45 200,20 240,55 280,85 320,100 360,112 400,125 400,140 0,140" fill="#1e295b" fill-opacity="0.15" />
+                <polyline fill="none" stroke="#1e295b" stroke-width="2.5" points="0,120 40,105 80,85 120,70 160,45 200,20 240,55 280,85 320,100 360,112 400,125" />
+                <circle cx="200" cy="20" r="4.5" fill="#1e295b" stroke="#ffffff" stroke-width="2"/>
+                <text x="200" y="10" text-anchor="middle" fill="#1e295b" font-size="10" font-weight="bold">2008: $678.9M</text>
+              </svg>
+              <div class="flex justify-between text-[10px] text-zinc-400 font-mono border-t border-zinc-100 pt-2">
+                <span>1995</span><span>2000</span><span>2005</span><span>2008</span><span>2015</span><span>2020</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. DONUT: Regional Market Share -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Regional Sales Market Share</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-center p-3">
+              <svg viewBox="0 0 200 200" class="w-44 h-44 transform -rotate-90">
+                <circle cx="100" cy="100" r="68" fill="transparent" stroke="#3b82f6" stroke-width="26" stroke-dasharray="427.2" stroke-dashoffset="217.0" />
+                <circle cx="100" cy="100" r="68" fill="transparent" stroke="#10b981" stroke-width="26" stroke-dasharray="427.2" stroke-dashoffset="310.6" transform="rotate(177.1 100 100)" />
+                <circle cx="100" cy="100" r="68" fill="transparent" stroke="#f59e0b" stroke-width="26" stroke-dasharray="427.2" stroke-dashoffset="365.3" transform="rotate(275.4 100 100)" />
+                <circle cx="100" cy="100" r="68" fill="transparent" stroke="#8b5cf6" stroke-width="26" stroke-dasharray="427.2" stroke-dashoffset="388.8" transform="rotate(327.6 100 100)" />
+              </svg>
+              <div class="w-full space-y-1 pt-3 border-t border-zinc-100 px-3 text-[11px]">
+                <div class="flex justify-between"><span>● North America</span><span class="font-mono font-semibold">$4,393.0M (49.2%)</span></div>
+                <div class="flex justify-between"><span>● Europe</span><span class="font-mono font-semibold">$2,434.1M (27.3%)</span></div>
+                <div class="flex justify-between"><span>● Japan</span><span class="font-mono font-semibold">$1,291.0M (14.5%)</span></div>
+                <div class="flex justify-between"><span>● Other</span><span class="font-mono font-semibold">$797.8M (9.0%)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. BARS: Top Platforms NA -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Top Platforms (by NA Sales)</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 p-3.5 flex flex-col justify-around text-xs">
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Xbox 360</span><span class="font-mono font-semibold">$601.0M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width: 100%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>PlayStation 2</span><span class="font-mono font-semibold">$582.9M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width: 97%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Wii</span><span class="font-mono font-semibold">$507.5M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width: 84%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>PlayStation 3</span><span class="font-mono font-semibold">$392.3M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width: 65%"></div></div></div>
+              <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Nintendo DS</span><span class="font-mono font-semibold">$390.4M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width: 65%"></div></div></div>
+            </div>
+          </div>
+
+          <!-- 8. COMPOSITE: Annual Title Releases -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Annual Title Volume</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 p-3.5 flex flex-col justify-between">
+              <div class="h-44 flex items-end justify-between gap-2 pt-4 px-2">
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end"><div class="w-full bg-[#1e295b] rounded-t" style="height: 33%"></div><span class="text-[9px] font-mono text-zinc-500">2001</span></div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end"><div class="w-full bg-[#1e295b] rounded-t" style="height: 54%"></div><span class="text-[9px] font-mono text-zinc-500">2003</span></div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end"><div class="w-full bg-[#1e295b] rounded-t" style="height: 65%"></div><span class="text-[9px] font-mono text-zinc-500">2005</span></div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end"><div class="w-full bg-[#1e295b] rounded-t" style="height: 84%"></div><span class="text-[9px] font-mono text-zinc-500">2007</span></div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end"><div class="w-full bg-blue-600 rounded-t" style="height: 100%"></div><span class="text-[9px] font-mono text-zinc-500 font-bold">2008</span></div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end"><div class="w-full bg-[#1e295b] rounded-t" style="height: 79%"></div><span class="text-[9px] font-mono text-zinc-500">2011</span></div>
+                <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end"><div class="w-full bg-[#1e295b] rounded-t" style="height: 42%"></div><span class="text-[9px] font-mono text-zinc-500">2015</span></div>
+              </div>
+              <div class="p-2 rounded bg-zinc-50 border border-zinc-100 text-[11px] text-zinc-600 text-center font-medium">
+                2008-2009 historical high with 1,428+ simultaneous title releases
+              </div>
+            </div>
+          </div>
+
+          <!-- 9. CARDS: Sales by Decade -->
+          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+            <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
+              <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Global Sales by Decade</h3>
+              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+            </div>
+            <div class="flex-1 p-3.5 flex flex-col justify-between text-xs space-y-2">
+              <div class="p-2 rounded-lg bg-zinc-50 border border-zinc-100 flex justify-between items-center"><div><div class="font-bold">1980s (4.3%)</div><span class="text-[10px] text-zinc-500">365 titles • Lead: Platform</span></div><div class="font-mono font-bold">$382.4M</div></div>
+              <div class="p-2 rounded-lg bg-zinc-50 border border-zinc-100 flex justify-between items-center"><div><div class="font-bold">1990s (14.3%)</div><span class="text-[10px] text-zinc-500">1,769 titles • Lead: Sports</span></div><div class="font-mono font-bold">$1,279.8M</div></div>
+              <div class="p-2 rounded-lg bg-zinc-50 border border-zinc-100 flex justify-between items-center"><div><div class="font-bold">2000s (52.0%)</div><span class="text-[10px] text-zinc-500">9,198 titles • Lead: Action</span></div><div class="font-mono font-bold">$4,640.2M</div></div>
+              <div class="p-2 rounded-lg bg-zinc-50 border border-zinc-100 flex justify-between items-center"><div><div class="font-bold">2010s (29.4%)</div><span class="text-[10px] text-zinc-500">5,266 titles • Lead: Shooter</span></div><div class="font-mono font-bold">$2,618.0M</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. ASK AI COPILOT WORKSPACE (30% WIDTH DOCKED SIDEBAR) -->
+    <div id="aiSideDock" class="hidden w-[30%] min-w-[380px] h-full bg-white border-l border-zinc-200 flex flex-col shadow-xl z-20 transition-all duration-200">
+      <header class="h-12 px-4 border-b border-zinc-200 bg-white flex items-center justify-between select-none z-30 flex-shrink-0 text-xs">
+        <div class="flex items-center gap-2.5">
+          <div class="w-6 h-6 rounded bg-[#1e295b] text-white flex items-center justify-center text-[10px] font-bold">Ai</div>
+          <div>
+            <h2 class="text-xs font-bold text-[#1e295b] leading-tight">Ask Akashic BI</h2>
+            <p class="text-[10px] text-zinc-500 leading-tight">Video Game Sales Copilot</p>
+          </div>
+        </div>
+        <button onclick="toggleAi()" class="p-1 rounded text-zinc-400 hover:text-rose-600" title="Close">✕</button>
+      </header>
+
+      <div class="px-4 py-1.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between text-[11px] text-zinc-600 flex-shrink-0">
+        <div class="flex items-center gap-1.5 truncate">
+          <span class="text-zinc-400 font-medium">Scope:</span>
+          <span class="font-semibold text-zinc-800">video_game_sales</span>
+          <span class="text-zinc-300">•</span>
+          <span class="text-zinc-500">9 active charts</span>
+        </div>
+        <span class="text-[10px] font-mono text-zinc-400">16,598 records</span>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-4 py-5 space-y-4" id="aiTranscriptScroll">
+        <div class="space-y-4">
+          <!-- Personalized Greeting with User Avatar -->
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#1e295b] text-white flex items-center justify-center font-bold text-xs shadow-xs">VC</div>
+            <div>
+              <h2 class="text-sm font-bold text-zinc-900 leading-tight">Good morning, Veman 👋</h2>
+              <p class="text-[11px] text-zinc-500 leading-tight">Superset Executive Briefing for <span class="font-semibold text-zinc-700">Video Game Sales</span></p>
+            </div>
+          </div>
+
+          <!-- Executive Summary & Visible Charts Digest Card -->
+          <div class="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden">
+            <div class="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span class="text-[11px] font-bold text-zinc-800 uppercase tracking-wide">Executive Briefing · 9 Charts</span>
+              </div>
+              <button onclick="copySlackText()" id="btnCopySlack" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs">
+                <span>📋</span>
+                <span id="copySlackLabel">Copy for Slack</span>
+              </button>
+            </div>
+            <div class="p-4 space-y-3 text-xs text-zinc-700">
+              <p>Across 9 dashboard visual slices and 16,598 catalog titles, <strong class="text-zinc-900 font-semibold">$8,920.4M</strong> in historical revenue is tracked. <strong class="text-zinc-900 font-semibold">Action & Sports</strong> account for 34.7% of all genre sales ($3.08B combined), while <strong class="text-zinc-900 font-semibold">North America</strong> accounts for nearly half (49.2%) of the global market.</p>
+              <div class="space-y-2 pt-2 border-t border-zinc-100">
+                <div class="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 flex gap-2"><span>🏆</span><div><strong>Top 10 Games & Publishers:</strong> Wii Sports (82.7M) and Super Mario Bros. (40.2M) lead. Nintendo accounts for 72% of top 25 bestselling releases.</div></div>
+                <div class="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 flex gap-2"><span>🎮</span><div><strong>Platforms & Consoles:</strong> Nintendo DS leads hit title volume (2,163), while Xbox 360 leads North American revenues ($601.0M).</div></div>
+                <div class="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 flex gap-2"><span>📈</span><div><strong>Trajectory & Decades:</strong> Revenues peaked in 2008 ($678.9M across 1,428 titles). The 2000s represented 52% of all-time industry revenue ($4.64B).</div></div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 text-[11px] text-zinc-700 flex items-start gap-2">
+                <span class="text-zinc-500 font-bold mt-0.5">•</span>
+                <div><strong>Macro Concentration:</strong> Top 3 publishers and top 2 regions (NA + Europe) generate over 76.5% of cumulative sales.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Smart Dashboard Slices Chips -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-semibold text-zinc-600">Smart Dashboard Slices:</span>
+              <span id="sliceStatusPill" class="text-[10px] text-emerald-600 font-medium hidden">● Sliced</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <button onclick="applySlice('nintendo')" id="btnSliceNintendo" class="px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all">🎮 Focus: Nintendo</button>
+              <button onclick="applySlice('na')" id="btnSliceNA" class="px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all">🌍 Focus: North America</button>
+              <button onclick="applySlice('2000s')" id="btnSlice2000s" class="px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all">📅 Focus: 2000s Boom</button>
+              <button onclick="applySlice('all')" id="btnSliceReset" class="px-2 py-1 rounded-md text-[11px] font-medium text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 hidden">Reset ✕</button>
+            </div>
+          </div>
+
+          <!-- 4 Decision-Centric Suggested Questions -->
+          <div class="space-y-2 pt-1">
+            <span class="text-[11px] font-semibold text-zinc-500 block">Questions for executive review:</span>
+            <div class="flex flex-col gap-2">
+              <button onclick="sendQuestion('What are the top 3 drivers of Nintendo\'s dominance?')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group">
+                <span>What are the top 3 drivers of Nintendo's dominance?</span>
+                <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+              </button>
+              <button onclick="sendQuestion('Compare handheld consoles (DS / GBA) vs home consoles')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group">
+                <span>Compare handheld consoles (DS / GBA) vs home consoles</span>
+                <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+              </button>
+              <button onclick="sendQuestion('Why did sales decline after the 2008 peak?')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group">
+                <span>Why did sales decline after the 2008 peak?</span>
+                <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+              </button>
+              <button onclick="sendQuestion('What is our revenue exposure outside North America?')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group">
+                <span>What is our revenue exposure outside North America?</span>
+                <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="chatMessagesTarget" class="space-y-3 mt-4"></div>
+      </div>
+
+      <div class="p-3 border-t border-zinc-200 bg-white">
+        <form onsubmit="handleChatSubmit(event)" class="relative">
+          <textarea id="chatInputText" rows="2" placeholder="Ask anything about these 9 charts..." class="w-full p-2.5 pr-10 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1e295b] resize-none"></textarea>
+          <button type="submit" class="absolute right-2 bottom-2.5 p-1.5 rounded-md bg-[#1e295b] text-white hover:bg-[#161f46]">➔</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let isAiOpen = false;
+    let currentSlice = 'all';
+
+    function toggleAi() {
+      isAiOpen = !isAiOpen;
+      const dock = document.getElementById('aiSideDock');
+      const host = document.getElementById('hostDashboardPane');
+      const btn = document.getElementById('btnRealAskAi');
+
+      if (isAiOpen) {
+        dock.classList.remove('hidden');
+        host.className = "w-[70%] max-w-[70%] flex flex-col h-full overflow-y-auto bg-[#f8fafc] transition-all duration-200 border-r border-zinc-200/80";
+        btn.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] text-white ring-2 ring-[#1e295b]/30";
+      } else {
+        dock.classList.add('hidden');
+        host.className = "w-full flex flex-col h-full overflow-y-auto bg-[#f8fafc] transition-all duration-200 border-r border-zinc-200/80";
+        btn.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] hover:bg-[#161f46] text-white";
+      }
+    }
+
+    function copySlackText() {
+      const slackText = `*Executive Briefing — Video Game Sales Dashboard*
+• Total Historical Revenue: $8,920.4M across 16,598 titles (+14.2% YoY).
+• Market Leaders: Nintendo holds 72% of top 25 games; Action & Sports generate 34.7% of all genre revenue ($3.08B).
+• Regional Concentration: North America drives 49.2% ($4.39B) and Europe 27.3% ($2.43B).
+• Key Watch-out: Top 3 publishers generate 76.5% of sales; long-tail titles show revenue fragmentation.`;
+      navigator.clipboard.writeText(slackText);
+      const lbl = document.getElementById('copySlackLabel');
+      lbl.innerText = 'Copied!';
+      setTimeout(() => { lbl.innerText = 'Copy for Slack'; }, 2000);
+    }
+
+    function applySlice(slice) {
+      currentSlice = slice;
+      const pill = document.getElementById('sliceStatusPill');
+      const resetBtn = document.getElementById('btnSliceReset');
+      const btnN = document.getElementById('btnSliceNintendo');
+      const btnNA = document.getElementById('btnSliceNA');
+      const btn2k = document.getElementById('btnSlice2000s');
+
+      [btnN, btnNA, btn2k].forEach(b => {
+        b.className = "px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all";
+      });
+
+      if (slice === 'all') {
+        pill.classList.add('hidden');
+        resetBtn.classList.add('hidden');
+      } else {
+        pill.classList.remove('hidden');
+        resetBtn.classList.remove('hidden');
+        if (slice === 'nintendo') btnN.className = "px-2.5 py-1 rounded-md text-[11px] font-medium border border-[#1e295b] bg-[#1e295b] text-white shadow-xs";
+        if (slice === 'na') btnNA.className = "px-2.5 py-1 rounded-md text-[11px] font-medium border border-[#1e295b] bg-[#1e295b] text-white shadow-xs";
+        if (slice === '2000s') btn2k.className = "px-2.5 py-1 rounded-md text-[11px] font-medium border border-[#1e295b] bg-[#1e295b] text-white shadow-xs";
+      }
+    }
+
+    function sendQuestion(q) {
+      const target = document.getElementById('chatMessagesTarget');
+      let answer = '';
+      const lower = q.toLowerCase();
+
+      if (lower.includes('nintendo') && (lower.includes('dominance') || lower.includes('driver'))) {
+        answer = `<strong>Top 3 Drivers of Nintendo's Market Dominance ($1,786.5M Total Revenue):</strong><br><br>
+1. <strong>Hardware Pack-in Flywheels</strong>: <em>Wii Sports</em> (82.7M units) and <em>Mario Kart Wii</em> (35.8M) were bundled directly with hardware purchases.<br>
+2. <strong>Generational IP Monopolies</strong>: Proprietary franchises (<em>Mario</em>, <em>Pokémon</em>, <em>Zelda</em>) drive repeat purchases without licensing royalties.<br>
+3. <strong>Handheld Proliferation</strong>: Handheld platforms (<em>Game Boy</em>, <em>Nintendo DS</em>) captured over 3,400 catalog titles with virtually zero direct competition.`;
+      } else if (lower.includes('handheld') || lower.includes('ds / gba') || lower.includes('home console')) {
+        answer = `<strong>Handheld vs. Home Console Strategic Comparison:</strong><br><br>
+• <strong>Handhelds (DS, GBA, 3DS, PSP)</strong>: Generated <strong>$1,712.4M (19.2%)</strong> across 4,892 catalog titles at lower development cost and higher margin stability.<br>
+• <strong>Home Consoles (PS2, Xbox 360, PS3, Wii)</strong>: Generated <strong>$5,124.6M (57.4%)</strong> across 8,410 titles, driving single-title blockbusters.<br>
+• <strong>Strategic Takeaway</strong>: Nintendo DS holds the all-time hit title record with 2,163 releases, surpassing PS2 (2,161).`;
+      } else if (lower.includes('decline') || lower.includes('2008') || lower.includes('peak')) {
+        answer = `<strong>3 Structural Reasons for the Post-2008 Contraction:</strong><br><br>
+1. <strong>Macroeconomic Recession (2008–2009)</strong>: Discretionary household spending contracted, pulling annual boxed sales from $678.9M down to $515.8M by 2011.<br>
+2. <strong>Late-Cycle 7th-Gen Saturation</strong>: Wii, PS3, and Xbox 360 reached peak household saturation.<br>
+3. <strong>Digital & Mobile Channel Disruption</strong>: The explosion of smartphones (App Store 2008) and digital store fronts (Steam, PSN, Xbox Live) shifted billions into digital microtransactions not captured in physical retail tracking.`;
+      } else if (lower.includes('outside north america') || lower.includes('exposure')) {
+        answer = `<strong>International Market Exposure ($4,527.5M non-NA Revenue / 50.8%):</strong><br><br>
+• <strong>Europe ($2,434.1M / 27.3%)</strong>: Largest international market, heavily indexed to PlayStation and Sports/Racing.<br>
+• <strong>Japan ($1,291.0M / 14.5%)</strong>: Driven by Handhelds (DS, 3DS) and RPGs (Pokémon, Final Fantasy).<br>
+• <strong>Other Regions ($797.8M / 9.0%)</strong>: High growth potential across Latin America and Asia-Pacific.<br>
+• <strong>Executive Takeaway</strong>: Single-region concentration in North America (49.2%) is a portfolio risk; expanding localization provides downside protection.`;
+      } else {
+        answer = `Factual analysis for <strong>${q}</strong> across all 9 dashboard visual slices from live catalog metadata.`;
+      }
+
+      target.innerHTML += `
+        <div class="p-2.5 rounded-lg bg-zinc-100 text-zinc-900 text-xs font-medium ml-6 text-right">${q}</div>
+        <div class="p-3 rounded-lg bg-blue-50/70 border border-blue-100 text-zinc-800 text-xs space-y-1.5 mr-2">
+          <div class="font-bold text-[#1e295b] text-[11px] uppercase tracking-wider">Akashic BI Executive Analysis</div>
+          <div class="leading-relaxed">${answer}</div>
+        </div>
+      `;
+      const scroll = document.getElementById('aiTranscriptScroll');
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInputText');
+      const text = input.value.trim();
+      if (!text) return;
+      sendQuestion(text);
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
