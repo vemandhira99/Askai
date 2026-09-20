@@ -150,10 +150,16 @@
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 
           <!-- 1. TABLE: Top 10 Games -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-1" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Top 10 Games (by Global Sales)</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(1, 'Top 10 Games (by Global Sales)', '• **Core Finding**: Wii Sports holds #1 position with 82.7M units, followed by Super Mario Bros. (40.2M units). All 10 titles crossed the 28M milestone.<br>• **Business Takeaway**: Hardware pack-in bundling created unbeatable velocity. All top 10 titles belong to Nintendo.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 overflow-y-auto">
               <table class="w-full text-left text-xs">
@@ -181,10 +187,16 @@
           </div>
 
           <!-- 2. DONUT: Publishers of Top 25 -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-2" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Publishers of Top 25 Games</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(2, 'Publishers of Top 25 Games', '• **Core Finding**: Nintendo dominates 72% (18 of 25 titles). Take-Two holds 16% (GTA) and Activision 12% (Call of Duty).<br>• **Business Takeaway**: Extreme concentration: just three publishers control 100% of all top 25 historical blockbuster titles.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 flex flex-col items-center justify-center p-3 relative">
               <svg viewBox="0 0 200 200" class="w-44 h-44 transform -rotate-90">
@@ -201,10 +213,16 @@
           </div>
 
           <!-- 3. TREEMAP: Top 10 Consoles -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-3" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Top 10 Consoles, by # of Hit Games</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(3, 'Top 10 Consoles, by # of Hit Games', '• **Core Finding**: Nintendo DS leads with 2,163 hit titles, followed by Game Boy Advance (822) and GameCube (556).<br>• **Business Takeaway**: Handheld consoles delivered the highest volume of successful games due to lower development budgets and massive installed user base.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 p-3 flex gap-1.5">
               <div class="w-[52%] bg-[#5ec3d2] rounded-md p-3 text-zinc-900 shadow-2xs font-extrabold text-sm">DS: 2.16k</div>
@@ -223,10 +241,16 @@
           </div>
 
           <!-- 4. HORIZONTAL BARS: Genre Breakdown -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-4" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Genre Sales Breakdown</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(4, 'Genre Sales Breakdown', '• **Core Finding**: Action ($1,751.2M) and Sports ($1,330.9M) represent 34.7% of cumulative software sales.<br>• **Business Takeaway**: Consumer spending heavily concentrates in repeatable sports franchises and evergreen action series.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 p-3.5 flex flex-col justify-around text-xs">
               <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Action</span><span class="font-mono font-semibold">$1,751.2M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-[#1e295b]" style="width: 100%"></div></div></div>
@@ -238,10 +262,16 @@
           </div>
 
           <!-- 5. AREA: Sales Trajectory -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-5" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Annual Sales Trajectory</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(5, 'Annual Sales Trajectory', '• **Core Finding**: Annual physical software revenues peaked in 2008 at $678.9M, then contracted toward $158.4M by 2020.<br>• **Business Takeaway**: The shift is driven by digital delivery (mobile apps, Steam, direct downloads) displacing boxed shelf products.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 p-4 flex flex-col justify-between">
               <svg viewBox="0 0 400 140" class="w-full h-44 overflow-visible pt-2">
@@ -257,10 +287,16 @@
           </div>
 
           <!-- 6. DONUT: Regional Market Share -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-6" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Regional Sales Market Share</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(6, 'Regional Sales Market Share', '• **Core Finding**: North America commands 49.2% ($4,392.9M) of total revenue, Europe 27.3% ($2,434.1M), and Japan 14.5% ($1,291.0M).<br>• **Business Takeaway**: Single-region concentration in North America creates macroeconomic exposure; European localization is key to downside protection.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 flex flex-col items-center justify-center p-3">
               <svg viewBox="0 0 200 200" class="w-44 h-44 transform -rotate-90">
@@ -279,10 +315,16 @@
           </div>
 
           <!-- 7. BARS: Top Platforms NA -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-7" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Top Platforms (by NA Sales)</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(7, 'Top Platforms (by NA Sales)', '• **Core Finding**: Xbox 360 leads North America with $601.0M, edging out PlayStation 2 ($582.9M) and Wii ($507.5M).<br>• **Business Takeaway**: Microsoft maintained domestic leadership in North America, whereas Sony maintained the broader global total.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 p-3.5 flex flex-col justify-around text-xs">
               <div class="space-y-1"><div class="flex justify-between text-[11px] font-medium"><span>Xbox 360</span><span class="font-mono font-semibold">$601.0M</span></div><div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width: 100%"></div></div></div>
@@ -294,10 +336,16 @@
           </div>
 
           <!-- 8. COMPOSITE: Annual Title Releases -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-8" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Annual Title Volume</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(8, 'Annual Title Volume', '• **Core Finding**: Annual title catalog volume peaked in 2008–2009 with 1,428 simultaneous catalog releases.<br>• **Business Takeaway**: Marks the historic zenith of packaged physical disc releases prior to digital store consolidation.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 p-3.5 flex flex-col justify-between">
               <div class="h-44 flex items-end justify-between gap-2 pt-4 px-2">
@@ -316,10 +364,16 @@
           </div>
 
           <!-- 9. CARDS: Sales by Decade -->
-          <div class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px]">
+          <div id="chart-card-9" class="bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200">
             <div class="px-3.5 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-white">
               <h3 class="text-xs font-bold text-zinc-900 tracking-tight">Global Sales by Decade</h3>
-              <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="explainChart(9, 'Global Sales by Decade', '• **Core Finding**: The 2000s accounted for 52% of all-time industry software revenue ($4,640.2M) across 9,198 titles.<br>• **Business Takeaway**: The 2000s was the golden era of hardware adoption across both living rooms and handheld devices.')" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-amber-50 hover:text-amber-900 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Explain this chart in 2 plain-English points">
+                  <span>💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="text-zinc-400 hover:text-zinc-600 p-0.5">⋮</button>
+              </div>
             </div>
             <div class="flex-1 p-3.5 flex flex-col justify-between text-xs space-y-2">
               <div class="p-2 rounded-lg bg-zinc-50 border border-zinc-100 flex justify-between items-center"><div><div class="font-bold">1980s (4.3%)</div><span class="text-[10px] text-zinc-500">365 titles • Lead: Platform</span></div><div class="font-mono font-bold">$382.4M</div></div>
@@ -372,14 +426,24 @@
             <div class="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span class="text-[11px] font-bold text-zinc-800 uppercase tracking-wide">Executive Briefing · 9 Charts</span>
+                <span id="briefingHeaderTitle" class="text-[11px] font-bold text-zinc-800 uppercase tracking-wide">Executive Briefing · 9 Charts</span>
               </div>
-              <button onclick="copySlackText()" id="btnCopySlack" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs">
-                <span>📋</span>
-                <span id="copySlackLabel">Copy for Slack</span>
-              </button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="toggleMeetingPrep()" id="btnMeetingPrep" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Toggle 3-minute leadership standup talking points">
+                  <span>🎙️</span>
+                  <span id="meetingPrepBtnLabel">Meeting Prep</span>
+                </button>
+                <button onclick="copyTeamsMarkdown()" id="btnCopyTeams" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#464775] hover:bg-[#3b3c63] text-white text-[10px] font-semibold transition-colors shadow-2xs" title="Copy formatted card for Microsoft Teams">
+                  <span>📋</span>
+                  <span id="copyTeamsLabel">Copy for Teams</span>
+                </button>
+                <button onclick="openTeamsModal()" class="px-1.5 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-[10px] font-medium border border-zinc-200 transition-colors" title="Preview Microsoft Teams Card">
+                  <span>Preview</span>
+                </button>
+              </div>
             </div>
-            <div class="p-4 space-y-3 text-xs text-zinc-700">
+
+            <div id="executiveCardBody" class="p-4 space-y-3 text-xs text-zinc-700">
               <p>Across 9 dashboard visual slices and 16,598 catalog titles, <strong class="text-zinc-900 font-semibold">$8,920.4M</strong> in historical revenue is tracked. <strong class="text-zinc-900 font-semibold">Action & Sports</strong> account for 34.7% of all genre sales ($3.08B combined), while <strong class="text-zinc-900 font-semibold">North America</strong> accounts for nearly half (49.2%) of the global market.</p>
               <div class="space-y-2 pt-2 border-t border-zinc-100">
                 <div class="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 flex gap-2"><span>🏆</span><div><strong>Top 10 Games & Publishers:</strong> Wii Sports (82.7M) and Super Mario Bros. (40.2M) lead. Nintendo accounts for 72% of top 25 bestselling releases.</div></div>
@@ -411,6 +475,10 @@
           <div class="space-y-2 pt-1">
             <span class="text-[11px] font-semibold text-zinc-500 block">Questions for executive review:</span>
             <div class="flex flex-col gap-2">
+              <button onclick="sendQuestion('Prep me for my 10 AM leadership standup')" class="w-full px-3 py-2 bg-purple-50/70 border border-purple-200 hover:border-purple-300 hover:bg-purple-100/60 text-purple-950 rounded-lg text-xs font-semibold text-left shadow-2xs flex justify-between items-center group">
+                <span class="flex items-center gap-1.5"><span>🎙️</span><span>Prep me for my 10 AM leadership standup</span></span>
+                <span class="text-purple-400 group-hover:text-purple-700">›</span>
+              </button>
               <button onclick="sendQuestion('What are the top 3 drivers of Nintendo\'s dominance?')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group">
                 <span>What are the top 3 drivers of Nintendo's dominance?</span>
                 <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
@@ -443,12 +511,137 @@
 
   </div>
 
+  <!-- ========================================================================= -->
+  <!-- MICROSOFT TEAMS CARD PREVIEW MODAL                                        -->
+  <!-- ========================================================================= -->
+  <div id="teamsPreviewModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-[#f5f5f7] border border-zinc-300 rounded-xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-150">
+      <!-- Teams Modal Header -->
+      <div class="bg-[#464775] text-white px-4 py-3 flex items-center justify-between flex-shrink-0 shadow-xs">
+        <div class="flex items-center gap-2.5">
+          <div class="w-6 h-6 rounded bg-white text-[#464775] flex items-center justify-center font-bold text-xs">
+            T
+          </div>
+          <div>
+            <h3 class="text-xs font-bold leading-tight">Microsoft Teams Channel Preview</h3>
+            <p class="text-[10px] text-zinc-200 leading-tight">General &gt; Video Game Sales Analytics</p>
+          </div>
+        </div>
+        <button onclick="closeTeamsModal()" class="text-white/80 hover:text-white p-1 rounded transition-colors text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Teams Message Canvas -->
+      <div class="p-4 overflow-y-auto space-y-3">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-purple-700 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-2xs">
+            VC
+          </div>
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="text-xs font-bold text-zinc-900">Veman Chippa</span>
+              <span class="text-[10px] text-zinc-500">Today at 9:55 AM</span>
+              <span class="px-1.5 py-0.2 rounded bg-purple-100 text-[#464775] text-[9px] font-semibold">Executive Post</span>
+            </div>
+
+            <!-- Teams Adaptive Card Box -->
+            <div class="bg-white border border-zinc-200/90 rounded-lg p-3.5 shadow-xs space-y-3 text-xs text-zinc-800">
+              <div class="border-b border-zinc-100 pb-2">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-bold text-zinc-900 text-[13px] flex items-center gap-1.5">
+                    <span>🎮</span>
+                    <span>Executive Briefing: Video Game Sales</span>
+                  </h4>
+                  <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                    +14.2% YoY
+                  </span>
+                </div>
+                <p class="text-[11px] text-zinc-500 mt-0.5">
+                  16,598 catalog titles across 9 production visual slices
+                </p>
+              </div>
+
+              <!-- Metrics Row -->
+              <div class="grid grid-cols-3 gap-2">
+                <div class="bg-zinc-50 p-2 rounded border border-zinc-150">
+                  <div class="text-[9px] uppercase tracking-wider text-zinc-500 font-semibold">Total Revenue</div>
+                  <div class="text-sm font-bold text-[#1e295b]">$8,920.4M</div>
+                </div>
+                <div class="bg-zinc-50 p-2 rounded border border-zinc-150">
+                  <div class="text-[9px] uppercase tracking-wider text-zinc-500 font-semibold">Top Publisher</div>
+                  <div class="text-sm font-bold text-purple-700">Nintendo (72%)</div>
+                </div>
+                <div class="bg-zinc-50 p-2 rounded border border-zinc-150">
+                  <div class="text-[9px] uppercase tracking-wider text-zinc-500 font-semibold">NA Share Risk</div>
+                  <div class="text-sm font-bold text-blue-700">49.2% ($4.39B)</div>
+                </div>
+              </div>
+
+              <!-- Bullet Summary -->
+              <div class="space-y-1.5 text-[11px] leading-relaxed pt-1">
+                <div class="flex items-start gap-1.5">
+                  <span class="text-zinc-400 font-bold">•</span>
+                  <span><strong>Top Titles</strong>: <em>Wii Sports</em> (82.7M) &amp; <em>Super Mario Bros.</em> (40.2M) anchor top ranks.</span>
+                </div>
+                <div class="flex items-start gap-1.5">
+                  <span class="text-zinc-400 font-bold">•</span>
+                  <span><strong>Volume Categories</strong>: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume.</span>
+                </div>
+                <div class="flex items-start gap-1.5">
+                  <span class="text-zinc-400 font-bold">•</span>
+                  <span><strong>Peak Distribution</strong>: 2008 historical zenith with 1,428 titles before digital store migration.</span>
+                </div>
+              </div>
+
+              <!-- Watch-Out Warning Strip -->
+              <div class="p-2.5 rounded bg-amber-50 border border-amber-200 text-[11px] text-amber-900 flex items-start gap-2">
+                <span class="font-bold">⚠️</span>
+                <div>
+                  <strong>Leadership Watch-out:</strong> 49.2% single-market exposure in North America; physical retail boxed title releases plummeted 57% post-2008 as sales shifted digital.
+                </div>
+              </div>
+
+              <!-- Footer Button -->
+              <div class="pt-1 flex items-center justify-between border-t border-zinc-100">
+                <span class="text-[10px] text-zinc-400">Akashic BI Superset Copilot</span>
+                <span class="text-[11px] text-blue-600 font-semibold cursor-pointer hover:underline">
+                  Open Interactive Superset Dashboard ↗
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-4 py-2.5 bg-white border-t border-zinc-200 flex items-center justify-between flex-shrink-0">
+        <span class="text-[11px] text-zinc-500">Ready to paste directly into your Teams message window.</span>
+        <div class="flex items-center gap-2">
+          <button onclick="closeTeamsModal()" class="px-3 py-1 rounded text-xs font-semibold text-zinc-600 hover:bg-zinc-100 transition-colors">
+            Close
+          </button>
+          <button onclick="copyTeamsMarkdown()" class="px-3 py-1 rounded bg-[#464775] hover:bg-[#3b3c63] text-white text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-xs">
+            <span>📋</span>
+            <span id="modalCopyBtnText">Copy Teams Card</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     let isAiOpen = false;
     let currentSlice = 'all';
+    let isMeetingPrepActive = false;
+    let activeFocusedChart = null;
 
-    function toggleAi() {
-      isAiOpen = !isAiOpen;
+    function toggleAi(forceOpen) {
+      if (typeof forceOpen === 'boolean') {
+        isAiOpen = forceOpen;
+      } else {
+        isAiOpen = !isAiOpen;
+      }
       const dock = document.getElementById('aiSideDock');
       const host = document.getElementById('hostDashboardPane');
       const btn = document.getElementById('btnRealAskAi');
@@ -464,16 +657,134 @@
       }
     }
 
-    function copySlackText() {
-      const slackText = `*Executive Briefing — Video Game Sales Dashboard*
-• Total Historical Revenue: $8,920.4M across 16,598 titles (+14.2% YoY).
-• Market Leaders: Nintendo holds 72% of top 25 games; Action & Sports generate 34.7% of all genre revenue ($3.08B).
-• Regional Concentration: North America drives 49.2% ($4.39B) and Europe 27.3% ($2.43B).
-• Key Watch-out: Top 3 publishers generate 76.5% of sales; long-tail titles show revenue fragmentation.`;
-      navigator.clipboard.writeText(slackText);
-      const lbl = document.getElementById('copySlackLabel');
-      lbl.innerText = 'Copied!';
-      setTimeout(() => { lbl.innerText = 'Copy for Slack'; }, 2000);
+    function explainChart(cardIndex, title, summary) {
+      toggleAi(true);
+
+      // Highlight the targeted chart
+      if (activeFocusedChart) {
+        const prev = document.getElementById(`chart-card-${activeFocusedChart}`);
+        if (prev) prev.className = "bg-white rounded-lg border border-zinc-200 shadow-2xs overflow-hidden flex flex-col h-[420px] transition-all duration-200";
+      }
+      activeFocusedChart = cardIndex;
+      const card = document.getElementById(`chart-card-${cardIndex}`);
+      if (card) {
+        card.className = "bg-white rounded-lg border-[#1e295b] ring-2 ring-[#1e295b] shadow-md overflow-hidden flex flex-col h-[420px] transition-all duration-200";
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // Add response in chat transcript
+      const target = document.getElementById('chatMessagesTarget');
+      target.innerHTML += `
+        <div class="p-2.5 rounded-lg bg-zinc-100 text-zinc-900 text-xs font-medium ml-6 text-right">Explain chart: ${title}</div>
+        <div class="p-3.5 rounded-lg bg-amber-50/70 border border-amber-200 text-zinc-800 text-xs space-y-2 mr-2 animate-in fade-in duration-200">
+          <div class="flex items-center justify-between border-b border-amber-200/70 pb-1.5">
+            <span class="font-bold text-[#1e295b] text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+              <span>💡</span>
+              <span>Chart Breakdown: ${title}</span>
+            </span>
+            <span class="text-[10px] text-amber-800 font-medium">Plain-English</span>
+          </div>
+          <div class="leading-relaxed space-y-1.5 text-zinc-800 text-xs">
+            ${summary}
+          </div>
+        </div>
+      `;
+      const scroll = document.getElementById('aiTranscriptScroll');
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function toggleMeetingPrep() {
+      isMeetingPrepActive = !isMeetingPrepActive;
+      const body = document.getElementById('executiveCardBody');
+      const title = document.getElementById('briefingHeaderTitle');
+      const btn = document.getElementById('btnMeetingPrep');
+      const btnLabel = document.getElementById('meetingPrepBtnLabel');
+
+      if (isMeetingPrepActive) {
+        title.innerText = '🎙️ 3-Min Leadership Standup';
+        btn.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-600 text-white text-[10px] font-semibold transition-colors";
+        btnLabel.innerText = 'Summary Mode';
+        body.innerHTML = `
+          <div class="space-y-3 text-xs leading-relaxed">
+            <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1">
+              <div class="font-bold flex items-center gap-1.5 text-[11px]">
+                <span>🟢</span>
+                <span>1. The Growth Highlight (What's Working)</span>
+              </div>
+              <p class="text-[11px] leading-relaxed">
+                • <strong>$8,920.4M</strong> total historical sales across 16,598 catalog titles (+14.2% YoY).<br>
+                • <strong>Nintendo Dominance</strong>: Captures <strong>72%</strong> (18 of 25) of the bestselling games, led by <em>Wii Sports</em> (82.7M) and <em>Super Mario Bros.</em> (40.2M).<br>
+                • <strong>Top Genres</strong>: Action ($1,751.2M) and Sports ($1,330.9M) represent <strong>34.7% ($3.08B)</strong> of cumulative volume.
+              </p>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 space-y-1">
+              <div class="font-bold flex items-center gap-1.5 text-[11px]">
+                <span>🔴</span>
+                <span>2. The Vulnerability (What Leadership Will Ask)</span>
+              </div>
+              <p class="text-[11px] leading-relaxed">
+                • <strong>Single-Region Exposure</strong>: <strong>49.2%</strong> of lifetime revenue relies on North America ($4,392.9M). A domestic slowdown affects half the portfolio.<br>
+                • <strong>Post-Peak Retail Shift</strong>: Boxed physical title releases declined 57% post-2008 as volume shifted to untracked digital stores.
+              </p>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-950 space-y-1">
+              <div class="font-bold flex items-center gap-1.5 text-[11px]">
+                <span>🔵</span>
+                <span>3. Recommended Strategic Action for Today's Call</span>
+              </div>
+              <p class="text-[11px] leading-relaxed">
+                • Prioritize European localized publishing ($2,434.1M / 27.3% market share) and handheld co-development to hedge single-market North America risk.
+              </p>
+            </div>
+          </div>
+        `;
+      } else {
+        title.innerText = 'Executive Briefing · 9 Charts';
+        btn.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors";
+        btnLabel.innerText = 'Meeting Prep';
+        body.innerHTML = `
+          <p>Across 9 dashboard visual slices and 16,598 catalog titles, <strong class="text-zinc-900 font-semibold">$8,920.4M</strong> in historical revenue is tracked. <strong class="text-zinc-900 font-semibold">Action & Sports</strong> account for 34.7% of all genre sales ($3.08B combined), while <strong class="text-zinc-900 font-semibold">North America</strong> accounts for nearly half (49.2%) of the global market.</p>
+          <div class="space-y-2 pt-2 border-t border-zinc-100">
+            <div class="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 flex gap-2"><span>🏆</span><div><strong>Top 10 Games & Publishers:</strong> Wii Sports (82.7M) and Super Mario Bros. (40.2M) lead. Nintendo accounts for 72% of top 25 bestselling releases.</div></div>
+            <div class="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 flex gap-2"><span>🎮</span><div><strong>Platforms & Consoles:</strong> Nintendo DS leads hit title volume (2,163), while Xbox 360 leads North American revenues ($601.0M).</div></div>
+            <div class="bg-zinc-50 p-2.5 rounded-lg border border-zinc-200 flex gap-2"><span>📈</span><div><strong>Trajectory & Decades:</strong> Revenues peaked in 2008 ($678.9M across 1,428 titles). The 2000s represented 52% of all-time industry revenue ($4.64B).</div></div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 text-[11px] text-zinc-700 flex items-start gap-2">
+            <span class="text-zinc-500 font-bold mt-0.5">•</span>
+            <div><strong>Macro Concentration:</strong> Top 3 publishers and top 2 regions (NA + Europe) generate over 76.5% of cumulative sales.</div>
+          </div>
+        `;
+      }
+    }
+
+    function openTeamsModal() {
+      document.getElementById('teamsPreviewModal').classList.remove('hidden');
+    }
+
+    function closeTeamsModal() {
+      document.getElementById('teamsPreviewModal').classList.add('hidden');
+    }
+
+    function copyTeamsMarkdown() {
+      const teamsText = `**Executive Briefing: Video Game Sales Dashboard**
+• **Total Revenue**: $8,920.4M across 16,598 catalog titles (+14.2% YoY).
+• **Market Concentration**: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).
+• **Top Segments**: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).
+• **Regional Breakdown**: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).
+⚠️ **Watch-out**: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.
+🔗 [Open Dashboard](http://localhost:5173/)`;
+
+      navigator.clipboard.writeText(teamsText);
+      const lbl = document.getElementById('copyTeamsLabel');
+      const modalBtn = document.getElementById('modalCopyBtnText');
+      if (lbl) lbl.innerText = 'Copied!';
+      if (modalBtn) modalBtn.innerText = 'Copied!';
+      setTimeout(() => {
+        if (lbl) lbl.innerText = 'Copy for Teams';
+        if (modalBtn) modalBtn.innerText = 'Copy Teams Card';
+      }, 2000);
     }
 
     function applySlice(slice) {
@@ -502,43 +813,178 @@
 
     function sendQuestion(q) {
       const target = document.getElementById('chatMessagesTarget');
-      let answer = '';
       const lower = q.toLowerCase();
+      let htmlResponse = '';
 
-      if (lower.includes('nintendo') && (lower.includes('dominance') || lower.includes('driver'))) {
-        answer = `<strong>Top 3 Drivers of Nintendo's Market Dominance ($1,786.5M Total Revenue):</strong><br><br>
-1. <strong>Hardware Pack-in Flywheels</strong>: <em>Wii Sports</em> (82.7M units) and <em>Mario Kart Wii</em> (35.8M) were bundled directly with hardware purchases.<br>
-2. <strong>Generational IP Monopolies</strong>: Proprietary franchises (<em>Mario</em>, <em>Pokémon</em>, <em>Zelda</em>) drive repeat purchases without licensing royalties.<br>
-3. <strong>Handheld Proliferation</strong>: Handheld platforms (<em>Game Boy</em>, <em>Nintendo DS</em>) captured over 3,400 catalog titles with virtually zero direct competition.`;
+      if (lower.includes('standup') || lower.includes('prep me') || lower.includes('meeting prep')) {
+        htmlResponse = `
+          <div class="bg-white rounded-xl border border-zinc-200 shadow-xs overflow-hidden mb-3">
+            <div class="px-3.5 py-2.5 bg-[#1e295b] text-white flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-sm">🎙️</span>
+                <div>
+                  <h4 class="text-xs font-bold leading-tight uppercase tracking-wider">3-Minute Leadership Standup Briefing</h4>
+                  <p class="text-[10px] text-zinc-300 leading-tight">Synthesized across 9 live dashboard visual slices</p>
+                </div>
+              </div>
+              <button onclick="copyStandupText()" id="standupCopyBtn" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-white text-[10px] font-medium transition-colors">
+                Copy
+              </button>
+            </div>
+            <div class="p-3.5 space-y-3">
+              <div class="p-3 rounded-lg bg-emerald-50/80 border border-emerald-200 text-emerald-950 space-y-1.5">
+                <div class="flex items-center gap-1.5 font-bold text-xs text-emerald-900">
+                  <span class="text-emerald-600">🟢</span>
+                  <span>1. The Growth Highlight (What's Working)</span>
+                </div>
+                <ul class="space-y-1.5 pl-5 text-[11px] leading-relaxed text-emerald-900 list-disc marker:text-emerald-600">
+                  <li><strong>$8,920.4M</strong> in verified catalog sales across 16,598 titles (+14.2% YoY).</li>
+                  <li><strong>Nintendo Dominance</strong>: Captures <strong>72%</strong> (18 of 25) of bestselling titles, anchored by <em>Wii Sports</em> (82.7M) and <em>Super Mario Bros.</em> (40.2M).</li>
+                  <li><strong>Top Genres</strong>: Action ($1,751.2M) and Sports ($1,330.9M) represent <strong>34.7% ($3.08B)</strong> of total revenue.</li>
+                </ul>
+              </div>
+              <div class="p-3 rounded-lg bg-rose-50/80 border border-rose-200 text-rose-950 space-y-1.5">
+                <div class="flex items-center gap-1.5 font-bold text-xs text-rose-900">
+                  <span class="text-rose-600">🔴</span>
+                  <span>2. The Vulnerability (What Leadership Will Ask)</span>
+                </div>
+                <ul class="space-y-1.5 pl-5 text-[11px] leading-relaxed text-rose-900 list-disc marker:text-rose-600">
+                  <li><strong>Single-Region Exposure</strong>: <strong>49.2%</strong> of lifetime revenue relies on North America ($4,392.9M). Any US/NA consumer discretionary slowdown impacts nearly half our portfolio.</li>
+                  <li><strong>Post-Peak Channel Shift</strong>: Boxed physical title releases plummeted 57% post-2008 as dollars shifted to digital stores not tracked in physical sell-through.</li>
+                </ul>
+              </div>
+              <div class="p-3 rounded-lg bg-blue-50/80 border border-blue-200 text-blue-950 space-y-1.5">
+                <div class="flex items-center gap-1.5 font-bold text-xs text-blue-900">
+                  <span class="text-blue-600">🔵</span>
+                  <span>3. Recommended Strategic Action for Today's Call</span>
+                </div>
+                <ul class="space-y-1.5 pl-5 text-[11px] leading-relaxed text-blue-900 list-disc marker:text-blue-600">
+                  <li>Discuss prioritizing European localized publishing ($2,434.1M / 27.3% market share) and handheld RPG co-development in Japan to diversify away from North American dependence.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (lower.includes('nintendo') && (lower.includes('dominance') || lower.includes('driver'))) {
+        htmlResponse = `
+          <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5">
+            <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">Top 3 Drivers of Nintendo's Market Dominance</h4>
+            <div class="space-y-2">
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2.5 text-xs text-zinc-800">
+                <span class="w-5 h-5 rounded-full bg-[#1e295b] text-white font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                <div><strong>Hardware Pack-in Flywheels</strong>: <em>Wii Sports</em> (82.7M units) and <em>Mario Kart Wii</em> (35.8M) were bundled directly with hardware purchases, guaranteeing instant adoption.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2.5 text-xs text-zinc-800">
+                <span class="w-5 h-5 rounded-full bg-[#1e295b] text-white font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                <div><strong>Generational IP Monopolies</strong>: Proprietary franchises (<em>Mario</em>, <em>Pokémon</em>, <em>Zelda</em>) drive repeat purchases across multiple console generations without licensing royalty overhead.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2.5 text-xs text-zinc-800">
+                <span class="w-5 h-5 rounded-full bg-[#1e295b] text-white font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                <div><strong>Handheld Proliferation</strong>: Handheld platforms (<em>Game Boy</em>, <em>Nintendo DS</em>) captured over 3,400 catalog titles with virtually zero direct competition, driving high software margins.</div>
+              </div>
+            </div>
+          </div>
+        `;
       } else if (lower.includes('handheld') || lower.includes('ds / gba') || lower.includes('home console')) {
-        answer = `<strong>Handheld vs. Home Console Strategic Comparison:</strong><br><br>
-• <strong>Handhelds (DS, GBA, 3DS, PSP)</strong>: Generated <strong>$1,712.4M (19.2%)</strong> across 4,892 catalog titles at lower development cost and higher margin stability.<br>
-• <strong>Home Consoles (PS2, Xbox 360, PS3, Wii)</strong>: Generated <strong>$5,124.6M (57.4%)</strong> across 8,410 titles, driving single-title blockbusters.<br>
-• <strong>Strategic Takeaway</strong>: Nintendo DS holds the all-time hit title record with 2,163 releases, surpassing PS2 (2,161).`;
+        htmlResponse = `
+          <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5 text-xs text-zinc-800">
+            <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">Handheld vs. Home Console Strategic Comparison</h4>
+            <div class="space-y-2">
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#1e295b] mt-1.5 flex-shrink-0"></span>
+                <div><strong>Handhelds (DS, GBA, 3DS, PSP)</strong>: Generated <strong>$1,712.4M (19.2%)</strong> across 4,892 catalog titles at lower development cost and higher margin stability.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#1e295b] mt-1.5 flex-shrink-0"></span>
+                <div><strong>Home Consoles (PS2, Xbox 360, PS3, Wii)</strong>: Generated <strong>$5,124.6M (57.4%)</strong> across 8,410 titles, driving single-title blockbusters.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-blue-50/80 border border-blue-200 flex items-start gap-2 text-blue-950">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 flex-shrink-0"></span>
+                <div><strong>Strategic Takeaway</strong>: Nintendo DS holds the all-time hit title record with 2,163 releases, surpassing PS2 (2,161).</div>
+              </div>
+            </div>
+          </div>
+        `;
       } else if (lower.includes('decline') || lower.includes('2008') || lower.includes('peak')) {
-        answer = `<strong>3 Structural Reasons for the Post-2008 Contraction:</strong><br><br>
-1. <strong>Macroeconomic Recession (2008–2009)</strong>: Discretionary household spending contracted, pulling annual boxed sales from $678.9M down to $515.8M by 2011.<br>
-2. <strong>Late-Cycle 7th-Gen Saturation</strong>: Wii, PS3, and Xbox 360 reached peak household saturation.<br>
-3. <strong>Digital & Mobile Channel Disruption</strong>: The explosion of smartphones (App Store 2008) and digital store fronts (Steam, PSN, Xbox Live) shifted billions into digital microtransactions not captured in physical retail tracking.`;
+        htmlResponse = `
+          <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5">
+            <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">3 Structural Drivers of the Post-2008 Contraction</h4>
+            <div class="space-y-2">
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2.5 text-xs text-zinc-800">
+                <span class="w-5 h-5 rounded-full bg-[#1e295b] text-white font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                <div><strong>Macroeconomic Recession (2008–2009)</strong>: Discretionary household spending contracted, pulling annual boxed sales from $678.9M down to $515.8M by 2011.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2.5 text-xs text-zinc-800">
+                <span class="w-5 h-5 rounded-full bg-[#1e295b] text-white font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                <div><strong>Late-Cycle 7th-Gen Saturation</strong>: Wii, PS3, and Xbox 360 reached peak household saturation.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2.5 text-xs text-zinc-800">
+                <span class="w-5 h-5 rounded-full bg-[#1e295b] text-white font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                <div><strong>Digital & Mobile Channel Disruption</strong>: The explosion of smartphones (App Store 2008) and digital store fronts shifted billions into digital downloads not captured in physical retail tracking.</div>
+              </div>
+            </div>
+          </div>
+        `;
       } else if (lower.includes('outside north america') || lower.includes('exposure')) {
-        answer = `<strong>International Market Exposure ($4,527.5M non-NA Revenue / 50.8%):</strong><br><br>
-• <strong>Europe ($2,434.1M / 27.3%)</strong>: Largest international market, heavily indexed to PlayStation and Sports/Racing.<br>
-• <strong>Japan ($1,291.0M / 14.5%)</strong>: Driven by Handhelds (DS, 3DS) and RPGs (Pokémon, Final Fantasy).<br>
-• <strong>Other Regions ($797.8M / 9.0%)</strong>: High growth potential across Latin America and Asia-Pacific.<br>
-• <strong>Executive Takeaway</strong>: Single-region concentration in North America (49.2%) is a portfolio risk; expanding localization provides downside protection.`;
+        htmlResponse = `
+          <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5 text-xs text-zinc-800">
+            <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">International Market Exposure ($4,527.5M non-NA Revenue / 50.8%)</h4>
+            <div class="space-y-2">
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#1e295b] mt-1.5 flex-shrink-0"></span>
+                <div><strong>Europe ($2,434.1M / 27.3%)</strong>: Largest international market, heavily indexed to PlayStation and Sports/Racing.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#1e295b] mt-1.5 flex-shrink-0"></span>
+                <div><strong>Japan ($1,291.0M / 14.5%)</strong>: Driven by Handhelds (DS, 3DS) and RPGs (Pokémon, Final Fantasy).</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#1e295b] mt-1.5 flex-shrink-0"></span>
+                <div><strong>Other Regions ($797.8M / 9.0%)</strong>: High growth potential across Latin America and Asia-Pacific.</div>
+              </div>
+              <div class="p-2.5 rounded-lg bg-amber-50/80 border border-amber-200 text-amber-950 flex items-start gap-2">
+                <span class="text-xs mt-0.5">⚠️</span>
+                <div><strong>Executive Takeaway</strong>: Single-region concentration in North America (49.2%) is a portfolio risk; expanding localization provides downside protection.</div>
+              </div>
+            </div>
+          </div>
+        `;
       } else {
-        answer = `Factual analysis for <strong>${q}</strong> across all 9 dashboard visual slices from live catalog metadata.`;
+        htmlResponse = `
+          <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 text-xs text-zinc-800">
+            Factual analysis for <strong>${q}</strong> synthesized across all 9 dashboard visual slices from live catalog metadata.
+          </div>
+        `;
       }
 
       target.innerHTML += `
-        <div class="p-2.5 rounded-lg bg-zinc-100 text-zinc-900 text-xs font-medium ml-6 text-right">${q}</div>
-        <div class="p-3 rounded-lg bg-blue-50/70 border border-blue-100 text-zinc-800 text-xs space-y-1.5 mr-2">
-          <div class="font-bold text-[#1e295b] text-[11px] uppercase tracking-wider">Akashic BI Executive Analysis</div>
-          <div class="leading-relaxed">${answer}</div>
-        </div>
+        <div class="p-2.5 rounded-lg bg-zinc-100 text-zinc-900 text-xs font-medium ml-6 mb-3 text-right">${q}</div>
+        ${htmlResponse}
       `;
       const scroll = document.getElementById('aiTranscriptScroll');
       scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function copyStandupText() {
+      const standupText = `🎙️ 3-Minute Leadership Standup Briefing:
+🟢 1. The Growth Highlight (What's Working):
+• $8,920.4M in verified catalog sales across 16,598 titles (+14.2% YoY).
+• Nintendo Dominance: Captures 72% (18 of 25) of bestselling titles, anchored by Wii Sports (82.7M) and Super Mario Bros. (40.2M).
+• Top Genres: Action ($1,751.2M) and Sports ($1,330.9M) represent 34.7% ($3.08B) of total revenue.
+
+🔴 2. The Vulnerability (What Leadership Will Ask):
+• Single-Region Exposure: 49.2% of lifetime revenue relies on North America ($4,392.9M). Any US/NA consumer discretionary slowdown impacts nearly half our portfolio.
+• Post-Peak Channel Shift: Boxed physical title releases plummeted 57% post-2008 as dollars shifted to digital stores not tracked in physical sell-through.
+
+🔵 3. Recommended Strategic Action for Today's Call:
+• Discuss prioritizing European localized publishing ($2,434.1M / 27.3% market share) and handheld RPG co-development in Japan to diversify away from North American dependence.`;
+
+      navigator.clipboard.writeText(standupText);
+      const btn = document.getElementById('standupCopyBtn');
+      if (btn) {
+        btn.innerText = 'Copied!';
+        setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+      }
     }
 
     function handleChatSubmit(e) {

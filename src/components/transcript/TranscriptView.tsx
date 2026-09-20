@@ -430,7 +430,7 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
             </div>
           )
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 pt-3 pb-6">
             {turns.map((turn, idx) => {
               const isLatest = idx === turns.length - 1;
               if (turn.sender === 'user') {
@@ -455,13 +455,15 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
       </div>
 
       {showScrollBottom && (
-        <button
-          onClick={scrollToBottom}
-          className="fixed bottom-20 right-8 z-30 inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 text-white rounded-full text-xs font-medium shadow-md hover:bg-zinc-800 transition-all"
-        >
-          <span>New result</span>
-          <ArrowDown className="w-3.5 h-3.5" />
-        </button>
+        <div className="sticky bottom-2 flex justify-center z-20 pointer-events-none">
+          <button
+            onClick={scrollToBottom}
+            className="pointer-events-auto inline-flex items-center gap-1.5 px-3 py-1 bg-[#1e295b] text-white rounded-full text-[11px] font-semibold shadow-md hover:bg-[#151d42] transition-all"
+          >
+            <span>Scroll to latest</span>
+            <ArrowDown className="w-3 h-3" />
+          </button>
+        </div>
       )}
     </div>
   );

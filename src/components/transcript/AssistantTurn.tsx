@@ -6,6 +6,7 @@ import { KeyInsightBanner } from '../cards/KeyInsightBanner';
 import { SqlDisclosure } from '../cards/SqlDisclosure';
 import { SuggestedActions } from '../composer/SuggestedActions';
 import { ProgressDisclosure } from './ProgressDisclosure';
+import { MarkdownMessage } from './MarkdownMessage';
 import { 
   Copy, 
   ThumbsUp, 
@@ -112,11 +113,16 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
         </div>
       )}
 
-      {/* 3. Analytical Narrative */}
-      {data.analyticalSummary && !data.error && (
-        <div className="text-xs sm:text-sm text-zinc-700 leading-relaxed px-0.5 mb-2.5">
-          <p>{data.analyticalSummary}</p>
+      {/* 2. Key Insight Banner (if standalone insight without chart) */}
+      {data.insight && !data.chart && (
+        <div className="mb-3">
+          <KeyInsightBanner insight={data.insight} />
         </div>
+      )}
+
+      {/* 3. Analytical Narrative (Rich Executive Rendering) */}
+      {data.analyticalSummary && !data.error && (
+        <MarkdownMessage content={data.analyticalSummary} />
       )}
 
       {/* 4. Suggested Follow-up Prompts */}
