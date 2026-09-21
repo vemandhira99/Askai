@@ -1,4 +1,4 @@
-import { MessageTurn, ContextFilter, ChartArtifact, KeyInsight, SuggestedAction, SqlQueryItem } from '../types/bi';
+import { MessageTurn, ContextFilter, ChartArtifact, KeyInsight, SuggestedAction, SqlQueryItem, ChatSession } from '../types/bi';
 
 export const INITIAL_CONTEXT: ContextFilter = {
   dataset: 'video_game_sales',
@@ -216,12 +216,357 @@ export const INITIAL_SUGGESTIONS: SuggestedAction[] = [
 
 export const INITIAL_TURNS: MessageTurn[] = [];
 
-export const MOCK_CHATS = [
-  { id: 'chat-1', title: 'Global Sales by Genre', updatedAt: 'Active now', timeGroup: 'Today' as const },
-  { id: 'chat-2', title: 'Publisher NULLXYZ Analysis', updatedAt: '1 d ago', timeGroup: 'Yesterday' as const },
-  { id: 'chat-3', title: 'World Bank Child Mortality Trends', updatedAt: '6 d ago', timeGroup: 'Previous 7 Days' as const },
-  { id: 'chat-4', title: 'HIV Demographics Comparison', updatedAt: '8 d ago', timeGroup: 'Previous 7 Days' as const },
+export const MOCK_CHATS: ChatSession[] = [
+  { id: 'chat-1', title: 'Global Sales by Genre', updatedAt: 'Active now', timeGroup: 'Today', datasetId: 'video_game_sales', turnCount: 2 },
+  { id: 'chat-2', title: 'Publisher NULLXYZ Analysis', updatedAt: '1 d ago', timeGroup: 'Yesterday', datasetId: 'video_game_sales', turnCount: 2 },
+  { id: 'chat-3', title: 'World Bank Child Mortality Trends', updatedAt: '6 d ago', timeGroup: 'Previous 7 Days', datasetId: 'wb_health_population', turnCount: 2 },
+  { id: 'chat-4', title: 'Access to Safe Drinking Water', updatedAt: '8 d ago', timeGroup: 'Previous 7 Days', datasetId: 'wb_health_population', turnCount: 2 },
 ];
+
+export interface MockSessionData {
+  session: ChatSession;
+  turns: MessageTurn[];
+  context: ContextFilter;
+  artifact: ChartArtifact;
+}
+
+export const MOCK_SESSIONS_MAP: Record<string, MockSessionData> = {
+  'chat-1': {
+    session: MOCK_CHATS[0],
+    context: INITIAL_CONTEXT,
+    artifact: INITIAL_CHART,
+    turns: [
+      {
+        id: 'c1-turn-1-user',
+        sender: 'user',
+        timestamp: '10 mins ago',
+        content: 'What are the total global sales by genre?',
+      },
+      {
+        id: 'c1-turn-1-asst',
+        sender: 'assistant',
+        timestamp: '10 mins ago',
+        assistantData: {
+          id: 'asst-c1-1',
+          chart: INITIAL_CHART,
+          insight: INITIAL_INSIGHT,
+          analyticalSummary: 'Action and Sports represent 35% of all-time global industry revenues ($3,082.1M). Shooter games demonstrate the highest North American concentration (56.1% of genre volume).',
+          context: INITIAL_CONTEXT,
+          sqlQueries: INITIAL_SQL,
+          suggestions: INITIAL_SUGGESTIONS,
+          tokenUsage: {
+            promptTokens: 420,
+            completionTokens: 295,
+            totalTokens: 715,
+            latencySeconds: 1.4,
+            tokensPerSecond: 211,
+            estimatedCostUsd: 0.0011,
+            modelName: 'Ask AI Semantic Engine',
+            contextWindowPct: 0.5,
+          },
+          operationProgress: {
+            id: 'op-c1-1',
+            label: 'Computed genre aggregations across 16,598 records',
+            status: 'completed',
+            durationMs: 46.8,
+          },
+          reasoningSteps: [
+            { id: 'rs-c1-1', label: 'Inspected schema and verified active columns', status: 'completed' },
+            { id: 'rs-c1-2', label: 'Computed sum of global_sales and na_sales grouped by genre', status: 'completed' },
+            { id: 'rs-c1-3', label: 'Constructed bar chart visualization', status: 'completed' },
+          ],
+        }
+      }
+    ]
+  },
+  'chat-2': {
+    session: MOCK_CHATS[1],
+    context: {
+      ...INITIAL_CONTEXT,
+      filters: ["publisher = 'NULLXYZ'"],
+    },
+    artifact: {
+      id: 'chart-vgs-nullxyz',
+      title: 'Publisher NULLXYZ — 0 Matches',
+      type: 'bar',
+      metric: 'Global Sales ($M)',
+      dimension: 'Publisher',
+      dataset: 'video_game_sales',
+      period: '1980 - 2020',
+      unit: '$M',
+      availableTypes: ['bar'],
+      data: [],
+    },
+    turns: [
+      {
+        id: 'c2-turn-1-user',
+        sender: 'user',
+        timestamp: 'Yesterday',
+        content: 'Filter where publisher = NULLXYZ',
+      },
+      {
+        id: 'c2-turn-1-asst',
+        sender: 'assistant',
+        timestamp: 'Yesterday',
+        assistantData: {
+          id: 'asst-c2-1',
+          chart: {
+            id: 'chart-vgs-nullxyz',
+            title: 'Publisher NULLXYZ — 0 Matches',
+            type: 'bar',
+            metric: 'Global Sales ($M)',
+            dimension: 'Publisher',
+            dataset: 'video_game_sales',
+            period: '1980 - 2020',
+            unit: '$M',
+            availableTypes: ['bar'],
+            data: [],
+          },
+          insight: {
+            headline: 'Publisher NULLXYZ does not exist in the 16,598 catalog records.',
+            narrative: 'The exact filter `publisher = \'NULLXYZ\'` returned 0 rows. Verified top publishers include Nintendo ($1,786.6M), Electronic Arts ($1,110.3M), and Activision ($727.7M).',
+            impact: 'warning',
+            metrics: [
+              { label: 'Matches Found', value: '0 rows' },
+              { label: 'Active Catalog', value: '16,598 titles' },
+              { label: 'Filter Status', value: 'Zero Records' },
+            ],
+          },
+          analyticalSummary: 'Queried `video_game_sales` with filter `publisher = \'NULLXYZ\'`. 0 matching records were found. Provided schema recovery options to explore verified publishers.',
+          context: {
+            ...INITIAL_CONTEXT,
+            filters: ["publisher = 'NULLXYZ'"],
+          },
+          sqlQueries: [
+            {
+              id: 'q-nullxyz',
+              label: 'Zero-Result Schema Check',
+              sql: `SELECT \n    publisher,\n    COUNT(*) AS title_count,\n    ROUND(SUM(global_sales), 2) AS total_sales_m\nFROM video_game_sales\nWHERE publisher = 'NULLXYZ'\nGROUP BY publisher;`,
+              executionTimeMs: 14.2,
+              rowsReturned: 0,
+              dialect: 'Trino SQL',
+            }
+          ],
+          suggestions: [
+            { id: 's-null-1', label: 'Show top 5 publishers instead', prompt: 'Show top 5 publishers by sales' },
+            { id: 's-null-2', label: 'Clear publisher filter', prompt: 'Clear publisher filter and show all games' },
+          ],
+          tokenUsage: {
+            promptTokens: 280,
+            completionTokens: 190,
+            totalTokens: 470,
+            latencySeconds: 0.9,
+            tokensPerSecond: 211,
+            estimatedCostUsd: 0.0007,
+            modelName: 'Ask AI Semantic Engine',
+            contextWindowPct: 0.3,
+          },
+          operationProgress: {
+            id: 'op-c2-1',
+            label: 'Executed search with 0 rows returned',
+            status: 'completed',
+            durationMs: 14.2,
+          },
+          reasoningSteps: [
+            { id: 'rs-c2-1', label: 'Evaluated filter predicate publisher = NULLXYZ', status: 'completed' },
+            { id: 'rs-c2-2', label: 'Executed query against catalog table video_game_sales', status: 'completed' },
+            { id: 'rs-c2-3', label: 'Generated recovery actions and verified alternatives', status: 'completed' },
+          ],
+        }
+      }
+    ]
+  },
+  'chat-3': {
+    session: MOCK_CHATS[2],
+    context: WB_CONTEXT,
+    artifact: {
+      id: 'chart-wb-mortality',
+      title: 'Global Child Mortality Rate (1990 - 2020)',
+      type: 'line',
+      metric: 'Mortality per 1,000 live births',
+      dimension: 'Year',
+      dataset: 'wb_health_population',
+      period: '1990 - 2020',
+      unit: '/ 1,000',
+      availableTypes: ['line', 'bar', 'area'],
+      data: WB_MORTALITY_DATA,
+    },
+    turns: [
+      {
+        id: 'c3-turn-1-user',
+        sender: 'user',
+        timestamp: '6 d ago',
+        content: 'What is the trend in child mortality by region since 1990?',
+      },
+      {
+        id: 'c3-turn-1-asst',
+        sender: 'assistant',
+        timestamp: '6 d ago',
+        assistantData: {
+          id: 'asst-c3-1',
+          chart: {
+            id: 'chart-wb-mortality',
+            title: 'Global Child Mortality Rate (1990 - 2020)',
+            type: 'line',
+            metric: 'Mortality per 1,000 live births',
+            dimension: 'Year',
+            dataset: 'wb_health_population',
+            period: '1990 - 2020',
+            unit: '/ 1,000',
+            availableTypes: ['line', 'bar', 'area'],
+            data: WB_MORTALITY_DATA,
+          },
+          insight: {
+            headline: 'Global under-5 mortality decreased by 59.5% over the 30-year observation period.',
+            narrative: 'Significant acceleration in child survival occurred following 2000, with Sub-Saharan Africa and South Asia showing the steepest declines in absolute terms.',
+            impact: 'positive',
+            metrics: [
+              { label: '1990 Baseline', value: '93.2 / 1k' },
+              { label: '2020 Rate', value: '37.7 / 1k', change: '-59.5% reduction' },
+              { label: 'Countries Covered', value: '195 verified' },
+            ],
+          },
+          analyticalSummary: 'Under-5 child mortality rate fell from 93.2 per 1,000 live births in 1990 down to 37.7 in 2020 globally—a 59.5% reduction over three decades.',
+          context: WB_CONTEXT,
+          sqlQueries: [
+            {
+              id: 'q-wb-mort',
+              label: 'World Bank Child Mortality Trend',
+              sql: `SELECT \n    year,\n    ROUND(AVG(mortality_rate_under5), 1) AS avg_mortality\nFROM wb_health_population\nWHERE year >= 1990\nGROUP BY year\nORDER BY year ASC;`,
+              executionTimeMs: 52.4,
+              rowsReturned: 7,
+              dialect: 'Trino SQL',
+            }
+          ],
+          suggestions: [
+            { id: 'w1', label: 'Access to safe water by region', prompt: 'How does access to safe water vary by region?' },
+            { id: 'w2', label: 'Compare female HIV prevalence', prompt: 'Compare HIV rates in females across regions' },
+          ],
+          tokenUsage: {
+            promptTokens: 510,
+            completionTokens: 340,
+            totalTokens: 850,
+            latencySeconds: 1.6,
+            tokensPerSecond: 212,
+            estimatedCostUsd: 0.0013,
+            modelName: 'Ask AI Semantic Engine',
+            contextWindowPct: 0.6,
+          },
+          operationProgress: {
+            id: 'op-c3-1',
+            label: 'Processed 38,204 rows from World Bank catalog',
+            status: 'completed',
+            durationMs: 52.4,
+          },
+          reasoningSteps: [
+            { id: 'rs-c3-1', label: 'Switched catalog to wb_health_population', status: 'completed' },
+            { id: 'rs-c3-2', label: 'Aggregated mortality_rate_under5 across 195 countries', status: 'completed' },
+            { id: 'rs-c3-3', label: 'Formulated historical trajectory line chart', status: 'completed' },
+          ],
+        }
+      }
+    ]
+  },
+  'chat-4': {
+    session: MOCK_CHATS[3],
+    context: {
+      ...WB_CONTEXT,
+      metric: 'AVG(access_to_safe_water)',
+      dimension: 'region',
+      grain: 'By Region',
+    },
+    artifact: {
+      id: 'chart-wb-water',
+      title: 'Population with Access to Safe Water (%)',
+      type: 'bar',
+      metric: 'Access to Safe Water (%)',
+      dimension: 'Region',
+      dataset: 'wb_health_population',
+      period: '2015 - 2020',
+      unit: '%',
+      availableTypes: ['bar', 'donut'],
+      data: WB_WATER_DATA,
+    },
+    turns: [
+      {
+        id: 'c4-turn-1-user',
+        sender: 'user',
+        timestamp: '8 d ago',
+        content: 'How does access to safe drinking water compare across regions?',
+      },
+      {
+        id: 'c4-turn-1-asst',
+        sender: 'assistant',
+        timestamp: '8 d ago',
+        assistantData: {
+          id: 'asst-c4-1',
+          chart: {
+            id: 'chart-wb-water',
+            title: 'Population with Access to Safe Water (%)',
+            type: 'bar',
+            metric: 'Access to Safe Water (%)',
+            dimension: 'Region',
+            dataset: 'wb_health_population',
+            period: '2015 - 2020',
+            unit: '%',
+            availableTypes: ['bar', 'donut'],
+            data: WB_WATER_DATA,
+          },
+          insight: {
+            headline: 'Sub-Saharan Africa faces a 41.5 percentage point gap in safe water access relative to North America.',
+            narrative: 'While North America (99.8%) and Europe (98.4%) exceed 98% coverage, Sub-Saharan Africa remains at 58.3%, indicating significant infrastructure investment disparity.',
+            impact: 'neutral',
+            metrics: [
+              { label: 'North America', value: '99.8%' },
+              { label: 'Sub-Saharan Africa', value: '58.3%' },
+              { label: 'Regional Spread', value: '41.5% gap' },
+            ],
+          },
+          analyticalSummary: 'Access to safely managed drinking water reaches 99.8% in North America and 98.4% in Europe & Central Asia, compared to 58.3% in Sub-Saharan Africa and 74.6% in South Asia.',
+          context: {
+            ...WB_CONTEXT,
+            metric: 'AVG(access_to_safe_water)',
+            dimension: 'region',
+            grain: 'By Region',
+          },
+          sqlQueries: [
+            {
+              id: 'q-wb-water',
+              label: 'Regional Safe Water Distribution',
+              sql: `SELECT \n    region,\n    ROUND(AVG(access_to_safe_water), 1) AS pct_safe_water\nFROM wb_health_population\nGROUP BY region\nORDER BY pct_safe_water DESC;`,
+              executionTimeMs: 48.1,
+              rowsReturned: 7,
+              dialect: 'Trino SQL',
+            }
+          ],
+          suggestions: [
+            { id: 'sw1', label: 'Trend mortality rates over time', prompt: 'What is the trend in child mortality over the years?' },
+          ],
+          tokenUsage: {
+            promptTokens: 480,
+            completionTokens: 310,
+            totalTokens: 790,
+            latencySeconds: 1.5,
+            tokensPerSecond: 207,
+            estimatedCostUsd: 0.0012,
+            modelName: 'Ask AI Semantic Engine',
+            contextWindowPct: 0.5,
+          },
+          operationProgress: {
+            id: 'op-c4-1',
+            label: 'Calculated regional access metrics across 217 territories',
+            status: 'completed',
+            durationMs: 48.1,
+          },
+          reasoningSteps: [
+            { id: 'rs-c4-1', label: 'Query access_to_safe_water grouped by regional cluster', status: 'completed' },
+            { id: 'rs-c4-2', label: 'Ranked regions by descending percentage', status: 'completed' },
+          ],
+        }
+      }
+    ]
+  }
+};
 
 export const AVAILABLE_DATASETS = [
   {

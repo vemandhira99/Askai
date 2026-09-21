@@ -7,7 +7,7 @@ import { TranscriptView } from './components/transcript/TranscriptView';
 import { ArtifactPane } from './components/artifact/ArtifactPane';
 import { BusinessGlossaryModal } from './components/modals/BusinessGlossaryModal';
 import { IconToggleModal } from './components/modals/IconToggleModal';
-import { TeamsPreviewModal } from './components/modals/TeamsPreviewModal';
+import { RecentChatsDrawer } from './components/modals/RecentChatsDrawer';
 import { 
   TOP_10_GAMES_DATA, 
   TOP_25_PUBLISHERS_DATA, 
@@ -17,7 +17,9 @@ import {
   VGS_TREND_DATA,
   REGIONAL_SALES_SHARE_DATA,
   ANNUAL_RELEASE_VOLUME_DATA,
-  SALES_BY_DECADE_DATA
+  SALES_BY_DECADE_DATA,
+  INITIAL_INSIGHT,
+  INITIAL_SQL
 } from './data/mockData';
 import { 
   Star,
@@ -31,7 +33,9 @@ import {
   Maximize2,
   Send,
   ExternalLink,
-  Lightbulb
+  Lightbulb,
+  History,
+  LayoutGrid
 } from 'lucide-react';
 
 export default function App() {
@@ -39,7 +43,6 @@ export default function App() {
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'trends'>('overview');
   const [dashboardFilter, setDashboardFilter] = useState<'all' | 'na' | 'nintendo' | '2000s'>('all');
-  const [isTeamsModalOpen, setIsTeamsModalOpen] = useState(false);
   const [focusedChart, setFocusedChart] = useState<string | null>(null);
 
   const explainChart = (chartKey: string, promptText: string) => {
@@ -113,7 +116,15 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="inline-flex items-center gap-1 bg-[#2b3975] hover:bg-[#35458c] text-white px-2.5 py-1 rounded text-xs font-medium transition-colors border border-white/10 shadow-2xs">
+            <button 
+              onClick={() => {
+                setIsAiOpen(true);
+                engine.setWorkspaceMode('docked');
+                engine.startNewChat();
+              }}
+              className="inline-flex items-center gap-1 bg-[#2b3975] hover:bg-[#35458c] text-white px-2.5 py-1 rounded text-xs font-medium transition-colors border border-white/10 shadow-2xs cursor-pointer"
+              title="Start a new chat session"
+            >
               <Plus className="w-3.5 h-3.5" />
               <span>New</span>
             </button>
@@ -880,51 +891,86 @@ export default function App() {
         {isAiOpen && (
           <div className={`${
             isFullscreen
-              ? 'fixed inset-0 z-50 bg-white flex flex-col'
-              : 'w-[30%] min-w-[380px] h-full bg-white border-l border-zinc-200 flex flex-col shadow-xl z-20 transition-all duration-200'
+              ? 'fixed inset-0 z-50 bg-white flex flex-col relative overflow-hidden'
+              : 'w-[30%] min-w-[380px] h-full bg-white border-l border-zinc-200 flex flex-col shadow-xl z-20 transition-all duration-200 relative overflow-hidden'
           }`}>
             
             {/* Clean, Uncluttered Header */}
             <div className="h-12 px-4 border-b border-zinc-200 bg-white flex items-center justify-between flex-shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded bg-[#1e295b] text-white flex items-center justify-center text-[10px] font-bold">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-6 h-6 rounded bg-[#1e295b] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">
                   Ai
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-xs font-bold text-[#1e295b] leading-tight">Ask Akashic BI</h2>
-                  <p className="text-[10px] text-zinc-500 leading-tight">Video Game Sales Copilot</p>
+                  <p className="text-[10px] text-zinc-500 leading-tight truncate">
+                    {engine.chatSessions.find(s => s.id === engine.activeChatId)?.title || 'Video Game Sales Copilot'}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 text-zinc-500">
+              <div className="flex items-center gap-1 text-zinc-500 flex-shrink-0">
                 <button 
-                  onClick={() => {
-                    engine.setWorkspaceMode(isFullscreen ? 'docked' : 'fullscreen');
-                  }}
-                  className="p-1.5 rounded hover:bg-zinc-100 hover:text-zinc-800 transition-colors"
-                  title={isFullscreen ? 'Exit Full Screen' : 'Full Screen'}
+                  onClick={() => engine.openInCanvas(engine.activeArtifact || undefined)}
+                  className={`p-1.5 rounded transition-colors cursor-pointer ${
+                    engine.isCanvasOpen
+                      ? 'bg-[#1e295b] text-white shadow-2xs'
+                      : 'hover:bg-zinc-100 hover:text-zinc-800 text-zinc-600'
+                  }`}
+                  title="Open Canvas & Chart Studio"
                 >
-                  <Maximize2 className="w-3.5 h-3.5" />
+                  <LayoutGrid className="w-3.5 h-3.5" />
                 </button>
                 <button 
-                  onClick={() => engine.setTurns([])}
-                  className="p-1.5 rounded hover:bg-zinc-100 hover:text-zinc-800 transition-colors"
+                  onClick={() => engine.setIsRecentChatsOpen(!engine.isRecentChatsOpen)}
+                  className={`p-1.5 rounded transition-colors cursor-pointer ${
+                    engine.isRecentChatsOpen
+                      ? 'bg-[#1e295b] text-white'
+                      : 'hover:bg-zinc-100 hover:text-zinc-800 text-zinc-600'
+                  }`}
+                  title="Recent Chats"
+                >
+                  <History className="w-3.5 h-3.5" />
+                </button>
+                <button 
+                  onClick={() => engine.startNewChat()}
+                  className="p-1.5 rounded hover:bg-zinc-100 hover:text-zinc-800 text-zinc-600 transition-colors cursor-pointer"
                   title="New Chat"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
                 <button 
                   onClick={() => {
+                    engine.setWorkspaceMode(isFullscreen ? 'docked' : 'fullscreen');
+                  }}
+                  className="p-1.5 rounded hover:bg-zinc-100 hover:text-zinc-800 text-zinc-600 transition-colors cursor-pointer"
+                  title={isFullscreen ? 'Exit Full Screen' : 'Full Screen'}
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </button>
+                <button 
+                  onClick={() => {
                     setIsAiOpen(false);
                     if (isFullscreen) engine.setWorkspaceMode('docked');
                   }}
-                  className="p-1.5 rounded hover:bg-rose-50 hover:text-rose-600 transition-colors ml-0.5"
+                  className="p-1.5 rounded hover:bg-rose-50 hover:text-rose-600 transition-colors ml-0.5 cursor-pointer"
                   title="Close Ask AI"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
+
+            {/* Slide-over Recent Chats Drawer */}
+            <RecentChatsDrawer
+              isOpen={engine.isRecentChatsOpen}
+              onClose={() => engine.setIsRecentChatsOpen(false)}
+              sessions={engine.chatSessions}
+              activeSessionId={engine.activeChatId}
+              onSelectSession={(id) => engine.loadChatSession(id)}
+              onNewChat={() => engine.startNewChat()}
+              onDeleteSession={(id) => engine.deleteChatSession(id)}
+            />
 
             {/* Single-line compact context strip */}
             <div className="px-4 py-1.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between text-[11px] text-zinc-600 flex-shrink-0">
@@ -948,8 +994,7 @@ export default function App() {
                 onPinChartToDashboard={engine.pinChartToDashboard}
                 onSelectPrompt={(p) => engine.sendPrompt(p)}
                 onExpandToCanvas={(chart) => {
-                  engine.setActiveArtifact(chart);
-                  engine.setWorkspaceMode('fullscreen');
+                  engine.openInCanvas(chart);
                 }}
                 onSelectSuggestion={(prompt) => {
                   engine.setComposerText(prompt);
@@ -964,7 +1009,6 @@ export default function App() {
                 onRetry={(turnId, mode) => engine.handleRetry(turnId, mode)}
                 onApplyQuickFilter={(filter) => setDashboardFilter(filter)}
                 activeDashboardFilter={dashboardFilter}
-                onOpenTeamsModal={() => setIsTeamsModalOpen(true)}
               />
 
               {/* Composer Input Area */}
@@ -1006,12 +1050,25 @@ export default function App() {
         )}
       </div>
 
-      {/* Microsoft Teams Preview Modal */}
-      <TeamsPreviewModal
-        isOpen={isTeamsModalOpen}
-        onClose={() => setIsTeamsModalOpen(false)}
-        dashboardTitle="Video Game Sales Dashboard"
-      />
+      {/* Canvas & Chart Configuration Studio Modal / Fullscreen Overlay */}
+      {engine.isCanvasOpen && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col animate-in fade-in duration-150 shadow-2xl">
+          <ArtifactPane
+            artifact={engine.activeArtifact}
+            insight={INITIAL_INSIGHT}
+            sqlQueries={INITIAL_SQL}
+            activeTab={engine.activeArtifactTab}
+            onSelectTab={engine.setActiveArtifactTab}
+            onClose={() => engine.setIsCanvasOpen(false)}
+            onSelectChartType={(type) => {
+              if (engine.activeArtifact) {
+                engine.setActiveArtifact({ ...engine.activeArtifact, type });
+              }
+            }}
+            onPinToDashboard={(chart) => engine.pinChartToDashboard(chart)}
+          />
+        </div>
+      )}
 
       {/* Business Glossary Modal */}
       <BusinessGlossaryModal

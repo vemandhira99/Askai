@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Copy, Check, Lightbulb, CheckCircle2, AlertTriangle, HelpCircle } from 'lucide-react';
+import { Copy, Check, Lightbulb, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 interface MarkdownMessageProps {
   content: string;
 }
 
 // Helper to parse inline markdown (bold, italic, code) into React elements
-export const parseInlineMarkdown = (text: string): React.ReactNode => {
+const parseInlineMarkdown = (text: string): React.ReactNode => {
   const parts: React.ReactNode[] = [];
   let keyIdx = 0;
   const regex = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
@@ -60,12 +60,11 @@ export const MarkdownMessage: React.FC<MarkdownMessageProps> = ({ content }) => 
   if (!content) return null;
 
   // =========================================================================
-  // CASE 1: 3-Minute Leadership Standup Briefing (Rich 3-Part Cards)
+  // CASE 1: 3-Minute Leadership Standup Briefing (Rich 2-Part Factual Cards)
   // =========================================================================
   if (content.includes('Leadership Standup') || (content.includes('Growth Highlight') && content.includes('Vulnerability'))) {
     const growthMatch = content.match(/(?:🟢|\*\*1\.)[^\n]*\n([\s\S]*?)(?=(?:🔴|\*\*2\.))/i);
-    const vulnMatch = content.match(/(?:🔴|\*\*2\.)[^\n]*\n([\s\S]*?)(?=(?:🔵|\*\*3\.))/i);
-    const actionMatch = content.match(/(?:🔵|\*\*3\.)[^\n]*\n([\s\S]*?)$/i);
+    const vulnMatch = content.match(/(?:🔴|\*\*2\.)[^\n]*\n([\s\S]*?)(?=(?:🔵|\*\*3\.|$))/i);
 
     const parseBullets = (rawText: string | undefined) => {
       if (!rawText) return [];
@@ -78,7 +77,6 @@ export const MarkdownMessage: React.FC<MarkdownMessageProps> = ({ content }) => 
 
     const growthBullets = growthMatch ? parseBullets(growthMatch[1]) : [];
     const vulnBullets = vulnMatch ? parseBullets(vulnMatch[1]) : [];
-    const actionBullets = actionMatch ? parseBullets(actionMatch[1]) : [];
 
     return (
       <div className="bg-white rounded-xl border border-zinc-200 shadow-xs overflow-hidden mb-3 animate-in fade-in duration-200">
@@ -132,23 +130,6 @@ export const MarkdownMessage: React.FC<MarkdownMessageProps> = ({ content }) => 
                 ))
               ) : (
                 <li><strong>Single-Region Concentration</strong>: 49.2% of lifetime sales relies on North America ($4,392.9M). Post-2008 physical sales declined 57%.</li>
-              )}
-            </ul>
-          </div>
-
-          {/* 3. Decision Point */}
-          <div className="p-3 rounded-lg bg-blue-50/80 border border-blue-200 text-blue-950 space-y-1.5">
-            <div className="flex items-center gap-1.5 font-bold text-xs text-blue-900">
-              <HelpCircle className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
-              <span>3. Recommended Strategic Action for Today's Call</span>
-            </div>
-            <ul className="space-y-1.5 pl-5 text-[11px] leading-relaxed text-blue-900 list-disc marker:text-blue-600">
-              {actionBullets.length > 0 ? (
-                actionBullets.map((b, idx) => (
-                  <li key={idx}>{parseInlineMarkdown(b)}</li>
-                ))
-              ) : (
-                <li>Discuss prioritizing European localized publishing ($2,434.1M / 27.3% share) and handheld RPG partnerships to hedge North American exposure.</li>
               )}
             </ul>
           </div>

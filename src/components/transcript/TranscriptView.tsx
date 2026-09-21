@@ -19,7 +19,6 @@ interface TranscriptViewProps {
   onPinChartToDashboard?: (chart: ChartArtifact) => void;
   onApplyQuickFilter?: (filter: 'all' | 'na' | 'nintendo' | '2000s') => void;
   activeDashboardFilter?: string;
-  onOpenTeamsModal?: () => void;
 }
 
 export const TranscriptView: React.FC<TranscriptViewProps> = ({
@@ -37,7 +36,6 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
   onPinChartToDashboard,
   onApplyQuickFilter,
   activeDashboardFilter = 'all',
-  onOpenTeamsModal,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showScrollBottom, setShowScrollBottom] = useState(false);
@@ -121,21 +119,21 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    {/* Copy for MS Teams */}
+                    {/* Copy Summary */}
                     <button
                       onClick={() => {
-                        const teamsText = `**Executive Briefing: Video Game Sales Dashboard**
-• **Total Revenue**: $8,920.4M across 16,598 catalog titles (+14.2% YoY).
-• **Market Concentration**: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).
-• **Top Segments**: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).
-• **Regional Breakdown**: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).
-⚠️ **Watch-out**: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.`;
-                        navigator.clipboard.writeText(teamsText);
+                        const summaryText = `Executive Briefing: Video Game Sales Dashboard
+• Total Revenue: $8,920.4M across 16,598 catalog titles (+14.2% YoY).
+• Market Concentration: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).
+• Top Segments: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).
+• Regional Breakdown: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).
+⚠️ Watch-out: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.`;
+                        navigator.clipboard.writeText(summaryText);
                         setCopiedTeams(true);
                         setTimeout(() => setCopiedTeams(false), 2000);
                       }}
                       className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs"
-                      title="Copy formatted summary for Microsoft Teams"
+                      title="Copy executive briefing summary"
                     >
                       {copiedTeams ? (
                         <>
@@ -144,22 +142,11 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
                         </>
                       ) : (
                         <>
-                          <span className="text-[#464eb8] font-bold">T</span>
-                          <span>Copy for Teams</span>
+                          <Copy className="w-3 h-3 text-zinc-500" />
+                          <span>Copy Summary</span>
                         </>
                       )}
                     </button>
-
-                    {/* Preview Teams Card */}
-                    {onOpenTeamsModal && (
-                      <button
-                        onClick={onOpenTeamsModal}
-                        className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#464eb8]/10 hover:bg-[#464eb8]/20 text-[#464eb8] text-[10px] font-semibold transition-colors"
-                        title="Preview how this update appears in Microsoft Teams"
-                      >
-                        <span>Preview</span>
-                      </button>
-                    )}
 
                     {/* Toggle Meeting Prep Mode */}
                     <button
@@ -273,57 +260,7 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
                 )}
               </div>
 
-              {/* 3. One-Click Smart Business Slicing Chips */}
-              <div className="space-y-1.5 pt-1">
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-semibold text-zinc-600">Smart Dashboard Slices:</span>
-                  {activeDashboardFilter && activeDashboardFilter !== 'all' && (
-                    <span className="text-[10px] text-emerald-600 font-medium">● Sliced</span>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  <button
-                    onClick={() => onApplyQuickFilter?.('nintendo')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium border transition-all ${
-                      activeDashboardFilter === 'nintendo'
-                        ? 'bg-[#1e295b] text-white border-[#1e295b] shadow-xs'
-                        : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:bg-zinc-50'
-                    }`}
-                  >
-                    🎮 Focus: Nintendo
-                  </button>
-                  <button
-                    onClick={() => onApplyQuickFilter?.('na')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium border transition-all ${
-                      activeDashboardFilter === 'na'
-                        ? 'bg-[#1e295b] text-white border-[#1e295b] shadow-xs'
-                        : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:bg-zinc-50'
-                    }`}
-                  >
-                    🌍 Focus: North America
-                  </button>
-                  <button
-                    onClick={() => onApplyQuickFilter?.('2000s')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium border transition-all ${
-                      activeDashboardFilter === '2000s'
-                        ? 'bg-[#1e295b] text-white border-[#1e295b] shadow-xs'
-                        : 'bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:bg-zinc-50'
-                    }`}
-                  >
-                    📅 Focus: 2000s Boom
-                  </button>
-                  {activeDashboardFilter && activeDashboardFilter !== 'all' && (
-                    <button
-                      onClick={() => onApplyQuickFilter?.('all')}
-                      className="px-2 py-1 rounded-md text-[11px] font-medium text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100"
-                    >
-                      Reset ✕
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* 4. Decision-Centric Suggested Questions */}
+              {/* Suggested Questions */}
               <div className="space-y-2 pt-1">
                 <span className="text-[11px] font-semibold text-zinc-500 block">
                   Questions for executive review:

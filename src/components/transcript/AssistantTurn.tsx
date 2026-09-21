@@ -4,6 +4,7 @@ import { ChartRenderer } from '../cards/ChartRenderer';
 import { QuickChartActions } from '../cards/QuickChartActions';
 import { KeyInsightBanner } from '../cards/KeyInsightBanner';
 import { SqlDisclosure } from '../cards/SqlDisclosure';
+import { TokenUsageBadge } from '../cards/TokenUsageBadge';
 import { SuggestedActions } from '../composer/SuggestedActions';
 import { ProgressDisclosure } from './ProgressDisclosure';
 import { MarkdownMessage } from './MarkdownMessage';
@@ -55,8 +56,20 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
 
   return (
     <div className="mb-8 w-full transition-all">
-      {/* 0. Subtle reasoning execution status */}
-      <ProgressDisclosure progress={data.operationProgress} />
+      {/* 0. Reasoning execution process checklist (Matching user screenshot) */}
+      <ProgressDisclosure 
+        progress={data.operationProgress} 
+        reasoningSteps={data.reasoningSteps}
+        isExecuting={isLatest && (data.operationProgress?.status === 'active' || (!data.analyticalSummary && !data.chart && !data.error))}
+      />
+
+      {/* Subtle loader while synthesizing data models and findings */}
+      {isLatest && !data.analyticalSummary && !data.chart && !data.error && (
+        <div className="flex items-center gap-2 text-xs text-zinc-500 py-2 px-1 animate-pulse">
+          <div className="w-2 h-2 rounded-full bg-[#1e295b] animate-ping" />
+          <span className="font-mono text-[11px] text-zinc-600">Synthesizing data models and executive findings...</span>
+        </div>
+      )}
 
       {/* Error state if failed */}
       {data.error && (
@@ -125,52 +138,60 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
         <MarkdownMessage content={data.analyticalSummary} />
       )}
 
+      {/* 3.5. Small Optional SQL Query Dropdown (Inspect if required, else discard) */}
+      {!data.error && (
+        <SqlDisclosure queries={data.sqlQueries} />
+      )}
+
       {/* 4. Suggested Follow-up Prompts */}
       <SuggestedActions
         suggestions={data.suggestions}
         onSelectSuggestion={onSelectSuggestion}
       />
 
-      {/* 6. Subtle Turn Actions Bar */}
-      <div className="mt-3 flex items-center justify-between text-xs text-zinc-400 select-none">
-        <div className="flex items-center gap-1.5">
+      {/* 6. Turn Actions Bar (Matching media_1789991062233.png pills + Token Consumption telemetry) */}
+      <div className="mt-3 flex items-center justify-between text-xs text-zinc-500 select-none flex-wrap gap-2">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={handleCopyAnswer}
-            className="flex items-center gap-1 px-2.5 py-1 rounded bg-zinc-50 border border-zinc-200 hover:bg-zinc-100 text-zinc-700 font-medium transition-colors shadow-2xs"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-all shadow-2xs"
             title="Copy answer formatted for Slack or Email"
           >
             {isCopied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3 text-zinc-500" />}
-            <span className="text-[11px]">{isCopied ? 'Copied to Clipboard!' : 'Copy for Slack / Email'}</span>
+            <span>{isCopied ? 'Copied' : 'Copy'}</span>
           </button>
 
           <button
             onClick={() => setLiked(liked === true ? null : true)}
-            className={`p-1 rounded hover:bg-zinc-100 transition-colors ${liked === true ? 'text-zinc-900 font-bold' : 'hover:text-zinc-700'}`}
+            className={`p-1.5 px-2.5 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-xs transition-all shadow-2xs ${liked === true ? 'text-blue-700 font-bold border-blue-300 bg-blue-50/50' : 'text-zinc-600 hover:text-zinc-900'}`}
           >
-            <ThumbsUp className="w-3 h-3" />
+            👍
           </button>
           <button
             onClick={() => setLiked(liked === false ? null : false)}
-            className={`p-1 rounded hover:bg-zinc-100 transition-colors ${liked === false ? 'text-zinc-900 font-bold' : 'hover:text-zinc-700'}`}
+            className={`p-1.5 px-2.5 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-xs transition-all shadow-2xs ${liked === false ? 'text-blue-700 font-bold border-blue-300 bg-blue-50/50' : 'text-zinc-600 hover:text-zinc-900'}`}
           >
-            <ThumbsDown className="w-3 h-3" />
+            👎
+          </button>
+
+          <button
+            onClick={() => onRetry(turn.id, 'analytical')}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-all shadow-2xs"
+            title="Regenerate query analysis"
+          >
+            <RotateCcw className="w-3 h-3 text-zinc-500" />
+            <span>Regenerate</span>
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => onRetry(turn.id, 'analytical')}
-            className="inline-flex items-center gap-1 px-2 py-1 rounded text-zinc-600 hover:bg-zinc-100 text-[11px] transition-colors"
-            title="Retry analytical query"
-          >
-            <RotateCcw className="w-3 h-3" />
-            <span>Retry</span>
-          </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Token consumption telemetry */}
+          <TokenUsageBadge usage={data.tokenUsage} />
 
           {isLatest && (
             <button
               onClick={onUndo}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[11px] transition-colors font-medium"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 text-xs transition-colors font-medium"
               title="Undo this turn and return prompt to composer"
             >
               <Undo2 className="w-3 h-3" />

@@ -11,7 +11,27 @@ export interface OperationStep {
   durationMs?: number;
 }
 
-export type ChartType = 'bar' | 'line' | 'donut' | 'area';
+export type ChartType = 'bar' | 'line' | 'donut' | 'area' | 'treemap' | 'table';
+
+export type ColorPalette = 'navy' | 'emerald' | 'purple' | 'amber' | 'slate';
+
+export interface ChartConfigState {
+  chartType: ChartType;
+  metric: string;
+  metricLabel: string;
+  aggregation: 'SUM' | 'AVG' | 'COUNT' | 'MIN' | 'MAX';
+  dimension: string;
+  topN: number;
+  sortBy: 'value' | 'name';
+  sortDirection: 'desc' | 'asc';
+  colorPalette: ColorPalette;
+  showDataLabels: boolean;
+  showGridlines: boolean;
+  showLegend: boolean;
+  activeFilters: string[];
+  customTitle?: string;
+  customSubtitle?: string;
+}
 
 export interface ChartSeries {
   name: string;
@@ -87,10 +107,29 @@ export interface AssistantTurnData {
   suggestions: SuggestedAction[];
   sqlQueries: SqlQueryItem[];
   operationProgress?: OperationStep;
+  reasoningSteps?: ReasoningStep[];
+  tokenUsage?: TokenUsage;
   error?: {
     message: string;
     recoveryAction?: SuggestedAction;
   };
+}
+
+export interface TokenUsage {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  latencySeconds: number;
+  tokensPerSecond?: number;
+  estimatedCostUsd?: number;
+  modelName?: string;
+  contextWindowPct?: number;
+}
+
+export interface ReasoningStep {
+  id: string;
+  label: string;
+  status: 'pending' | 'active' | 'completed' | 'failed';
 }
 
 export interface MessageTurn {
@@ -107,6 +146,8 @@ export interface ChatSession {
   title: string;
   updatedAt: string;
   timeGroup: 'Today' | 'Yesterday' | 'Previous 7 Days';
+  datasetId?: string;
+  turnCount?: number;
 }
 
 export interface AuditRecord {

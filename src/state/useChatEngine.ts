@@ -9,10 +9,13 @@ import {
   AuditRecord, 
   ChartType, 
   OperationStep, 
+  ReasoningStep,
+  TokenUsage,
   KeyInsight, 
   SqlQueryItem,
   DashboardViewMode,
-  UserProfile
+  UserProfile,
+  ChatSession
 } from '../types/bi';
 import { 
   INITIAL_TURNS, 
@@ -31,8 +34,227 @@ import {
   SALES_BY_DECADE_DATA,
   WB_MORTALITY_DATA,
   WB_WATER_DATA,
-  WB_HIV_DATA
+  WB_HIV_DATA,
+  MOCK_CHATS,
+  MOCK_SESSIONS_MAP
 } from '../data/mockData';
+
+export function getReasoningStepsForPrompt(textToSend: string): ReasoningStep[] {
+  const lower = textToSend.toLowerCase();
+
+  if (lower.includes('standup') || lower.includes('prep me') || lower.includes('meeting prep') || (lower.includes('meeting') && lower.includes('prep'))) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks across 9 visual slices', status: 'completed' },
+      { id: 'rs-2', label: 'Understand available time coverage and confirm existence of required columns (year, genre, platform, na_sales, eu_sales, global_sales)', status: 'completed' },
+      { id: 'rs-3', label: 'Inspect North America revenue concentration and compute regional share (49.2%)', status: 'completed' },
+      { id: 'rs-4', label: 'Calculate top publisher market concentration across top 25 historical releases (Nintendo 72%)', status: 'completed' },
+      { id: 'rs-5', label: 'Synthesized 2-part executive briefing: growth highlights and vulnerabilities', status: 'completed' },
+      { id: 'rs-6', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  if (lower.includes('teams') || lower.includes('format for teams') || lower.includes('microsoft teams')) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+      { id: 'rs-2', label: 'Query global and regional totals across 16,598 catalog titles', status: 'completed' },
+      { id: 'rs-3', label: 'Compute top genre contributions and regional concentration breakdown', status: 'completed' },
+      { id: 'rs-4', label: 'Format executive key points into standardized bulleted communication structure', status: 'completed' },
+      { id: 'rs-5', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  if (lower.includes('nintendo') && (lower.includes('dominance') || lower.includes('driver') || lower.includes('top 3') || lower.includes('lead'))) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+      { id: 'rs-2', label: 'Understand available time coverage and confirm existence of required columns (publisher, title, global_sales, platform) for analysis.', status: 'completed' },
+      { id: 'rs-3', label: 'Identify which publishers contributed most to total historical volume across catalog', status: 'completed' },
+      { id: 'rs-4', label: 'Chose a chart approach', status: 'completed' },
+      { id: 'rs-5', label: 'Building bar chart of revenue by publisher', status: 'completed' },
+      { id: 'rs-6', label: 'Created chart preview: Global Video Game Sales by Publisher', status: 'completed' },
+      { id: 'rs-7', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  if (lower.includes('handheld') || (lower.includes('ds') && lower.includes('gba')) || lower.includes('home console')) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+      { id: 'rs-2', label: 'Understand available time coverage and classify consoles into Handheld (DS, GBA, 3DS, PSP) vs Home Consoles (PS2, PS3, Xbox 360, Wii)', status: 'completed' },
+      { id: 'rs-3', label: 'Identify which platform form factors contributed most to total volume and hit title count', status: 'completed' },
+      { id: 'rs-4', label: 'Chose a chart approach', status: 'completed' },
+      { id: 'rs-5', label: 'Building bar chart of top consoles by hit game volume', status: 'completed' },
+      { id: 'rs-6', label: 'Created chart preview: Top Consoles, by # of Hit Games', status: 'completed' },
+      { id: 'rs-7', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  if (lower.includes('decline') || lower.includes('2008') || lower.includes('peak')) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+      { id: 'rs-2', label: 'Understand available time coverage and confirm existence of required columns (year, global_sales, na_sales) for analysis.', status: 'completed' },
+      { id: 'rs-3', label: 'Identify inflection point at 2008 ($678.9M peak) and compute subsequent contraction values', status: 'completed' },
+      { id: 'rs-4', label: 'Evaluate 3 macroeconomic and channel drivers: recession, 7th-gen cycle saturation, and smartphone/digital transition', status: 'completed' },
+      { id: 'rs-5', label: 'Chose a chart approach', status: 'completed' },
+      { id: 'rs-6', label: 'Created chart preview: Historical Sales Trend (1995-2016)', status: 'completed' },
+      { id: 'rs-7', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  if (lower.includes('outside north america') || lower.includes('exposure') || lower.includes('outside na')) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+      { id: 'rs-2', label: 'Understand available time coverage and confirm existence of required columns (na_sales, eu_sales, jp_sales, other_sales, global_sales)', status: 'completed' },
+      { id: 'rs-3', label: 'Identify which regions contributed most to change in revenue and compute delta and contribution values', status: 'completed' },
+      { id: 'rs-4', label: 'Calculate North America concentration ratio (49.2%) vs international market diversification (50.8%)', status: 'completed' },
+      { id: 'rs-5', label: 'Chose a chart approach', status: 'completed' },
+      { id: 'rs-6', label: 'Created chart preview: Regional Sales Share', status: 'completed' },
+      { id: 'rs-7', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  if (lower.includes('filter') || lower.includes('slice by')) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+      { id: 'rs-2', label: 'Validate semantic filter predicate against active dataset schema', status: 'completed' },
+      { id: 'rs-3', label: 'Recompute dimensional aggregates and affected card values', status: 'completed' },
+      { id: 'rs-4', label: 'Synchronized filter slices across all visual dashboard widgets', status: 'completed' },
+      { id: 'rs-5', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  if (lower.includes('platform') || lower.includes('highest sales in north america') || lower.includes('na')) {
+    return [
+      { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+      { id: 'rs-2', label: 'Understand available time coverage and confirm existence of required columns (platform, na_sales, global_sales) for analysis.', status: 'completed' },
+      { id: 'rs-3', label: 'Identify which console platforms contributed most to North American sales by computing totals and rank', status: 'completed' },
+      { id: 'rs-4', label: 'Chose a chart approach', status: 'completed' },
+      { id: 'rs-5', label: 'Building bar chart of NA sales by platform', status: 'completed' },
+      { id: 'rs-6', label: 'Created chart preview: Top Platforms in North America', status: 'completed' },
+      { id: 'rs-7', label: 'Completed data investigation', status: 'completed' },
+    ];
+  }
+
+  // Default / Generic matching media_1789991062233.png
+  return [
+    { id: 'rs-1', label: 'Planned the data checks', status: 'completed' },
+    { id: 'rs-2', label: 'Understand available time coverage and confirm existence of required columns (year, country, sales, product_line) for analysis.', status: 'completed' },
+    { id: 'rs-3', label: 'Identify which dimensions contributed most to variance across catalog intervals by computing delta and contribution values.', status: 'completed' },
+    { id: 'rs-4', label: 'Chose a chart approach', status: 'completed' },
+    { id: 'rs-5', label: 'Building dimensional aggregation and verifying semantic Trino query', status: 'completed' },
+    { id: 'rs-6', label: `Created chart preview: Analysis for ${textToSend.slice(0, 26)}`, status: 'completed' },
+    { id: 'rs-7', label: 'Completed data investigation', status: 'completed' },
+  ];
+}
+
+export function getTokenUsageForPrompt(textToSend: string, durationMs: number = 1320): TokenUsage {
+  const lower = textToSend.toLowerCase();
+  const latencySeconds = Math.max(0.8, +(durationMs / 1000).toFixed(2));
+
+  if (lower.includes('standup') || lower.includes('prep me') || lower.includes('meeting prep') || (lower.includes('meeting') && lower.includes('prep'))) {
+    return {
+      promptTokens: 486,
+      completionTokens: 942,
+      totalTokens: 1428,
+      latencySeconds,
+      tokensPerSecond: Math.round(942 / latencySeconds),
+      estimatedCostUsd: 0.0022,
+      modelName: 'Ask AI Semantic Engine',
+      contextWindowPct: 0.7,
+    };
+  }
+
+  if (lower.includes('teams') || lower.includes('format for teams') || lower.includes('microsoft teams')) {
+    return {
+      promptTokens: 412,
+      completionTokens: 786,
+      totalTokens: 1198,
+      latencySeconds,
+      tokensPerSecond: Math.round(786 / latencySeconds),
+      estimatedCostUsd: 0.0018,
+      modelName: 'Ask AI Semantic Engine',
+      contextWindowPct: 0.6,
+    };
+  }
+
+  if (lower.includes('nintendo')) {
+    return {
+      promptTokens: 418,
+      completionTokens: 764,
+      totalTokens: 1182,
+      latencySeconds,
+      tokensPerSecond: Math.round(764 / latencySeconds),
+      estimatedCostUsd: 0.0018,
+      modelName: 'Ask AI Semantic Engine',
+      contextWindowPct: 0.6,
+    };
+  }
+
+  if (lower.includes('handheld') || lower.includes('ds') || lower.includes('gba') || lower.includes('home console')) {
+    return {
+      promptTokens: 440,
+      completionTokens: 792,
+      totalTokens: 1232,
+      latencySeconds,
+      tokensPerSecond: Math.round(792 / latencySeconds),
+      estimatedCostUsd: 0.0019,
+      modelName: 'Ask AI Semantic Engine',
+      contextWindowPct: 0.6,
+    };
+  }
+
+  if (lower.includes('decline') || lower.includes('2008') || lower.includes('peak')) {
+    return {
+      promptTokens: 432,
+      completionTokens: 816,
+      totalTokens: 1248,
+      latencySeconds,
+      tokensPerSecond: Math.round(816 / latencySeconds),
+      estimatedCostUsd: 0.0019,
+      modelName: 'Ask AI Semantic Engine',
+      contextWindowPct: 0.6,
+    };
+  }
+
+  if (lower.includes('outside north america') || lower.includes('exposure') || lower.includes('outside na')) {
+    return {
+      promptTokens: 426,
+      completionTokens: 784,
+      totalTokens: 1210,
+      latencySeconds,
+      tokensPerSecond: Math.round(784 / latencySeconds),
+      estimatedCostUsd: 0.0018,
+      modelName: 'Ask AI Semantic Engine',
+      contextWindowPct: 0.6,
+    };
+  }
+
+  if (lower.includes('filter') || lower.includes('slice by')) {
+    return {
+      promptTokens: 312,
+      completionTokens: 328,
+      totalTokens: 640,
+      latencySeconds: Math.max(0.6, +(latencySeconds * 0.7).toFixed(2)),
+      tokensPerSecond: Math.round(328 / Math.max(0.6, latencySeconds * 0.7)),
+      estimatedCostUsd: 0.0009,
+      modelName: 'Ask AI Semantic Engine',
+      contextWindowPct: 0.3,
+    };
+  }
+
+  // Generic / Default
+  const promptEstimate = 380 + Math.round(Math.min(textToSend.length * 0.8, 120));
+  const completionEstimate = 580 + Math.round(Math.min(textToSend.length * 1.2, 350));
+  const total = promptEstimate + completionEstimate;
+  return {
+    promptTokens: promptEstimate,
+    completionTokens: completionEstimate,
+    totalTokens: total,
+    latencySeconds,
+    tokensPerSecond: Math.round(completionEstimate / latencySeconds),
+    estimatedCostUsd: +(total * 0.0000015).toFixed(4),
+    modelName: 'Ask AI Semantic Engine',
+    contextWindowPct: 0.5,
+  };
+}
 
 export function useChatEngine() {
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>('docked');
@@ -46,12 +268,19 @@ export function useChatEngine() {
   const [stashedDraft, setStashedDraft] = useState<string | null>(null);
   const [activeArtifact, setActiveArtifact] = useState<ChartArtifact | null>(INITIAL_CHART);
   const [activeArtifactTab, setActiveArtifactTab] = useState<'preview' | 'table' | 'sql' | 'insight'>('preview');
+  const [isCanvasOpen, setIsCanvasOpen] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isGlossaryOpen, setIsGlossaryOpen] = useState<boolean>(false);
   const [isIconSettingsOpen, setIsIconSettingsOpen] = useState<boolean>(false);
   const [isContextDrawerOpen, setIsContextDrawerOpen] = useState<boolean>(false);
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const [auditLog, setAuditLog] = useState<AuditRecord[]>([]);
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>(MOCK_CHATS);
+  const [activeChatId, setActiveChatId] = useState<string>('chat-1');
+  const [isRecentChatsOpen, setIsRecentChatsOpen] = useState<boolean>(false);
+  const savedSessionsMapRef = useRef<Record<string, { turns: MessageTurn[]; context: ContextFilter; artifact: ChartArtifact | null }>>({
+    ...MOCK_SESSIONS_MAP
+  });
 
   const userProfile: UserProfile = {
     name: 'Veman',
@@ -75,6 +304,7 @@ export function useChatEngine() {
   const stateSnapshotsRef = useRef<{ turns: MessageTurn[]; context: ContextFilter; artifact: ChartArtifact | null }[]>([
     { turns: INITIAL_TURNS, context: INITIAL_CONTEXT, artifact: INITIAL_CHART }
   ]);
+  const stepTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const toggleIcon = useCallback((key: keyof IconVisibilitySettings) => {
     setIconSettings(prev => ({ ...prev, [key]: !prev[key] }));
@@ -107,6 +337,102 @@ export function useChatEngine() {
     setTimeout(() => setPinToast(null), 3500);
   }, []);
 
+  const openInCanvas = useCallback((chart?: ChartArtifact) => {
+    if (chart) {
+      setActiveArtifact(chart);
+    }
+    setIsCanvasOpen(true);
+  }, []);
+
+  // Session Management (New Chat, Load Session, Delete Session)
+  const startNewChat = useCallback(() => {
+    // 1. Snapshot current active session state if any
+    if (activeChatId && turns.length > 0) {
+      savedSessionsMapRef.current[activeChatId] = {
+        turns: [...turns],
+        context: { ...activeContext },
+        artifact: activeArtifact ? { ...activeArtifact } : null,
+      };
+    }
+
+    // 2. Clear running step timers if executing
+    stepTimersRef.current.forEach(clearTimeout);
+    stepTimersRef.current = [];
+    setIsExecuting(false);
+
+    // 3. Create fresh new chat session
+    const newChatId = `chat-${Date.now()}`;
+    const newSession: ChatSession = {
+      id: newChatId,
+      title: 'New Conversation',
+      updatedAt: 'Just now',
+      timeGroup: 'Today',
+      datasetId: activeContext.dataset,
+      turnCount: 0,
+    };
+
+    savedSessionsMapRef.current[newChatId] = {
+      turns: [],
+      context: INITIAL_CONTEXT,
+      artifact: INITIAL_CHART,
+    };
+
+    setChatSessions(prev => [newSession, ...prev]);
+    setActiveChatId(newChatId);
+    setTurns([]);
+    setComposerText('');
+    setActiveContext(INITIAL_CONTEXT);
+    setActiveArtifact(INITIAL_CHART);
+    setIsRecentChatsOpen(false);
+  }, [activeChatId, turns, activeContext, activeArtifact]);
+
+  const loadChatSession = useCallback((sessionId: string) => {
+    // 1. Save current session state before switching (if it has turns)
+    if (activeChatId && activeChatId !== sessionId && turns.length > 0) {
+      savedSessionsMapRef.current[activeChatId] = {
+        turns: [...turns],
+        context: { ...activeContext },
+        artifact: activeArtifact ? { ...activeArtifact } : null,
+      };
+    }
+
+    // 2. Clear running step timers if executing
+    stepTimersRef.current.forEach(clearTimeout);
+    stepTimersRef.current = [];
+    setIsExecuting(false);
+
+    // 3. Retrieve target session
+    const target = savedSessionsMapRef.current[sessionId] || MOCK_SESSIONS_MAP[sessionId];
+    if (target) {
+      setActiveChatId(sessionId);
+      setTurns(target.turns);
+      setActiveContext(target.context);
+      setActiveArtifact(target.artifact);
+    } else {
+      setActiveChatId(sessionId);
+      setTurns([]);
+    }
+    setComposerText('');
+    setIsRecentChatsOpen(false);
+  }, [activeChatId, turns, activeContext, activeArtifact]);
+
+  const deleteChatSession = useCallback((sessionId: string) => {
+    setChatSessions(prev => {
+      const remaining = prev.filter(s => s.id !== sessionId);
+      delete savedSessionsMapRef.current[sessionId];
+
+      if (activeChatId === sessionId) {
+        if (remaining.length > 0) {
+          const next = remaining[0];
+          setTimeout(() => loadChatSession(next.id), 0);
+        } else {
+          setTimeout(() => startNewChat(), 0);
+        }
+      }
+      return remaining;
+    });
+  }, [activeChatId, loadChatSession, startNewChat]);
+
   // Send Prompt (Capabilities 1, 2, 3, 4, 5, 9)
   const sendPrompt = useCallback(async (customText?: string) => {
     const textToSend = (customText || composerText).trim();
@@ -136,13 +462,31 @@ export function useChatEngine() {
     setStashedDraft(null);
     setIsExecuting(true);
 
+    // Update active chat session title and turn count
+    setChatSessions(prev => prev.map(s => {
+      if (s.id !== activeChatId) return s;
+      const cleanTitle = (s.title === 'New Conversation' || !s.title)
+        ? (textToSend.length > 36 ? textToSend.slice(0, 36) + '...' : textToSend)
+        : s.title;
+      return {
+        ...s,
+        title: cleanTitle,
+        updatedAt: 'Just now',
+        turnCount: (s.turnCount || 0) + 1,
+      };
+    }));
+
     const lower = textToSend.toLowerCase();
 
-    // Fast reasoning progress
-    const isSimple = lower.includes('filter') || textToSend.length < 30;
-    const initialProgress: OperationStep = isSimple 
-      ? { id: 'step-1', label: 'Applying filter slice', status: 'completed', durationMs: 19 }
-      : { id: 'step-1', label: 'Executing Trino query plan', status: 'active', durationMs: 46 };
+    // Clear any previous running step timers
+    stepTimersRef.current.forEach(clearTimeout);
+    stepTimersRef.current = [];
+
+    const rawSteps = getReasoningStepsForPrompt(textToSend);
+    const initialAnimatedSteps: ReasoningStep[] = rawSteps.map((s, idx) => ({
+      ...s,
+      status: (idx === 0 ? 'active' : 'pending') as ReasoningStep['status']
+    }));
 
     const placeholderTurn: MessageTurn = {
       id: asstTurnId,
@@ -155,7 +499,13 @@ export function useChatEngine() {
           ...activeContext,
           filters: [...activeContext.filters],
         },
-        operationProgress: initialProgress,
+        operationProgress: {
+          id: 'step-reasoning',
+          label: 'Reasoning process',
+          status: 'active',
+          durationMs: 34.2,
+        },
+        reasoningSteps: initialAnimatedSteps,
         suggestions: [],
         sqlQueries: [],
       }
@@ -163,7 +513,47 @@ export function useChatEngine() {
 
     setTurns(prev => [...prev, placeholderTurn]);
 
-    setTimeout(() => {
+    const stepIntervalMs = 220;
+    for (let i = 1; i < rawSteps.length; i++) {
+      const timer = setTimeout(() => {
+        setTurns(prev => prev.map(t => {
+          if (t.id !== asstTurnId || !t.assistantData) return t;
+          const updatedSteps = rawSteps.map((s, idx) => ({
+            ...s,
+            status: (idx < i ? 'completed' : idx === i ? 'active' : 'pending') as ReasoningStep['status']
+          }));
+          return {
+            ...t,
+            assistantData: {
+              ...t.assistantData,
+              reasoningSteps: updatedSteps,
+            }
+          };
+        }));
+      }, i * stepIntervalMs);
+      stepTimersRef.current.push(timer);
+    }
+
+    const finalTimer = setTimeout(() => {
+      const finalCompletedSteps: ReasoningStep[] = rawSteps.map(s => ({
+        ...s,
+        status: 'completed' as const
+      }));
+
+      const finalTokenUsage = getTokenUsageForPrompt(textToSend, rawSteps.length * stepIntervalMs);
+
+      // Ensure completed reasoning steps and token usage telemetry are sealed in assistantData
+      setTurns(prev => prev.map(t => {
+        if (t.id !== asstTurnId || !t.assistantData) return t;
+        return {
+          ...t,
+          assistantData: {
+            ...t.assistantData,
+            reasoningSteps: finalCompletedSteps,
+            tokenUsage: finalTokenUsage,
+          }
+        };
+      }));
       // SCENARIO 0: Auto-Generate Starter Dashboard from AI
       if (lower.includes('starter dashboard') || lower.includes('auto-generate') || lower.includes('build starter')) {
         setDashboardViewMode('populated');
@@ -270,13 +660,41 @@ export function useChatEngine() {
       if (lower.includes('standup') || lower.includes('prep me') || lower.includes('meeting prep') || (lower.includes('meeting') && lower.includes('prep'))) {
         const standupInsight: KeyInsight = {
           headline: "Leadership Standup: $8.92B historical baseline with 49.2% North America concentration risk.",
-          narrative: "Synthesized 3 talking points across 9 active visual slices: Growth drivers, single-region concentration, and recommended international diversification.",
+          narrative: "Synthesized 2 talking points across 9 active visual slices: Growth drivers and single-region concentration risk.",
           impact: 'positive',
           metrics: [
             { label: 'Verified Revenue', value: '$8,920.4M' },
             { label: 'NA Risk Exposure', value: '49.2% ($4.39B)' },
             { label: 'Publisher Lead', value: 'Nintendo (72% Share)' },
           ]
+        };
+
+        const standupSql: SqlQueryItem = {
+          id: `sql-standup-${Date.now()}`,
+          label: 'Standup Executive Slices: Revenue, Publishers & NA Exposure',
+          sql: `-- 1. Total Catalog Revenue & Regional Split
+SELECT 
+    COUNT(DISTINCT name) AS verified_titles,
+    ROUND(SUM(global_sales), 2) AS total_revenue_m,
+    ROUND(SUM(na_sales) / SUM(global_sales) * 100, 1) AS na_concentration_pct
+FROM video_game_sales;
+
+-- 2. Top Publisher Share in Top 25 Hits
+SELECT 
+    publisher, 
+    COUNT(*) AS top25_hits,
+    ROUND(COUNT(*) * 100.0 / 25, 1) AS share_pct
+FROM (
+    SELECT publisher, global_sales 
+    FROM video_game_sales 
+    ORDER BY global_sales DESC 
+    LIMIT 25
+) top_games
+GROUP BY 1 
+ORDER BY 2 DESC;`,
+          executionTimeMs: 34.2,
+          rowsReturned: 4,
+          dialect: 'Trino SQL / PostgreSQL'
         };
 
         setTurns(prev => prev.map(t => {
@@ -286,10 +704,11 @@ export function useChatEngine() {
             assistantData: {
               ...t.assistantData!,
               insight: standupInsight,
-              analyticalSummary: `**🎙️ 3-Minute Leadership Standup Briefing:**\n\n🟢 **1. The Growth Highlight (What's Working):**\n• **$8,920.4M** in verified catalog sales across 16,598 titles (+14.2% YoY).\n• **Nintendo Dominance**: Captures **72%** (18 of 25) of the bestselling games in history, anchored by *Wii Sports* (82.7M) and *Super Mario Bros.* (40.2M).\n• **Top Genres**: Action ($1,751.2M) and Sports ($1,330.9M) represent **34.7% ($3.08B)** of total revenue.\n\n🔴 **2. The Vulnerability (What Leadership Will Ask):**\n• **Single-Region Exposure**: **49.2%** of lifetime revenue relies on North America ($4,392.9M). Any US/NA consumer discretionary slowdown impacts nearly half our portfolio.\n• **Post-Peak Channel Shift**: Boxed physical title releases plummeted 57% between 2008 and 2015 as dollars moved to digital stores not tracked in physical sell-through.\n\n🔵 **3. Recommended Decision Point for Today's Call:**\n• Discuss prioritizing European localized publishing ($2,434.1M / 27.3% market share) and handheld RPG co-development in Japan to diversify away from North American dependence.`,
+              analyticalSummary: `**🎙️ 3-Minute Leadership Standup Briefing:**\n\n🟢 **1. The Growth Highlight (What's Working):**\n• **$8,920.4M** in verified catalog sales across 16,598 titles (+14.2% YoY).\n• **Nintendo Dominance**: Captures **72%** (18 of 25) of the bestselling games in history, anchored by *Wii Sports* (82.7M) and *Super Mario Bros.* (40.2M).\n• **Top Genres**: Action ($1,751.2M) and Sports ($1,330.9M) represent **34.7% ($3.08B)** of total revenue.\n\n🔴 **2. The Vulnerability (What Leadership Will Ask):**\n• **Single-Region Exposure**: **49.2%** of lifetime revenue relies on North America ($4,392.9M). Any US/NA consumer discretionary slowdown impacts nearly half our portfolio.\n• **Post-Peak Channel Shift**: Boxed physical title releases plummeted 57% between 2008 and 2015 as dollars moved to digital stores not tracked in physical sell-through.`,
+              sqlQueries: [standupSql],
               operationProgress: {
                 id: 'op-standup',
-                label: 'Synthesized 3-part meeting talking points',
+                label: 'Synthesized 2-part meeting talking points',
                 status: 'completed',
                 durationMs: 34.2,
               },
@@ -308,6 +727,21 @@ export function useChatEngine() {
 
       // SCENARIO: Microsoft Teams Channel Format
       if (lower.includes('teams') || lower.includes('format for teams') || lower.includes('microsoft teams')) {
+        const teamsSql: SqlQueryItem = {
+          id: `sql-teams-${Date.now()}`,
+          label: 'Executive Briefing Aggregation (Global & Regional Totals)',
+          sql: `SELECT 
+    ROUND(SUM(global_sales), 2) AS total_revenue_m,
+    ROUND(SUM(na_sales), 2) AS na_sales_m,
+    ROUND(SUM(eu_sales), 2) AS eu_sales_m,
+    ROUND(SUM(jp_sales), 2) AS jp_sales_m,
+    ROUND(SUM(other_sales), 2) AS other_sales_m
+FROM video_game_sales;`,
+          executionTimeMs: 28.5,
+          rowsReturned: 1,
+          dialect: 'Trino SQL'
+        };
+
         setTurns(prev => prev.map(t => {
           if (t.id !== asstTurnId) return t;
           return {
@@ -315,6 +749,7 @@ export function useChatEngine() {
             assistantData: {
               ...t.assistantData!,
               analyticalSummary: `**📋 Formatted for Microsoft Teams Channel:**\n\n\`\`\`markdown\n**Executive Briefing: Video Game Sales Dashboard**\n• **Total Revenue**: $8,920.4M across 16,598 catalog titles (+14.2% YoY).\n• **Market Concentration**: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).\n• **Top Segments**: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).\n• **Regional Breakdown**: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).\n⚠️ **Watch-out**: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.\n🔗 [Open Dashboard](http://localhost:5173/)\n\`\`\`\n\n*Click "Copy for Teams" in the header or copy the block above to paste into your Teams channel.*`,
+              sqlQueries: [teamsSql],
               operationProgress: {
                 id: 'op-teams-card',
                 label: 'Formatted adaptive Teams card',
@@ -367,6 +802,36 @@ export function useChatEngine() {
           chartSummary = `**Chart Breakdown: Global Sales by Decade**\n\n• **Core Finding**: The **2000s represented 52% of all-time software sales ($4,640.2M)** across 9,198 titles, led by Action.\n• **Business Takeaway**: The 2000s was the golden era of console adoption across both living rooms and handhelds.`;
         }
 
+        let chartSqlStr = '';
+        if (lower.includes('top 10 games') || lower.includes('games')) {
+          chartSqlStr = `SELECT name, platform, publisher, ROUND(global_sales, 2) AS global_sales_m\nFROM video_game_sales\nORDER BY global_sales DESC\nLIMIT 10;`;
+        } else if (lower.includes('publishers') || lower.includes('top 25')) {
+          chartSqlStr = `SELECT publisher, COUNT(*) AS hit_count, ROUND(SUM(global_sales), 2) AS total_sales_m\nFROM (\n    SELECT publisher, global_sales FROM video_game_sales ORDER BY global_sales DESC LIMIT 25\n) top25\nGROUP BY 1\nORDER BY 2 DESC;`;
+        } else if (lower.includes('consoles') || lower.includes('hit games') || lower.includes('treemap')) {
+          chartSqlStr = `SELECT platform, COUNT(*) AS hit_titles\nFROM video_game_sales\nWHERE global_sales >= 1.0\nGROUP BY 1\nORDER BY 2 DESC\nLIMIT 10;`;
+        } else if (lower.includes('genre')) {
+          chartSqlStr = `SELECT genre, ROUND(SUM(global_sales), 2) AS total_sales_m\nFROM video_game_sales\nGROUP BY 1\nORDER BY 2 DESC;`;
+        } else if (lower.includes('trajectory') || lower.includes('annual sales')) {
+          chartSqlStr = `SELECT year, ROUND(SUM(global_sales), 2) AS annual_sales_m\nFROM video_game_sales\nWHERE year IS NOT NULL\nGROUP BY 1\nORDER BY 1;`;
+        } else if (lower.includes('regional') || lower.includes('market share')) {
+          chartSqlStr = `SELECT \n    ROUND(SUM(na_sales), 2) AS na_sales_m,\n    ROUND(SUM(eu_sales), 2) AS eu_sales_m,\n    ROUND(SUM(jp_sales), 2) AS jp_sales_m,\n    ROUND(SUM(other_sales), 2) AS other_sales_m\nFROM video_game_sales;`;
+        } else if (lower.includes('platform') || lower.includes('na sales')) {
+          chartSqlStr = `SELECT platform, ROUND(SUM(na_sales), 2) AS na_sales_m\nFROM video_game_sales\nGROUP BY 1\nORDER BY 2 DESC LIMIT 5;`;
+        } else if (lower.includes('volume') || lower.includes('title volume')) {
+          chartSqlStr = `SELECT year, COUNT(*) AS releases\nFROM video_game_sales\nWHERE year IS NOT NULL\nGROUP BY 1\nORDER BY 1;`;
+        } else {
+          chartSqlStr = `SELECT FLOOR(year / 10) * 10 AS decade, ROUND(SUM(global_sales), 2) AS sales_m\nFROM video_game_sales\nWHERE year IS NOT NULL\nGROUP BY 1\nORDER BY 1;`;
+        }
+
+        const explainSql: SqlQueryItem = {
+          id: `sql-explain-${Date.now()}`,
+          label: `Chart Semantic Model Query: ${chartTitle}`,
+          sql: chartSqlStr,
+          executionTimeMs: 29.8,
+          rowsReturned: 10,
+          dialect: 'Trino SQL'
+        };
+
         setTurns(prev => prev.map(t => {
           if (t.id !== asstTurnId) return t;
           return {
@@ -374,6 +839,7 @@ export function useChatEngine() {
             assistantData: {
               ...t.assistantData!,
               analyticalSummary: chartSummary,
+              sqlQueries: [explainSql],
               operationProgress: {
                 id: 'op-explain-chart',
                 label: `Analyzed ${chartTitle}`,
@@ -419,6 +885,22 @@ export function useChatEngine() {
           ]
         };
 
+        const nintendoSql: SqlQueryItem = {
+          id: `sql-nintendo-${Date.now()}`,
+          label: 'Nintendo Market Share & Catalog Breakdown',
+          sql: `SELECT 
+    publisher,
+    COUNT(*) AS total_titles,
+    ROUND(SUM(global_sales), 2) AS catalog_sales_m,
+    ROUND(AVG(global_sales), 2) AS avg_sales_per_title_m
+FROM video_game_sales
+WHERE publisher = 'Nintendo'
+GROUP BY 1;`,
+          executionTimeMs: 22.4,
+          rowsReturned: 1,
+          dialect: 'Trino SQL'
+        };
+
         setTurns(prev => prev.map(t => {
           if (t.id !== asstTurnId) return t;
           return {
@@ -428,6 +910,7 @@ export function useChatEngine() {
               chart: nintendoChart,
               insight: nintendoInsight,
               analyticalSummary: `**Top 3 Drivers of Nintendo's Market Dominance:**\n\n1. **Hardware Pack-in Flywheels**: *Wii Sports* (82.7M units) and *Mario Kart Wii* (35.8M) were bundled directly with hardware purchases, guaranteeing instant adoption.\n2. **Generational IP Monopolies**: Proprietary franchises (*Mario*, *Pokémon*, *Zelda*) drive repeat purchases across multiple console generations without licensing royalty overhead.\n3. **Handheld Proliferation**: Handheld platforms (*Game Boy*, *Nintendo DS*) captured over 3,400 catalog titles with virtually zero direct competition, driving high software margins.`,
+              sqlQueries: [nintendoSql],
               operationProgress: {
                 id: 'op-nintendo',
                 label: 'Synthesized 9-chart executive breakdown',
@@ -474,6 +957,25 @@ export function useChatEngine() {
           ]
         };
 
+        const handheldSql: SqlQueryItem = {
+          id: `sql-handheld-${Date.now()}`,
+          label: 'Hardware Category Distribution (Handheld vs Home Consoles)',
+          sql: `SELECT 
+    CASE 
+        WHEN platform IN ('DS', 'GBA', '3DS', 'PSP', 'GB') THEN 'Handheld'
+        ELSE 'Home Console'
+    END AS device_category,
+    COUNT(*) AS catalog_titles,
+    ROUND(SUM(global_sales), 2) AS revenue_m,
+    ROUND(SUM(global_sales) * 100.0 / (SELECT SUM(global_sales) FROM video_game_sales), 1) AS pct_share
+FROM video_game_sales
+GROUP BY 1
+ORDER BY 3 DESC;`,
+          executionTimeMs: 31.5,
+          rowsReturned: 2,
+          dialect: 'Trino SQL'
+        };
+
         setTurns(prev => prev.map(t => {
           if (t.id !== asstTurnId) return t;
           return {
@@ -483,6 +985,7 @@ export function useChatEngine() {
               chart: handheldChart,
               insight: handheldInsight,
               analyticalSummary: `**Handheld vs. Home Console Strategic Comparison:**\n\n• **Handheld Consoles (DS, GBA, 3DS, PSP)**: Generated **$1,712.4M (19.2%)** across 4,892 catalog titles. Lower production budgets allowed rapid iteration and continuous margin stability during transition periods.\n• **Home Consoles (PS2, Xbox 360, PS3, Wii)**: Generated **$5,124.6M (57.4%)** across 8,410 titles. Home consoles captured the largest single-title blockbusters but carried higher development risk.\n• **Strategic Takeaway**: Handhelds acted as an essential hedge, sustaining publisher revenues when home console hardware cycles peaked.`,
+              sqlQueries: [handheldSql],
               operationProgress: {
                 id: 'op-handheld',
                 label: 'Segmented handheld vs home console catalog',
@@ -529,6 +1032,22 @@ export function useChatEngine() {
           ]
         };
 
+        const declineSql: SqlQueryItem = {
+          id: `sql-decline-${Date.now()}`,
+          label: 'Post-2008 Annual Volume & Sales Trend',
+          sql: `SELECT 
+    year, 
+    ROUND(SUM(global_sales), 2) AS sales_m,
+    COUNT(*) AS total_releases
+FROM video_game_sales 
+WHERE year BETWEEN 2005 AND 2016 
+GROUP BY 1 
+ORDER BY 1;`,
+          executionTimeMs: 25.1,
+          rowsReturned: 12,
+          dialect: 'Trino SQL'
+        };
+
         setTurns(prev => prev.map(t => {
           if (t.id !== asstTurnId) return t;
           return {
@@ -538,6 +1057,7 @@ export function useChatEngine() {
               chart: declineChart,
               insight: declineInsight,
               analyticalSummary: `**3 Structural Reasons for the Post-2008 Contraction:**\n\n1. **Macroeconomic Recession (2008–2009)**: Discretionary household entertainment spending contracted following the global financial crisis, pulling annual boxed sales from $678.9M down to $515.8M by 2011.\n2. **Late-Cycle 7th-Gen Saturation**: The Wii, PS3, and Xbox 360 installed bases matured, leading to catalog discounting and title volume consolidation.\n3. **Digital & Mobile Channel Disruption**: The explosive rise of smartphones (Apple App Store 2008) and digital store fronts (Steam, PSN, Xbox Live) shifted consumer dollars into digital microtransactions not captured in physical retail tracking.`,
+              sqlQueries: [declineSql],
               operationProgress: {
                 id: 'op-decline',
                 label: 'Aggregated macro trend post-2008',
@@ -584,6 +1104,19 @@ export function useChatEngine() {
           ]
         };
 
+        const exposureSql: SqlQueryItem = {
+          id: `sql-exposure-${Date.now()}`,
+          label: 'Regional Distribution & Non-NA Share Exposure',
+          sql: `SELECT 
+    ROUND(SUM(na_sales), 2) AS na_sales_m,
+    ROUND(SUM(global_sales - na_sales), 2) AS international_sales_m,
+    ROUND(SUM(global_sales - na_sales) * 100.0 / SUM(global_sales), 1) AS international_share_pct
+FROM video_game_sales;`,
+          executionTimeMs: 19.8,
+          rowsReturned: 1,
+          dialect: 'Trino SQL'
+        };
+
         setTurns(prev => prev.map(t => {
           if (t.id !== asstTurnId) return t;
           return {
@@ -593,6 +1126,7 @@ export function useChatEngine() {
               chart: exposureChart,
               insight: exposureInsight,
               analyticalSummary: `**International Market Exposure ($4,527.5M non-NA Revenue / 50.8%):**\n\n• **Europe ($2,434.1M / 27.3%)**: Largest international market, heavily indexed to PlayStation hardware and Sports/Racing franchises.\n• **Japan ($1,291.0M / 14.5%)**: Highly idiosyncratic market driven almost entirely by Handhelds (DS, 3DS) and RPGs (Pokémon, Final Fantasy), with near-zero adoption of western shooters.\n• **Other Regions ($797.8M / 9.0%)**: High growth potential but fragmented distribution across Latin America and Asia-Pacific.\n• **Executive Takeaway**: Single-region concentration in North America (49.2%) is a portfolio risk; expanding localization in Europe and Japan provides crucial downside protection.`,
+              sqlQueries: [exposureSql],
               operationProgress: {
                 id: 'op-exposure',
                 label: 'Calculated 4-region market share',
@@ -1077,11 +1611,14 @@ LIMIT 8;`,
 
       setActiveArtifact(defaultChart);
       setIsExecuting(false);
-    }, 400);
-  }, [composerText, isExecuting, turns, activeContext, activeArtifact]);
+    }, rawSteps.length * stepIntervalMs);
+    stepTimersRef.current.push(finalTimer);
+  }, [composerText, isExecuting, turns, activeContext, activeArtifact, activeChatId]);
 
   // UNDO ACTION (Capability 6)
   const handleUndo = useCallback(() => {
+    stepTimersRef.current.forEach(clearTimeout);
+    stepTimersRef.current = [];
     if (turns.length === 0 || isExecuting) return;
 
     const lastAssistantIdx = [...turns].reverse().findIndex(t => t.sender === 'assistant');
@@ -1120,6 +1657,8 @@ LIMIT 8;`,
 
   // RETRY ACTION (Capability 6)
   const handleRetry = useCallback((turnId: string, mode: 'network' | 'analytical') => {
+    stepTimersRef.current.forEach(clearTimeout);
+    stepTimersRef.current = [];
     if (isExecuting) return;
 
     setTurns(prev => prev.map(t => {
@@ -1337,6 +1876,18 @@ LIMIT 8;`,
     pinToast,
     pinWidgetContext,
     autoGenerateStarterDashboard,
+    chatSessions,
+    setChatSessions,
+    activeChatId,
+    setActiveChatId,
+    isRecentChatsOpen,
+    setIsRecentChatsOpen,
+    startNewChat,
+    loadChatSession,
+    deleteChatSession,
+    isCanvasOpen,
+    setIsCanvasOpen,
+    openInCanvas,
   };
 }
 
