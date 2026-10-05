@@ -2,14 +2,14 @@ import React, { useRef, useEffect, useState } from 'react';
 import { MessageTurn, ChartArtifact, ChartType, UserProfile, DashboardViewMode } from '../../types/bi';
 import { UserTurn } from './UserTurn';
 import { AssistantTurn } from './AssistantTurn';
-import { ArrowDown, Sparkles, BarChart2, TrendingUp, Globe, AlertCircle, LayoutTemplate, Copy, Check, ChevronRight } from 'lucide-react';
+import { ArrowDown, Sparkles, BarChart2, TrendingUp, Globe, AlertCircle, LayoutTemplate, Copy, Check, ChevronRight, Database, Code2 } from 'lucide-react';
 
 interface TranscriptViewProps {
   turns: MessageTurn[];
   onSelectPrompt: (prompt: string) => void;
   onExpandToCanvas: (chart: ChartArtifact) => void;
   onSelectSuggestion: (prompt: string) => void;
-  onQuickChartType: (type: ChartType) => void;
+  onQuickChartType: (turnId: string, type: ChartType) => void;
   onUndo: () => void;
   onRetry: (turnId: string, mode: 'network' | 'analytical') => void;
   datasetName: string;
@@ -19,6 +19,7 @@ interface TranscriptViewProps {
   onPinChartToDashboard?: (chart: ChartArtifact) => void;
   onApplyQuickFilter?: (filter: 'all' | 'na' | 'nintendo' | '2000s') => void;
   activeDashboardFilter?: string;
+  aiRole?: 'business' | 'data_analyst';
 }
 
 export const TranscriptView: React.FC<TranscriptViewProps> = ({
@@ -36,6 +37,7 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
   onPinChartToDashboard,
   onApplyQuickFilter,
   activeDashboardFilter = 'all',
+  aiRole = 'business',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showScrollBottom, setShowScrollBottom] = useState(false);
@@ -88,220 +90,274 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
     >
       <div className="max-w-2xl mx-auto w-full">
         {turns.length === 0 ? (
-          dashboardViewMode === 'populated' ? (
-            /* POPULATED DASHBOARD: PERSONALIZED GREETING & EXECUTIVE BRIEFING CARD */
+          aiRole === 'data_analyst' ? (
+            /* ========================================================================= */
+            /* DATA ANALYST (DA) STARTER WORKSPACE: SCHEMA, METRICS & SQL STUDIO         */
+            /* ========================================================================= */
             <div className="py-2 space-y-4 animate-in fade-in duration-200">
-              {/* 1. Personalized Greeting with User Avatar */}
+              {/* DA Header */}
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#2563eb] text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 font-mono">
+                  DA
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="text-sm sm:text-base font-bold text-zinc-900 leading-tight">
+                      Data Analyst Copilot
+                    </h2>
+                    <span className="px-1.5 py-0.2 rounded text-[9px] font-bold font-mono bg-blue-100 text-blue-800 border border-blue-200">
+                      DA Mode
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-500 leading-tight font-mono">
+                    Model: <span className="font-semibold text-zinc-700">{datasetName}</span> • 16,598 rows • Trino SQL
+                  </p>
+                </div>
+              </div>
+
+              {/* Schema & Semantic Model Card */}
+              <div className="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden text-xs">
+                <div className="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Database className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-[11px] font-bold text-zinc-800 uppercase tracking-wide font-mono">
+                      Semantic Model Schema ({datasetName})
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-zinc-500 bg-zinc-200/70 px-1.5 py-0.5 rounded">
+                    Trino Dialect
+                  </span>
+                </div>
+
+                <div className="p-3.5 space-y-3">
+                  {/* Dimensions */}
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1.5 font-mono">
+                      Dimensions (Categorical Columns)
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['name (VARCHAR)', 'platform (VARCHAR)', 'year (INT)', 'genre (VARCHAR)', 'publisher (VARCHAR)'].map((col) => (
+                        <span key={col} className="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 text-zinc-700 font-mono text-[10px]">
+                          {col}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Metrics */}
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1.5 font-mono">
+                      Calculated Metrics & Measures
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['SUM(global_sales)', 'SUM(na_sales)', 'SUM(eu_sales)', 'SUM(jp_sales)', 'SUM(other_sales)', 'COUNT(name)'].map((metric) => (
+                        <span key={metric} className="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800 font-mono text-[10px] font-medium">
+                          {metric}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Active Slices */}
+                  <div className="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 text-[11px] text-zinc-600 flex items-center justify-between">
+                    <span>9 Certified Superset visual slices mapped to this semantic model</span>
+                    <span className="font-mono text-zinc-500 text-[10px]">Certified</span>
+                  </div>
+                </div>
+
+                {/* Footer with Canvas studio shortcut */}
+                <div className="px-3.5 py-2 bg-zinc-50 border-t border-zinc-100 flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-zinc-500 font-mono">Authoring & Chart Studio</span>
+                  <button
+                    onClick={() => {
+                      if (onExpandToCanvas) {
+                        onExpandToCanvas({
+                          id: 'chart-canvas-studio',
+                          type: 'bar',
+                          title: 'Global Sales by Genre',
+                          dataset: 'video_game_sales',
+                          metric: 'SUM(global_sales)',
+                          dimension: 'genre',
+                          unit: '$M',
+                          availableTypes: ['bar', 'line', 'donut', 'table'],
+                          data: [
+                            { name: 'Action', value: 1751.18 },
+                            { name: 'Sports', value: 1330.93 },
+                            { name: 'Shooter', value: 1037.37 },
+                            { name: 'Role-Playing', value: 927.37 },
+                            { name: 'Platform', value: 831.37 },
+                          ]
+                        });
+                      }
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#2563eb] hover:bg-blue-700 text-white text-xs font-medium transition-colors shadow-2xs cursor-pointer"
+                  >
+                    <span>Open in Canvas Studio</span>
+                    <span>↗</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Data Analyst Prompts */}
+              <div className="space-y-2 pt-1">
+                <span className="text-[11px] font-semibold text-zinc-500 block font-mono">
+                  Recommended Data Analyst Queries:
+                </span>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => onSelectPrompt("Show me global sales by genre with Trino SQL")}
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-blue-500 hover:bg-blue-50/30 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                  >
+                    <span className="font-mono text-zinc-900">Show me global sales by genre (Trino SQL)</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-600 transition-colors flex-shrink-0 ml-2" />
+                  </button>
+                  <button
+                    onClick={() => onSelectPrompt("Filter where publisher is null or missing and inspect anomaly")}
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-blue-500 hover:bg-blue-50/30 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                  >
+                    <span className="font-mono text-zinc-900">Filter where publisher = NULLXYZ and inspect missing values</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-600 transition-colors flex-shrink-0 ml-2" />
+                  </button>
+                  <button
+                    onClick={() => onSelectPrompt("Compare regional sales distributions across EU vs NA in Trino SQL")}
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-blue-500 hover:bg-blue-50/30 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                  >
+                    <span className="font-mono text-zinc-900">Compare regional sales distributions (EU vs NA)</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-600 transition-colors flex-shrink-0 ml-2" />
+                  </button>
+                  <button
+                    onClick={() => onSelectPrompt("What are the top 10 titles by NA to Global ratio?")}
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-blue-500 hover:bg-blue-50/30 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                  >
+                    <span className="font-mono text-zinc-900">Compute NA_sales / Global_sales ratio by title</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-600 transition-colors flex-shrink-0 ml-2" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : dashboardViewMode === 'populated' ? (
+            /* ========================================================================= */
+            /* END USER (EU) STARTER WORKSPACE: SIMPLE EXECUTIVE BRIEFING                */
+            /* ========================================================================= */
+            <div className="py-2 space-y-4 animate-in fade-in duration-200">
+              {/* 1. Simple Friendly Greeting */}
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-[#1e295b] text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0">
                   {userProfile.avatar}
                 </div>
                 <div>
                   <h2 className="text-sm sm:text-base font-bold text-zinc-900 leading-tight flex items-center gap-1.5">
-                    <span>Good morning, {userProfile.name}</span>
+                    <span>Hii Veman</span>
                     <span className="text-base">👋</span>
                   </h2>
-                  <p className="text-[11px] text-zinc-500 leading-tight">
-                    Superset Executive Briefing for <span className="font-semibold text-zinc-700">{datasetName === 'wb_health_population' ? 'Global Health & Mortality' : 'Video Game Sales'}</span>
+                  <p className="text-[11px] text-zinc-500 leading-tight mt-0.5">
+                    How can I help you explore this dashboard today?
                   </p>
                 </div>
               </div>
 
-              {/* 2. Executive Summary & Visible Charts Digest Card */}
+              {/* 2. Simple Dashboard Highlights Card (Concise & Easy to Read) */}
               <div className="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden">
-                {/* Header with Teams / Slack / Meeting Prep Actions */}
-                <div className="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex flex-wrap items-center justify-between gap-2">
+                <div className="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     <span className="text-[11px] font-bold text-zinc-800 uppercase tracking-wide">
-                      Executive Briefing · 9 Charts
+                      Dashboard Highlights
                     </span>
                   </div>
+                  <span className="text-[10px] text-zinc-400 font-medium">9 Live Charts</span>
+                </div>
 
-                  <div className="flex items-center gap-1.5">
-                    {/* Copy Summary */}
-                    <button
-                      onClick={() => {
-                        const summaryText = `Executive Briefing: Video Game Sales Dashboard
-• Total Revenue: $8,920.4M across 16,598 catalog titles (+14.2% YoY).
-• Market Concentration: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).
-• Top Segments: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).
-• Regional Breakdown: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).
-⚠️ Watch-out: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.`;
-                        navigator.clipboard.writeText(summaryText);
-                        setCopiedTeams(true);
-                        setTimeout(() => setCopiedTeams(false), 2000);
-                      }}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs"
-                      title="Copy executive briefing summary"
-                    >
-                      {copiedTeams ? (
-                        <>
-                          <Check className="w-3 h-3 text-emerald-600" />
-                          <span className="text-emerald-700">Copied!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3 h-3 text-zinc-500" />
-                          <span>Copy Summary</span>
-                        </>
-                      )}
-                    </button>
-
-                    {/* Toggle Meeting Prep Mode */}
-                    <button
-                      onClick={() => setIsMeetingPrepActive(!isMeetingPrepActive)}
-                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-semibold border transition-all ${
-                        isMeetingPrepActive
-                          ? 'bg-[#1e295b] text-white border-[#1e295b] shadow-2xs'
-                          : 'bg-white hover:bg-zinc-100 text-zinc-700 border-zinc-200 shadow-2xs'
-                      }`}
-                      title="Toggle 3-part meeting talking points"
-                    >
-                      <span>🎙️</span>
-                      <span>Meeting Prep</span>
-                    </button>
+                <div className="p-3.5 space-y-2.5 text-xs text-zinc-700 leading-relaxed">
+                  <p className="font-medium text-zinc-900">
+                    Tracking <strong className="font-bold text-zinc-950">$8,920.4M</strong> in sales across 16,598 catalog titles.
+                  </p>
+                  <div className="grid grid-cols-1 gap-1.5 pt-0.5 text-zinc-600">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+                      <span><strong className="text-zinc-800 font-medium">Top Genres:</strong> Action ($1,751M) and Sports ($1,331M) account for 35% of total sales.</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+                      <span><strong className="text-zinc-800 font-medium">Top Region:</strong> North America leads with 49.2% of global volume ($4,393M).</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 flex-shrink-0"></span>
+                      <span><strong className="text-zinc-800 font-medium">Publisher:</strong> Nintendo holds 72% (18 of 25) of bestselling releases.</span>
+                    </div>
                   </div>
                 </div>
 
-                {isMeetingPrepActive ? (
-                  /* MEETING TALKING POINTS: STANDUP & LEADERSHIP READY */
-                  <div className="p-4 space-y-3 bg-amber-50/25 animate-in fade-in duration-150">
-                    <div className="flex items-center justify-between border-b border-amber-200/50 pb-2">
-                      <span className="text-[11px] font-bold text-zinc-900 uppercase tracking-wide flex items-center gap-1.5">
-                        <span>🎙️</span>
-                        <span>Meeting Talking Points (3-Part Executive Briefing)</span>
-                      </span>
-                      <span className="text-[10px] text-zinc-500 font-mono">Standup Ready</span>
-                    </div>
-
-                    <div className="space-y-2.5 text-xs">
-                      {/* 1. The Highlight */}
-                      <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 flex items-start gap-2.5">
-                        <span className="text-base">🟢</span>
-                        <div>
-                          <strong className="text-emerald-950 font-bold text-xs">The Growth Highlight:</strong>
-                          <p className="text-emerald-900 text-[11px] mt-0.5 leading-relaxed">
-                            Total catalog revenue stands at <strong>$8,920.4M</strong>. Nintendo controls <strong>72%</strong> of top 25 bestselling releases, while Action and Sports drive <strong>34.7% ($3.08B)</strong> of all genre volume.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* 2. The Risk */}
-                      <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 flex items-start gap-2.5">
-                        <span className="text-base">🔴</span>
-                        <div>
-                          <strong className="text-rose-950 font-bold text-xs">The Risk / Watch-Out:</strong>
-                          <p className="text-rose-900 text-[11px] mt-0.5 leading-relaxed">
-                            <strong>49.2%</strong> of all revenue ($4,392.9M) depends on North America. Post-2008 physical boxed sales contracted 62% as consumer dollars shifted toward uncaptured digital stores.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* 3. The Discussion Topic */}
-                      <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 flex items-start gap-2.5">
-                        <span className="text-base">🔵</span>
-                        <div>
-                          <strong className="text-blue-950 font-bold text-xs">Strategic Meeting Question:</strong>
-                          <p className="text-blue-900 text-[11px] mt-0.5 leading-relaxed">
-                            Should publisher marketing budgets expand in Europe ($2.43B / 27.3%) and handheld RPG localization in Japan to hedge North American single-market concentration?
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                {/* Card Footer: Copy Summary down side */}
+                <div className="px-3.5 py-2 bg-zinc-50 border-t border-zinc-100 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 text-[11px] text-zinc-500 font-medium">
+                    <span className="text-emerald-600 font-bold">✓</span>
+                    <span>Verified across 9 live visual slices</span>
                   </div>
-                ) : (
-                  /* DEFAULT EXECUTIVE SUMMARY */
-                  <div className="p-4 space-y-3.5">
-                    {/* High-level Takeaway */}
-                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
-                      Across 9 dashboard visual slices and 16,598 catalog titles, <strong className="text-zinc-900 font-semibold">$8,920.4M</strong> in historical revenue is tracked. <strong className="text-zinc-900 font-semibold">Action & Sports</strong> account for 34.7% of all genre sales ($3.08B combined), while <strong className="text-zinc-900 font-semibold">North America</strong> accounts for nearly half (49.2%) of the global market.
-                    </p>
-
-                    {/* Visible Charts Digest Accordion */}
-                    <div className="space-y-2 pt-2 border-t border-zinc-100">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">
-                        Visible Charts Digest
-                      </span>
-                      <div className="grid grid-cols-1 gap-2 text-xs">
-                        <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
-                          <span className="text-sm">🏆</span>
-                          <div>
-                            <span className="font-semibold text-zinc-900">Top 10 Games & Publishers:</span>{' '}
-                            <span className="text-zinc-600">Wii Sports (82.7M) and Super Mario Bros. (40.2M) lead. Nintendo accounts for 72% of the top 25 bestselling releases.</span>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
-                          <span className="text-sm">🎮</span>
-                          <div>
-                            <span className="font-semibold text-zinc-900">Platforms & Consoles:</span>{' '}
-                            <span className="text-zinc-600">Nintendo DS leads hit title volume (2,163), while Xbox 360 leads North American revenues ($601.0M).</span>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-2 bg-zinc-50 p-2.5 rounded-lg border border-zinc-200">
-                          <span className="text-sm">📈</span>
-                          <div>
-                            <span className="font-semibold text-zinc-900">Trajectory & Decades:</span>{' '}
-                            <span className="text-zinc-600">Revenues peaked in 2008 ($678.9M across 1,428 titles). The 2000s represented 52% of all-time industry revenue ($4.64B).</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Concentration Takeaway */}
-                    <div className="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200 text-[11px] text-zinc-700 flex items-start gap-2">
-                      <span className="text-zinc-500 font-bold mt-0.5">•</span>
-                      <div>
-                        <span className="font-semibold text-zinc-900">Macro Concentration:</span>{' '}
-                        <span>Top 3 publishers and top 2 regions (NA + Europe) generate over 76.5% of cumulative sales.</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                  <button
+                    onClick={() => {
+                      const summaryText = `Dashboard Highlights: Video Game Sales
+• Total Revenue: $8,920.4M across 16,598 catalog titles (+14.2% YoY).
+• Top Segments: Action ($1,751M) and Sports ($1,331M) drive 35% of volume.
+• Top Region: North America leads with 49.2% market share ($4,393M).
+• Key Leader: Nintendo controls 72% of top 25 bestselling releases.`;
+                      navigator.clipboard.writeText(summaryText);
+                      setCopiedTeams(true);
+                      setTimeout(() => setCopiedTeams(false), 2000);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[11px] font-semibold border border-zinc-200 transition-colors shadow-2xs cursor-pointer"
+                    title="Copy highlights to clipboard"
+                  >
+                    {copiedTeams ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-zinc-500" />
+                        <span>Copy Summary</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
-              {/* Suggested Questions */}
+              {/* 3. Simple Suggested Questions */}
               <div className="space-y-2 pt-1">
                 <span className="text-[11px] font-semibold text-zinc-500 block">
-                  Questions for executive review:
+                  Quick questions to explore:
                 </span>
                 <div className="flex flex-col gap-2">
                   <button
-                    onClick={() => onSelectPrompt("Prep me for my 10 AM leadership standup")}
-                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
-                  >
-                    <span className="flex items-center gap-1.5 font-semibold text-zinc-900">
-                      <span>🎙️</span>
-                      <span>Prep me for my 10 AM leadership standup</span>
-                    </span>
-                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 transition-colors flex-shrink-0 ml-2" />
-                  </button>
-                  <button
                     onClick={() => onSelectPrompt("What are the top 3 drivers of Nintendo's dominance?")}
-                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group cursor-pointer"
                   >
                     <span>What are the top 3 drivers of Nintendo's dominance?</span>
                     <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 transition-colors flex-shrink-0 ml-2" />
                   </button>
                   <button
                     onClick={() => onSelectPrompt("Compare handheld consoles (DS / GBA) vs home consoles")}
-                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group cursor-pointer"
                   >
                     <span>Compare handheld consoles (DS / GBA) vs home consoles</span>
                     <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 transition-colors flex-shrink-0 ml-2" />
                   </button>
                   <button
                     onClick={() => onSelectPrompt("Why did sales decline after the 2008 peak?")}
-                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group cursor-pointer"
                   >
                     <span>Why did sales decline after the 2008 peak?</span>
                     <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 transition-colors flex-shrink-0 ml-2" />
                   </button>
                   <button
-                    onClick={() => onSelectPrompt("What is our revenue exposure outside North America?")}
-                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group"
+                    onClick={() => onSelectPrompt("Give me a 3-bullet standup summary")}
+                    className="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium transition-all text-left shadow-2xs hover:shadow-xs flex items-center justify-between group cursor-pointer"
                   >
-                    <span>What is our revenue exposure outside North America?</span>
+                    <span className="flex items-center gap-1.5 font-semibold text-zinc-900">
+                      <span>🎙️</span>
+                      <span>Give me a 3-bullet standup summary</span>
+                    </span>
                     <ChevronRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 transition-colors flex-shrink-0 ml-2" />
                   </button>
                 </div>
@@ -380,10 +436,11 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
                   isLatest={isLatest}
                   onExpandToCanvas={onExpandToCanvas}
                   onSelectSuggestion={onSelectSuggestion}
-                  onQuickChartType={onQuickChartType}
+                  onQuickChartType={(type) => onQuickChartType(turn.id, type)}
                   onUndo={onUndo}
                   onRetry={onRetry}
                   onPinChartToDashboard={onPinChartToDashboard}
+                  aiRole={aiRole}
                 />
               );
             })}
@@ -391,7 +448,7 @@ export const TranscriptView: React.FC<TranscriptViewProps> = ({
         )}
       </div>
 
-      {showScrollBottom && (
+      {showScrollBottom && turns.length > 0 && (
         <div className="sticky bottom-2 flex justify-center z-20 pointer-events-none">
           <button
             onClick={scrollToBottom}

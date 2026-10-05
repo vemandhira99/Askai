@@ -29,6 +29,7 @@ interface AssistantTurnProps {
   onUndo: () => void;
   onRetry: (turnId: string, mode: 'network' | 'analytical') => void;
   onPinChartToDashboard?: (chart: ChartArtifact) => void;
+  aiRole?: 'business' | 'data_analyst';
 }
 
 export const AssistantTurn: React.FC<AssistantTurnProps> = ({
@@ -40,8 +41,10 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
   onUndo,
   onRetry,
   onPinChartToDashboard,
+  aiRole = 'business',
 }) => {
   const [isCopied, setIsCopied] = useState(false);
+  const [copiedFinding, setCopiedFinding] = useState(false);
   const [liked, setLiked] = useState<boolean | null>(null);
 
   const data = turn.assistantData;
@@ -52,6 +55,13 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
     navigator.clipboard.writeText(textToCopy);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 1500);
+  };
+
+  const handleCopyFinding = () => {
+    const findingText = data.insight ? `${data.insight.headline} - ${data.insight.narrative}` : data.chart?.title || '';
+    navigator.clipboard.writeText(findingText);
+    setCopiedFinding(true);
+    setTimeout(() => setCopiedFinding(false), 1500);
   };
 
   return (
@@ -90,36 +100,52 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
           {/* Artifact Header Banner */}
           <div className="px-4 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/60">
             <div className="min-w-0 pr-2">
-              <span className="text-[10px] font-mono text-zinc-400 block">{data.chart.dataset} • {data.chart.metric}</span>
+              <span className="text-[10px] font-mono text-zinc-400 block">
+                {aiRole === 'data_analyst' ? `${data.chart.dataset} • ${data.chart.metric}` : data.chart.metric}
+              </span>
               <h3 className="text-xs sm:text-sm font-semibold text-zinc-900 truncate">{data.chart.title}</h3>
             </div>
 
             <div className="flex items-center gap-1.5">
-              {onPinChartToDashboard && (
+              {aiRole === 'data_analyst' ? (
+                <>
+                  {onPinChartToDashboard && (
+                    <button
+                      onClick={() => onPinChartToDashboard(data.chart!)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors shadow-2xs"
+                      title="Pin this chart to your Superset dashboard on the left"
+                    >
+                      <Pin className="w-3 h-3 text-[#1e295b]" />
+                      <span>Pin to Dashboard</span>
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => onExpandToCanvas(data.chart!)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors shadow-2xs"
+                    title="Open full interactive artifact in Canvas"
+                  >
+                    <span>Canvas</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </button>
+                </>
+              ) : (
                 <button
-                  onClick={() => onPinChartToDashboard(data.chart!)}
+                  onClick={handleCopyFinding}
                   className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors shadow-2xs"
-                  title="Pin this chart to your Superset dashboard on the left"
+                  title="Copy key chart insight to clipboard"
                 >
-                  <Pin className="w-3 h-3 text-[#1e295b]" />
-                  <span>Pin to Dashboard</span>
+                  {copiedFinding ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3 text-zinc-500" />}
+                  <span>{copiedFinding ? 'Copied' : 'Copy Finding'}</span>
                 </button>
               )}
-
-              <button
-                onClick={() => onExpandToCanvas(data.chart!)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors shadow-2xs"
-                title="Open full interactive artifact in Canvas"
-              >
-                <span>Canvas</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
             </div>
           </div>
 
           {/* Chart preview & quick chart bar */}
           <div className="p-4">
             <ChartRenderer type={data.chart.type} data={data.chart.data} unit={data.chart.unit} height={210} />
+            {/* 3-4 visual perspective options available for EU and DA */}
             <QuickChartActions currentType={data.chart.type} onSelectChartType={onQuickChartType} />
             <KeyInsightBanner insight={data.insight} isPreparing={!data.insight} />
           </div>
@@ -138,18 +164,12 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
         <MarkdownMessage content={data.analyticalSummary} />
       )}
 
-      {/* 3.5. Small Optional SQL Query Dropdown (Inspect if required, else discard) */}
+      {/* 3.5. Small Optional SQL Query Dropdown (Available in all modes for verification & trust) */}
       {!data.error && (
         <SqlDisclosure queries={data.sqlQueries} />
       )}
 
-      {/* 4. Suggested Follow-up Prompts */}
-      <SuggestedActions
-        suggestions={data.suggestions}
-        onSelectSuggestion={onSelectSuggestion}
-      />
-
-      {/* 6. Turn Actions Bar (Matching media_1789991062233.png pills + Token Consumption telemetry) */}
+      {/* 4. Turn Actions Bar (Copy, Regenerate, Undo, Feedback) - Placed above suggested questions */}
       <div className="mt-3 flex items-center justify-between text-xs text-zinc-500 select-none flex-wrap gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           <button
@@ -185,7 +205,7 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Token consumption telemetry */}
+          {/* Token consumption and execution latency telemetry */}
           <TokenUsageBadge usage={data.tokenUsage} />
 
           {isLatest && (
@@ -200,6 +220,12 @@ export const AssistantTurn: React.FC<AssistantTurnProps> = ({
           )}
         </div>
       </div>
+
+      {/* 5. Suggested Follow-up Prompts (At the very last) */}
+      <SuggestedActions
+        suggestions={data.suggestions}
+        onSelectSuggestion={onSelectSuggestion}
+      />
     </div>
   );
 };

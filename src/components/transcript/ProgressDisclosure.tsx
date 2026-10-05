@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OperationStep, ReasoningStep } from '../../types/bi';
 import { Loader2, Check, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -13,7 +13,17 @@ export const ProgressDisclosure: React.FC<ProgressDisclosureProps> = ({
   reasoningSteps = [],
   isExecuting = false,
 }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(isExecuting);
+
+  // When reasoning is executing, keep dropdown open so user can watch steps.
+  // Once reasoning finishes, automatically close the dropdown.
+  useEffect(() => {
+    if (isExecuting) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
+  }, [isExecuting]);
 
   if (!progress && (!reasoningSteps || reasoningSteps.length === 0)) return null;
 
@@ -37,13 +47,14 @@ export const ProgressDisclosure: React.FC<ProgressDisclosureProps> = ({
               <span>Thinking... {totalCount > 0 ? `(${completedCount}/${totalCount})` : ''}</span>
             </div>
           ) : (
-            <span className="text-[11px] text-slate-400 font-normal">
+            <span className="text-[11px] text-slate-500 font-normal">
               ({totalCount > 0 ? `${totalCount} steps completed` : `${progress?.durationMs || 34.2}ms`})
             </span>
           )}
         </div>
 
         <div className="flex items-center gap-1 text-slate-400 group-hover:text-slate-600 transition-colors">
+          <span className="text-[10px] text-slate-400 mr-1 font-medium">{isOpen ? 'Hide' : 'Show'}</span>
           {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </div>
       </div>

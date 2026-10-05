@@ -137,7 +137,7 @@ export const SqlDisclosure: React.FC<SqlDisclosureProps> = ({ queries = [] }) =>
               <span>•</span>
               <span>⏱️ Latency: <strong className="text-zinc-700">{currentQuery.executionTimeMs}ms</strong></span>
               <span>•</span>
-              <span className="hidden sm:inline">Semantic Model: <code className="text-zinc-700 font-mono">video_game_sales</code></span>
+              <span className="hidden sm:inline">Semantic Engine: <code className="text-zinc-700 font-mono">Verified Query</code></span>
             </div>
             <button
               onClick={() => setIsOpen(false)}

@@ -513,7 +513,8 @@ export function useChatEngine() {
 
     setTurns(prev => [...prev, placeholderTurn]);
 
-    const stepIntervalMs = 220;
+    // Paced at ~460ms per step so users can comfortably observe the authentic reasoning trace
+    const stepIntervalMs = 460;
     for (let i = 1; i < rawSteps.length; i++) {
       const timer = setTimeout(() => {
         setTurns(prev => prev.map(t => {

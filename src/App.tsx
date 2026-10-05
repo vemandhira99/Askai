@@ -35,7 +35,8 @@ import {
   ExternalLink,
   Lightbulb,
   History,
-  LayoutGrid
+  LayoutGrid,
+  Sparkles
 } from 'lucide-react';
 
 export default function App() {
@@ -44,9 +45,11 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'overview' | 'trends'>('overview');
   const [dashboardFilter, setDashboardFilter] = useState<'all' | 'na' | 'nintendo' | '2000s'>('all');
   const [focusedChart, setFocusedChart] = useState<string | null>(null);
+  const [aiRole, setAiRole] = useState<'business' | 'data_analyst'>('business');
 
   const explainChart = (chartKey: string, promptText: string) => {
     setIsAiOpen(true);
+    setAiRole('business');
     engine.setWorkspaceMode('docked');
     setFocusedChart(chartKey);
     engine.sendPrompt(promptText);
@@ -168,27 +171,53 @@ export default function App() {
             </span>
           </div>
 
-          {/* Right: ONLY ONE ASK AI BUTTON AND [...] (Exactly as in media_1789727091879.png) */}
+          {/* Right: TWO ASK AI BUTTONS (End User & Data Analyst) AND [...] */}
           <div className="flex items-center gap-2">
-            {/* The ONE and ONLY Ask AI Button */}
+            {/* 1. End User / Stakeholder Ask AI Button */}
             <button
               onClick={() => {
-                engine.setWorkspaceMode('docked');
-                setIsAiOpen(!isAiOpen);
+                if (isAiOpen && aiRole === 'business') {
+                  setIsAiOpen(false);
+                } else {
+                  engine.setWorkspaceMode('docked');
+                  setAiRole('business');
+                  setIsAiOpen(true);
+                }
               }}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all ${
-                isAiOpen
+              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all cursor-pointer ${
+                isAiOpen && aiRole === 'business'
                   ? 'bg-[#1e295b] text-white ring-2 ring-[#1e295b]/30'
                   : 'bg-[#1e295b] hover:bg-[#161f46] text-white'
               }`}
-              title="Ask AI"
+              title="Ask AI (End User - EU)"
             >
-              Ask AI
+              Ask AI (EU)
+            </button>
+
+            {/* 2. Data Analyst Ask AI Button */}
+            <button
+              onClick={() => {
+                if (isAiOpen && aiRole === 'data_analyst') {
+                  setIsAiOpen(false);
+                } else {
+                  engine.setWorkspaceMode('docked');
+                  setAiRole('data_analyst');
+                  setIsAiOpen(true);
+                }
+              }}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all cursor-pointer flex items-center gap-1.5 ${
+                isAiOpen && aiRole === 'data_analyst'
+                  ? 'bg-[#2563eb] text-white ring-2 ring-blue-500/30'
+                  : 'bg-[#2563eb] hover:bg-[#1d4ed8] text-white'
+              }`}
+              title="Ask AI (Data Analyst)"
+            >
+              Ask AI (DA)
             </button>
 
             {/* Options button */}
             <button 
-              className="px-2.5 py-1.5 rounded-md border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-bold text-xs"
+              className="px-2.5 py-1.5 rounded-md border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-bold text-xs cursor-pointer"
               title="Actions"
             >
               ···
@@ -898,29 +927,44 @@ export default function App() {
             {/* Clean, Uncluttered Header */}
             <div className="h-12 px-4 border-b border-zinc-200 bg-white flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-6 h-6 rounded bg-[#1e295b] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">
-                  Ai
+                <div className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold flex-shrink-0 text-white shadow-2xs ${
+                  aiRole === 'data_analyst' ? 'bg-[#2563eb]' : 'bg-[#1e295b]'
+                }`}>
+                  {aiRole === 'data_analyst' ? 'DA' : <Sparkles className="w-3.5 h-3.5 text-indigo-200" />}
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-xs font-bold text-[#1e295b] leading-tight">Ask Akashic BI</h2>
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="text-xs font-bold text-[#1e295b] leading-tight">
+                      {aiRole === 'data_analyst' ? 'Ask AI (DA)' : 'Ask AI'}
+                    </h2>
+                    {aiRole === 'data_analyst' && (
+                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold font-mono border bg-blue-50 text-blue-700 border-blue-200">
+                        DA Mode
+                      </span>
+                    )}
+                  </div>
                   <p className="text-[10px] text-zinc-500 leading-tight truncate">
-                    {engine.chatSessions.find(s => s.id === engine.activeChatId)?.title || 'Video Game Sales Copilot'}
+                    {aiRole === 'data_analyst'
+                      ? 'Data Analyst Copilot • Schema & SQL Mode'
+                      : 'Video Game Sales Dashboard'}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-1 text-zinc-500 flex-shrink-0">
-                <button 
-                  onClick={() => engine.openInCanvas(engine.activeArtifact || undefined)}
-                  className={`p-1.5 rounded transition-colors cursor-pointer ${
-                    engine.isCanvasOpen
-                      ? 'bg-[#1e295b] text-white shadow-2xs'
-                      : 'hover:bg-zinc-100 hover:text-zinc-800 text-zinc-600'
-                  }`}
-                  title="Open Canvas & Chart Studio"
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                </button>
+                {aiRole === 'data_analyst' && (
+                  <button 
+                    onClick={() => engine.openInCanvas(engine.activeArtifact || undefined)}
+                    className={`p-1.5 rounded transition-colors cursor-pointer ${
+                      engine.isCanvasOpen
+                        ? 'bg-[#1e295b] text-white shadow-2xs'
+                        : 'hover:bg-zinc-100 hover:text-zinc-800 text-zinc-600'
+                    }`}
+                    title="Open Canvas & Chart Studio"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                  </button>
+                )}
                 <button 
                   onClick={() => engine.setIsRecentChatsOpen(!engine.isRecentChatsOpen)}
                   className={`p-1.5 rounded transition-colors cursor-pointer ${
@@ -972,16 +1016,22 @@ export default function App() {
               onDeleteSession={(id) => engine.deleteChatSession(id)}
             />
 
-            {/* Single-line compact context strip */}
-            <div className="px-4 py-1.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between text-[11px] text-zinc-600 flex-shrink-0">
-              <div className="flex items-center gap-1.5 truncate">
-                <span className="text-zinc-400 font-medium">Scope:</span>
-                <span className="font-semibold text-zinc-800">video_game_sales</span>
-                <span className="text-zinc-300">•</span>
-                <span className="text-zinc-500">9 active charts</span>
+            {/* Single-line compact context strip (Only in Data Analyst mode) */}
+            {aiRole === 'data_analyst' && (
+              <div className="px-4 py-1.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between text-[11px] text-zinc-600 flex-shrink-0">
+                <div className="flex items-center gap-1.5 truncate">
+                  <span className="px-1.5 py-0.2 rounded text-[10px] font-bold font-mono bg-blue-100 text-blue-800 border border-blue-200">
+                    DA Mode
+                  </span>
+                  <span className="text-zinc-300">•</span>
+                  <span className="text-zinc-400 font-medium">Scope:</span>
+                  <span className="font-semibold text-zinc-800">{engine.activeContext.dataset}</span>
+                  <span className="text-zinc-300">•</span>
+                  <span className="text-zinc-500">9 active charts</span>
+                </div>
+                <span className="text-[10px] font-mono text-zinc-400">16,598 records</span>
               </div>
-              <span className="text-[10px] font-mono text-zinc-400">16,598 records</span>
-            </div>
+            )}
 
             {/* Pure Single-Column Chat Transcript (Takes Full 30% Width!) */}
             <main className="flex-1 flex flex-col h-full overflow-hidden bg-white">
@@ -999,16 +1049,14 @@ export default function App() {
                 onSelectSuggestion={(prompt) => {
                   engine.setComposerText(prompt);
                 }}
-                onQuickChartType={(type) => {
-                  if (engine.turns.length > 0) {
-                    const lastTurn = engine.turns[engine.turns.length - 1];
-                    engine.handleQuickChart(lastTurn.id, type);
-                  }
+                onQuickChartType={(turnId, type) => {
+                  engine.handleQuickChart(turnId, type);
                 }}
                 onUndo={engine.handleUndo}
                 onRetry={(turnId, mode) => engine.handleRetry(turnId, mode)}
                 onApplyQuickFilter={(filter) => setDashboardFilter(filter)}
                 activeDashboardFilter={dashboardFilter}
+                aiRole={aiRole}
               />
 
               {/* Composer Input Area */}
@@ -1030,7 +1078,11 @@ export default function App() {
                       }
                     }}
                     rows={2}
-                    placeholder="Ask anything about these 9 charts..."
+                    placeholder={
+                      aiRole === 'data_analyst'
+                        ? "Ask DA Copilot (schema, Trino SQL, metrics, aggregations)..."
+                        : "Ask EU Copilot (executive summaries, chart explanations, trends)..."
+                    }
                     className="w-full p-2.5 pr-10 text-xs border border-zinc-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1e295b] resize-none"
                   />
                   <button

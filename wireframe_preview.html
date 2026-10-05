@@ -107,14 +107,22 @@
 
     <div class="flex items-center gap-2">
       <button
-        onclick="toggleAi()"
+        onclick="toggleAiRole('business')"
         id="btnRealAskAi"
-        class="px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] hover:bg-[#161f46] text-white"
-        title="Ask AI"
+        class="px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] hover:bg-[#161f46] text-white cursor-pointer"
+        title="Ask AI (End User - EU)"
       >
-        Ask AI
+        Ask AI (EU)
       </button>
-      <button class="px-2.5 py-1.5 rounded-md border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-bold text-xs">···</button>
+      <button
+        onclick="toggleAiRole('data_analyst')"
+        id="btnRealAskAiDa"
+        class="px-3 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#2563eb] hover:bg-[#1d4ed8] text-white cursor-pointer flex items-center gap-1.5"
+        title="Ask AI (Data Analyst)"
+      >
+        Ask AI (DA)
+      </button>
+      <button class="px-2.5 py-1.5 rounded-md border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-bold text-xs cursor-pointer">···</button>
     </div>
   </div>
 
@@ -391,10 +399,10 @@
     <div id="aiSideDock" class="hidden w-[30%] min-w-[380px] h-full bg-white border-l border-zinc-200 flex flex-col shadow-xl z-20 transition-all duration-200 relative overflow-hidden">
       <header class="h-12 px-4 border-b border-zinc-200 bg-white flex items-center justify-between select-none z-30 flex-shrink-0 text-xs">
         <div class="flex items-center gap-2.5 min-w-0">
-          <div class="w-6 h-6 rounded bg-[#1e295b] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">Ai</div>
+          <div id="copilotBadge" class="w-6 h-6 rounded bg-[#1e295b] text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-2xs">✨</div>
           <div class="min-w-0">
-            <h2 class="text-xs font-bold text-[#1e295b] leading-tight">Ask Akashic BI</h2>
-            <p id="copilotSubtitle" class="text-[10px] text-zinc-500 leading-tight truncate">Video Game Sales Copilot</p>
+            <h2 id="copilotTitle" class="text-xs font-bold text-[#1e295b] leading-tight">Ask AI</h2>
+            <p id="copilotSubtitle" class="text-[10px] text-zinc-500 leading-tight truncate">Video Game Sales Dashboard</p>
           </div>
         </div>
         <div class="flex items-center gap-1 text-zinc-500 flex-shrink-0">
@@ -477,18 +485,17 @@
         </div>
       </div>
 
-      <div class="px-4 py-1.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between text-[11px] text-zinc-600 flex-shrink-0">
+      <div id="copilotContextStrip" class="hidden px-4 py-1.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between text-[11px] text-zinc-600 flex-shrink-0">
         <div class="flex items-center gap-1.5 truncate">
-          <span class="text-zinc-400 font-medium">Scope:</span>
-          <span class="font-semibold text-zinc-800">video_game_sales</span>
+          <span id="copilotRoleBadge" class="px-1.5 py-0.2 rounded text-[10px] font-bold font-mono bg-blue-100 text-blue-800 border border-blue-200">DA Mode</span>
           <span class="text-zinc-300">•</span>
-          <span class="text-zinc-500">9 active charts</span>
+          <span id="copilotScopeInfo" class="text-zinc-700 font-medium">video_game_sales • 9 charts</span>
         </div>
         <span class="text-[10px] font-mono text-zinc-400">16,598 records</span>
       </div>
 
       <div class="flex-1 overflow-y-auto px-4 py-5 space-y-4" id="aiTranscriptScroll">
-        <div class="space-y-4">
+        <div class="space-y-4" id="starterWorkspace">
           <!-- Personalized Greeting with User Avatar -->
           <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-[#1e295b] text-white flex items-center justify-center font-bold text-xs shadow-xs">VC</div>
@@ -500,21 +507,15 @@
 
           <!-- Executive Summary & Visible Charts Digest Card -->
           <div class="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden">
-            <div class="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
+            <div class="px-3.5 py-2 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span id="briefingHeaderTitle" class="text-[11px] font-bold text-zinc-800 uppercase tracking-wide">Executive Briefing · 9 Charts</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <button onclick="toggleMeetingPrep()" id="btnMeetingPrep" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors" title="Toggle 3-minute leadership standup talking points">
-                  <span>🎙️</span>
-                  <span id="meetingPrepBtnLabel">Meeting Prep</span>
-                </button>
-                <button onclick="copyBriefingSummary()" id="btnCopySummary" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-white hover:bg-zinc-50 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs" title="Copy executive briefing summary">
-                  <span>📋</span>
-                  <span id="copySummaryLabel">Copy Summary</span>
-                </button>
-              </div>
+              <button onclick="toggleMeetingPrep()" id="btnMeetingPrep" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs cursor-pointer" title="Toggle leadership standup talking points">
+                <span>🎙️</span>
+                <span id="meetingPrepBtnLabel">Meeting Prep</span>
+              </button>
             </div>
 
             <div id="executiveCardBody" class="p-4 space-y-3 text-xs text-zinc-700">
@@ -528,6 +529,18 @@
                 <span class="text-zinc-500 font-bold mt-0.5">•</span>
                 <div><strong>Macro Concentration:</strong> Top 3 publishers and top 2 regions (NA + Europe) generate over 76.5% of cumulative sales.</div>
               </div>
+            </div>
+
+            <!-- Card Footer: Copy Summary Placed Down at the Bottom -->
+            <div class="px-3.5 py-2 bg-zinc-50 border-t border-zinc-100 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-1.5 text-[11px] text-zinc-500 font-medium">
+                <span class="text-emerald-600">✓</span>
+                <span id="briefingFooterMeta">Verified across 9 live visual slices</span>
+              </div>
+              <button onclick="copyBriefingSummary()" id="btnCopySummary" class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[11px] font-semibold border border-zinc-200 transition-colors shadow-2xs cursor-pointer" title="Copy executive briefing to clipboard">
+                <span>📋</span>
+                <span id="copySummaryLabel">Copy Summary</span>
+              </button>
             </div>
           </div>
 
@@ -575,9 +588,201 @@
 
   <script>
     let isAiOpen = false;
+    let aiRole = 'business';
     let currentSlice = 'all';
     let isMeetingPrepActive = false;
     let activeFocusedChart = null;
+
+    function toggleAiRole(role) {
+      if (isAiOpen && aiRole === role) {
+        toggleAi(false);
+      } else {
+        aiRole = role;
+        updateRoleUI();
+        toggleAi(true);
+      }
+    }
+
+    function updateRoleUI() {
+      const headerTitle = document.getElementById('copilotTitle');
+      const headerSubtitle = document.getElementById('copilotSubtitle');
+      const headerBadge = document.getElementById('copilotBadge');
+      const roleStripBadge = document.getElementById('copilotRoleBadge');
+      const btnDa = document.getElementById('btnRealAskAiDa');
+      const btnBiz = document.getElementById('btnRealAskAi');
+      const input = document.getElementById('chatInputText');
+
+      const scopeInfo = document.getElementById('copilotScopeInfo');
+
+      if (aiRole === 'data_analyst') {
+        if (headerTitle) headerTitle.innerText = 'Ask AI (DA)';
+        if (headerSubtitle) headerSubtitle.innerText = 'Data Analyst Copilot • Schema & SQL Mode';
+        if (headerBadge) {
+          headerBadge.innerText = 'DA';
+          headerBadge.className = "w-6 h-6 rounded bg-[#2563eb] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 shadow-2xs";
+        }
+        if (roleStripBadge) {
+          roleStripBadge.innerText = 'DA Mode';
+          roleStripBadge.className = "px-1.5 py-0.2 rounded text-[10px] font-bold font-mono bg-blue-100 text-blue-800 border border-blue-200";
+        }
+        if (scopeInfo) {
+          scopeInfo.innerHTML = '<span class="text-zinc-400 font-medium">Scope:</span> <span class="font-semibold text-zinc-800">video_game_sales</span> <span class="text-zinc-300">•</span> <span class="text-zinc-500">9 active charts</span>';
+        }
+        const strip = document.getElementById('copilotContextStrip');
+        if (strip) strip.classList.remove('hidden');
+        if (btnDa) btnDa.className = "px-3 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#2563eb] text-white ring-2 ring-blue-500/30 cursor-pointer flex items-center gap-1.5";
+        if (btnBiz) btnBiz.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] hover:bg-[#161f46] text-white cursor-pointer";
+        if (input) input.placeholder = "Ask DA Copilot (schema, Trino SQL, metrics, aggregations)...";
+
+        const starter = document.getElementById('starterWorkspace');
+        const msgs = document.getElementById('chatMessagesTarget');
+        if (starter && (!msgs || msgs.innerHTML.trim() === '')) {
+          starter.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-[#2563eb] text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 font-mono">DA</div>
+              <div>
+                <h2 class="text-sm font-bold text-zinc-900 leading-tight">Data Analyst Copilot</h2>
+                <p class="text-[11px] text-zinc-500 leading-tight font-mono">Model: <span class="font-semibold text-zinc-700">video_game_sales</span> • 16,598 rows • Trino SQL</p>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden text-xs">
+              <div class="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
+                <span class="text-[11px] font-bold text-zinc-800 uppercase tracking-wide font-mono">Semantic Model Schema</span>
+                <span class="text-[10px] font-mono text-zinc-500 bg-zinc-200/70 px-1.5 py-0.5 rounded">Trino Dialect</span>
+              </div>
+              <div class="p-3.5 space-y-3">
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1.5 font-mono">Dimensions</span>
+                  <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+                    <span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 text-zinc-700">name (VARCHAR)</span>
+                    <span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 text-zinc-700">platform (VARCHAR)</span>
+                    <span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 text-zinc-700">year (INT)</span>
+                    <span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 text-zinc-700">genre (VARCHAR)</span>
+                    <span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 text-zinc-700">publisher (VARCHAR)</span>
+                  </div>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1.5 font-mono">Calculated Measures</span>
+                  <div class="flex flex-wrap gap-1.5 font-mono text-[10px] font-medium">
+                    <span class="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800">SUM(global_sales)</span>
+                    <span class="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800">SUM(na_sales)</span>
+                    <span class="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800">SUM(eu_sales)</span>
+                    <span class="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-800">COUNT(name)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2 pt-1">
+              <span class="text-[11px] font-semibold text-zinc-500 block font-mono">Recommended Data Analyst Queries:</span>
+              <div class="flex flex-col gap-2">
+                <button onclick="sendQuestion('Show me global sales by genre with Trino SQL')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-blue-500 hover:bg-blue-50/30 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group font-mono">
+                  <span>Show me global sales by genre (Trino SQL)</span>
+                  <span class="text-zinc-400 group-hover:text-blue-600">›</span>
+                </button>
+                <button onclick="sendQuestion('Filter where publisher is null or missing')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-blue-500 hover:bg-blue-50/30 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group font-mono">
+                  <span>Filter where publisher = NULLXYZ anomaly</span>
+                  <span class="text-zinc-400 group-hover:text-blue-600">›</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        if (headerTitle) headerTitle.innerText = 'Ask AI';
+        if (headerSubtitle) headerSubtitle.innerText = 'Video Game Sales Dashboard';
+        if (headerBadge) {
+          headerBadge.innerHTML = '✨';
+          headerBadge.className = "w-6 h-6 rounded bg-[#1e295b] text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-2xs";
+        }
+        const strip = document.getElementById('copilotContextStrip');
+        if (strip) strip.classList.add('hidden');
+        if (btnBiz) btnBiz.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] text-white ring-2 ring-[#1e295b]/30 cursor-pointer";
+        if (btnDa) btnDa.className = "px-3 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#2563eb] hover:bg-[#1d4ed8] text-white cursor-pointer flex items-center gap-1.5";
+        if (input) input.placeholder = "Ask anything about this dashboard (summaries, chart breakdowns, trends)...";
+
+        const starter = document.getElementById('starterWorkspace');
+        const msgs = document.getElementById('chatMessagesTarget');
+        if (starter && (!msgs || msgs.innerHTML.trim() === '')) {
+          starter.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-[#1e295b] text-white flex items-center justify-center font-bold text-xs shadow-xs">VC</div>
+              <div>
+                <h2 class="text-sm font-bold text-zinc-900 leading-tight">Hii Veman 👋</h2>
+                <p class="text-[11px] text-zinc-500 leading-tight mt-0.5">How can I help you explore this dashboard today?</p>
+              </div>
+            </div>
+
+            <!-- Simple Dashboard Highlights (Concise & Easy to Read) -->
+            <div class="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden">
+              <div class="px-3.5 py-2.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span class="text-[11px] font-bold text-zinc-800 uppercase tracking-wide">Dashboard Highlights</span>
+                </div>
+                <span class="text-[10px] text-zinc-400 font-medium">9 Live Charts</span>
+              </div>
+
+              <div class="p-3.5 space-y-2.5 text-xs text-zinc-700 leading-relaxed">
+                <p class="font-medium text-zinc-900">
+                  Tracking <strong class="font-bold text-zinc-950">$8,920.4M</strong> in sales across 16,598 catalog titles.
+                </p>
+                <div class="grid grid-cols-1 gap-1.5 pt-0.5 text-zinc-600">
+                  <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+                    <span><strong class="text-zinc-800 font-medium">Top Genres:</strong> Action ($1,751M) and Sports ($1,331M) account for 35% of total sales.</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+                    <span><strong class="text-zinc-800 font-medium">Top Region:</strong> North America leads with 49.2% of global volume ($4,393M).</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-purple-500 flex-shrink-0"></span>
+                    <span><strong class="text-zinc-800 font-medium">Publisher:</strong> Nintendo holds 72% (18 of 25) of bestselling releases.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Footer: Copy Summary down side -->
+              <div class="px-3.5 py-2 bg-zinc-50 border-t border-zinc-100 flex items-center justify-between text-xs">
+                <div class="flex items-center gap-1.5 text-[11px] text-zinc-500 font-medium">
+                  <span class="text-emerald-600 font-bold">✓</span>
+                  <span>Verified across 9 live visual slices</span>
+                </div>
+                <button onclick="copyBriefingSummary()" id="btnCopySummary" class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[11px] font-semibold border border-zinc-200 transition-colors shadow-2xs cursor-pointer" title="Copy highlights to clipboard">
+                  <span>📋</span>
+                  <span id="copySummaryLabel">Copy Summary</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Suggested Questions -->
+            <div class="space-y-2 pt-1">
+              <span class="text-[11px] font-semibold text-zinc-500 block">Quick questions to explore:</span>
+              <div class="flex flex-col gap-2">
+                <button onclick="sendQuestion('What are the top 3 drivers of Nintendo\'s dominance?')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group cursor-pointer">
+                  <span>What are the top 3 drivers of Nintendo's dominance?</span>
+                  <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+                </button>
+                <button onclick="sendQuestion('Compare handheld consoles (DS / GBA) vs home consoles')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group cursor-pointer">
+                  <span>Compare handheld consoles (DS / GBA) vs home consoles</span>
+                  <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+                </button>
+                <button onclick="sendQuestion('Why did sales decline after the 2008 peak?')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group cursor-pointer">
+                  <span>Why did sales decline after the 2008 peak?</span>
+                  <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+                </button>
+                <button onclick="sendQuestion('Give me a 3-bullet standup summary')" class="w-full px-3 py-2 bg-white border border-zinc-200 hover:border-[#1e295b] hover:bg-zinc-50 text-zinc-800 rounded-lg text-xs font-medium text-left shadow-2xs flex justify-between items-center group cursor-pointer">
+                  <span class="flex items-center gap-1.5 font-semibold text-zinc-900"><span>🎙️</span><span>Give me a 3-bullet standup summary</span></span>
+                  <span class="text-zinc-400 group-hover:text-zinc-700">›</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
 
     function toggleAi(forceOpen) {
       if (typeof forceOpen === 'boolean') {
@@ -587,16 +792,18 @@
       }
       const dock = document.getElementById('aiSideDock');
       const host = document.getElementById('hostDashboardPane');
-      const btn = document.getElementById('btnRealAskAi');
 
       if (isAiOpen) {
         dock.classList.remove('hidden');
         host.className = "w-[70%] max-w-[70%] flex flex-col h-full overflow-y-auto bg-[#f8fafc] transition-all duration-200 border-r border-zinc-200/80";
-        btn.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] text-white ring-2 ring-[#1e295b]/30";
+        updateRoleUI();
       } else {
         dock.classList.add('hidden');
         host.className = "w-full flex flex-col h-full overflow-y-auto bg-[#f8fafc] transition-all duration-200 border-r border-zinc-200/80";
-        btn.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] hover:bg-[#161f46] text-white";
+        const btnBiz = document.getElementById('btnRealAskAi');
+        const btnDa = document.getElementById('btnRealAskAiDa');
+        if (btnBiz) btnBiz.className = "px-3.5 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#1e295b] hover:bg-[#161f46] text-white cursor-pointer";
+        if (btnDa) btnDa.className = "px-3 py-1.5 rounded-md text-xs font-semibold shadow-xs transition-all bg-[#2563eb] hover:bg-[#1d4ed8] text-white cursor-pointer flex items-center gap-1.5";
       }
     }
 
@@ -643,10 +850,15 @@
       const btn = document.getElementById('btnMeetingPrep');
       const btnLabel = document.getElementById('meetingPrepBtnLabel');
 
+      const footerMeta = document.getElementById('briefingFooterMeta');
+      const copyLabel = document.getElementById('copySummaryLabel');
+
       if (isMeetingPrepActive) {
         title.innerText = '🎙️ 3-Min Leadership Standup';
-        btn.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-600 text-white text-[10px] font-semibold transition-colors";
-        btnLabel.innerText = 'Summary Mode';
+        btn.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#1e295b] text-white text-[10px] font-semibold transition-all shadow-2xs cursor-pointer";
+        btnLabel.innerText = 'Meeting Prep Active';
+        if (footerMeta) footerMeta.innerText = 'Standup Ready (2 Talking Points)';
+        if (copyLabel) copyLabel.innerText = 'Copy Talking Points';
         body.innerHTML = `
           <div class="space-y-3 text-xs leading-relaxed">
             <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-1">
@@ -675,8 +887,10 @@
         `;
       } else {
         title.innerText = 'Executive Briefing · 9 Charts';
-        btn.className = "inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[10px] font-medium border border-zinc-200 transition-colors";
+        btn.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-white hover:bg-zinc-100 text-zinc-700 text-[10px] font-semibold border border-zinc-200 transition-colors shadow-2xs cursor-pointer";
         btnLabel.innerText = 'Meeting Prep';
+        if (footerMeta) footerMeta.innerText = 'Verified across 9 live visual slices';
+        if (copyLabel) copyLabel.innerText = 'Copy Summary';
         body.innerHTML = `
           <p>Across 9 dashboard visual slices and 16,598 catalog titles, <strong class="text-zinc-900 font-semibold">$8,920.4M</strong> in historical revenue is tracked. <strong class="text-zinc-900 font-semibold">Action & Sports</strong> account for 34.7% of all genre sales ($3.08B combined), while <strong class="text-zinc-900 font-semibold">North America</strong> accounts for nearly half (49.2%) of the global market.</p>
           <div class="space-y-2 pt-2 border-t border-zinc-100">
@@ -693,18 +907,18 @@
     }
 
     function copyBriefingSummary() {
-      const summaryText = `Executive Briefing: Video Game Sales Dashboard
+      const summaryText = `Dashboard Highlights: Video Game Sales
 • Total Revenue: $8,920.4M across 16,598 catalog titles (+14.2% YoY).
-• Market Concentration: Nintendo controls 72% of top 25 bestselling releases (18 of 25 titles).
-• Top Segments: Action ($1,751.2M) and Sports ($1,330.9M) drive 34.7% of volume ($3.08B).
-• Regional Breakdown: North America leads at 49.2% ($4,392.9M), Europe at 27.3% ($2,434.1M).
-⚠️ Watch-out: 49.2% single-market exposure in North America; physical boxed titles declined post-2008 peak.`;
+• Top Segments: Action ($1,751M) and Sports ($1,331M) drive 35% of volume.
+• Top Region: North America leads with 49.2% market share ($4,393M).
+• Key Leader: Nintendo controls 72% of top 25 bestselling releases.`;
 
       navigator.clipboard.writeText(summaryText);
       const lbl = document.getElementById('copySummaryLabel');
+      const original = lbl ? lbl.innerText : 'Copy Summary';
       if (lbl) lbl.innerText = 'Copied!';
       setTimeout(() => {
-        if (lbl) lbl.innerText = 'Copy Summary';
+        if (lbl) lbl.innerText = original;
       }, 2000);
     }
 
@@ -732,9 +946,308 @@
       }
     }
 
+    window.chartDatasets = {};
+
+    function switchWireframeChart(turnId, type) {
+      const ds = window.chartDatasets[turnId];
+      if (!ds) return;
+      ds.currentType = type;
+
+      const container = document.getElementById(`${turnId}-chart-body`);
+      if (container) {
+        container.innerHTML = generateChartBodyHtml(ds.data, type, ds.unit);
+      }
+
+      // Update button active states
+      const actionsBar = document.getElementById(`${turnId}-actions`);
+      if (actionsBar) {
+        const btns = actionsBar.querySelectorAll('button[data-chart-type]');
+        btns.forEach(b => {
+          const bType = b.getAttribute('data-chart-type');
+          if (bType === type) {
+            b.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white text-zinc-900 shadow-2xs transition-all cursor-pointer";
+          } else {
+            b.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium text-zinc-500 hover:text-zinc-900 transition-all cursor-pointer";
+          }
+        });
+      }
+    }
+
+    function generateChartBodyHtml(data, type, unit) {
+      if (!data || data.length === 0) return '<div class="h-40 flex items-center justify-center text-zinc-400 text-xs">No chart data</div>';
+
+      const maxValue = Math.max(...data.map(d => d.value), 1);
+      const total = data.reduce((acc, d) => acc + d.value, 0);
+      const shades = ['#1e295b', '#283674', '#35458d', '#4457a6', '#596dc0', '#7486d3', '#96a5e4', '#bcc6f1'];
+
+      // 1. BAR CHART
+      if (type === 'bar') {
+        const chartWidth = 540;
+        const height = 210;
+        const paddingX = 40;
+        const chartHeight = height - 44;
+        const barWidth = Math.min(38, Math.max(18, (chartWidth - paddingX * 2) / data.length - 14));
+
+        let barsSvg = '';
+        data.forEach((item, idx) => {
+          const barH = (item.value / maxValue) * (chartHeight - 32);
+          const x = paddingX + 16 + idx * ((chartWidth - paddingX - 24) / data.length);
+          const y = chartHeight - barH + 14;
+          const color = shades[idx % shades.length];
+          barsSvg += `
+            <g class="cursor-pointer group">
+              <rect x="${x}" y="${y}" width="${barWidth}" height="${barH}" rx="4" fill="${color}" class="transition-all duration-200 hover:opacity-80">
+                <title>${item.name}: ${item.value.toLocaleString()} ${unit}</title>
+              </rect>
+              <text x="${x + barWidth / 2}" y="${y - 6}" text-anchor="middle" class="text-[9px] fill-zinc-500 font-mono font-medium">${item.value.toLocaleString()}</text>
+              <text x="${x + barWidth / 2}" y="${chartHeight + 28}" text-anchor="middle" class="text-[10px] fill-zinc-600 font-medium">${item.name}</text>
+            </g>
+          `;
+        });
+
+        return `
+          <div class="relative w-full overflow-x-auto py-1 select-none">
+            <svg viewBox="0 0 ${chartWidth} ${height}" class="w-full h-auto min-h-[190px]">
+              <line x1="${paddingX}" y1="14" x2="${chartWidth - 16}" y2="14" stroke="#f4f4f5" stroke-dasharray="3 3" />
+              <line x1="${paddingX}" y1="${chartHeight / 2 + 14}" x2="${chartWidth - 16}" y2="${chartHeight / 2 + 14}" stroke="#f4f4f5" stroke-dasharray="3 3" />
+              <line x1="${paddingX}" y1="${chartHeight + 14}" x2="${chartWidth - 16}" y2="${chartHeight + 14}" stroke="#e4e4e7" />
+              ${barsSvg}
+            </svg>
+          </div>
+        `;
+      }
+
+      // 2. LINE OR AREA CHART
+      if (type === 'line' || type === 'area') {
+        const chartWidth = 540;
+        const height = 210;
+        const paddingX = 40;
+        const chartHeight = height - 44;
+
+        const points = data.map((d, i) => {
+          const x = paddingX + 24 + i * ((chartWidth - paddingX - 48) / (data.length - 1 || 1));
+          const y = chartHeight - (d.value / maxValue) * (chartHeight - 36) + 12;
+          return { x, y, ...d };
+        });
+
+        const pathD = points.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`, '');
+        const areaD = `${pathD} L ${points[points.length - 1].x} ${chartHeight + 14} L ${points[0].x} ${chartHeight + 14} Z`;
+
+        let dotsSvg = '';
+        points.forEach((p, idx) => {
+          dotsSvg += `
+            <g class="cursor-pointer">
+              <circle cx="${p.x}" cy="${p.y}" r="4" fill="#ffffff" stroke="#1e295b" stroke-width="2.5">
+                <title>${p.name}: ${p.value.toLocaleString()} ${unit}</title>
+              </circle>
+              <text x="${p.x}" y="${p.y - 8}" text-anchor="middle" class="text-[9px] fill-zinc-600 font-mono font-bold">${p.value.toLocaleString()}</text>
+              <text x="${p.x}" y="${chartHeight + 28}" text-anchor="middle" class="text-[10px] fill-zinc-600 font-medium">${p.name}</text>
+            </g>
+          `;
+        });
+
+        return `
+          <div class="relative w-full overflow-x-auto py-1 select-none">
+            <svg viewBox="0 0 ${chartWidth} ${height}" class="w-full h-auto min-h-[190px]">
+              <line x1="${paddingX}" y1="14" x2="${chartWidth - 16}" y2="14" stroke="#f4f4f5" stroke-dasharray="3 3" />
+              <line x1="${paddingX}" y1="${chartHeight / 2 + 14}" x2="${chartWidth - 16}" y2="${chartHeight / 2 + 14}" stroke="#f4f4f5" stroke-dasharray="3 3" />
+              <line x1="${paddingX}" y1="${chartHeight + 14}" x2="${chartWidth - 16}" y2="${chartHeight + 14}" stroke="#e4e4e7" />
+              ${type === 'area' ? `<path d="${areaD}" fill="#1e295b" opacity="0.15" />` : ''}
+              <path d="${pathD}" fill="none" stroke="#1e295b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              ${dotsSvg}
+            </svg>
+          </div>
+        `;
+      }
+
+      // 3. DONUT CHART
+      if (type === 'donut') {
+        const radius = 62;
+        const strokeWidth = 24;
+        const center = 85;
+        let accumulatedAngle = 0;
+        let slicesSvg = '';
+
+        data.forEach((item, idx) => {
+          const sliceAngle = (item.value / total) * 360;
+          const circumference = 2 * Math.PI * radius;
+          const strokeDasharray = `${(sliceAngle / 360) * circumference} ${circumference}`;
+          const strokeDashoffset = -((accumulatedAngle / 360) * circumference);
+          accumulatedAngle += sliceAngle;
+          const color = shades[idx % shades.length];
+          slicesSvg += `
+            <circle cx="${center}" cy="${center}" r="${radius}" fill="transparent" stroke="${color}" stroke-width="${strokeWidth}"
+              stroke-dasharray="${strokeDasharray}" stroke-dashoffset="${strokeDashoffset}" class="cursor-pointer hover:opacity-80 transition-opacity">
+              <title>${item.name}: ${item.value.toLocaleString()} ${unit} (${Math.round((item.value / total) * 100)}%)</title>
+            </circle>
+          `;
+        });
+
+        let legendHtml = '';
+        data.forEach((item, idx) => {
+          const color = shades[idx % shades.length];
+          const pct = Math.round((item.value / total) * 100);
+          legendHtml += `
+            <div class="flex items-center gap-2 p-1 rounded hover:bg-zinc-50 cursor-pointer">
+              <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${color}"></span>
+              <span class="text-zinc-700 truncate max-w-[100px] font-medium text-[11px]">${item.name}</span>
+              <span class="text-zinc-400 ml-auto font-mono text-[10px]">${pct}%</span>
+            </div>
+          `;
+        });
+
+        return `
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-8 py-3 select-none">
+            <div class="relative w-44 h-44 flex-shrink-0">
+              <svg viewBox="0 0 170 170" class="w-full h-full transform -rotate-90">
+                ${slicesSvg}
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span class="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Total</span>
+                <span class="text-xs font-bold text-zinc-900 font-mono">${Math.round(total).toLocaleString()} ${unit}</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs w-full max-w-xs">
+              ${legendHtml}
+            </div>
+          </div>
+        `;
+      }
+
+      // 4. TABLE VIEW
+      if (type === 'table') {
+        let rowsHtml = '';
+        data.forEach((item, idx) => {
+          const pct = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+          rowsHtml += `
+            <tr class="hover:bg-zinc-50">
+              <td class="px-3 py-1.5 text-zinc-400">${idx + 1}</td>
+              <td class="px-3 py-1.5 font-sans font-medium text-zinc-800">${item.name}</td>
+              <td class="px-3 py-1.5 text-right font-bold text-zinc-900">${item.value.toLocaleString()}</td>
+              <td class="px-3 py-1.5 text-right text-zinc-500">${pct}%</td>
+            </tr>
+          `;
+        });
+
+        return `
+          <div class="w-full overflow-x-auto border border-zinc-200 rounded-lg select-none my-1">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-zinc-50 border-b border-zinc-200 text-zinc-600 font-semibold">
+                <tr>
+                  <th class="px-3 py-2 w-10">#</th>
+                  <th class="px-3 py-2">Category</th>
+                  <th class="px-3 py-2 text-right">Value (${unit})</th>
+                  <th class="px-3 py-2 text-right">Share (%)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-100 font-mono text-[11px]">
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      return '';
+    }
+
+    function renderInteractiveChartHtml(turnId, title, metric, data, unit, headline, narrative, initialType = 'bar') {
+      window.chartDatasets[turnId] = { title, metric, data, unit, currentType: initialType };
+      const isDa = aiRole === 'data_analyst';
+
+      return `
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden mb-3">
+          <!-- Artifact Header Banner -->
+          <div class="px-4 py-2.5 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/60">
+            <div class="min-w-0 pr-2">
+              <span class="text-[10px] font-mono text-zinc-400 block">${isDa ? 'video_game_sales • ' + metric : metric}</span>
+              <h3 class="text-xs sm:text-sm font-semibold text-zinc-900 truncate">${title}</h3>
+            </div>
+            <div class="flex items-center gap-1.5">
+              ${isDa ? `
+                <button onclick="pinChartPreview('${turnId}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors shadow-2xs cursor-pointer" title="Pin to dashboard">
+                  <span>📌 Pin to Dashboard</span>
+                </button>
+                <button onclick="openCanvasPreview('${turnId}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors shadow-2xs cursor-pointer" title="Open in Canvas">
+                  <span>Canvas ↗</span>
+                </button>
+              ` : `
+                <button onclick="copyChartFinding('${turnId}', this)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors shadow-2xs cursor-pointer" title="Copy key finding to clipboard">
+                  <span>📋</span>
+                  <span class="finding-copy-text">Copy Finding</span>
+                </button>
+              `}
+            </div>
+          </div>
+
+          <!-- Chart Body Canvas -->
+          <div class="p-4">
+            <div id="${turnId}-chart-body">
+              ${generateChartBodyHtml(data, initialType, unit)}
+            </div>
+
+            <!-- 3-4 Visual Perspective Switcher (EU & DA) -->
+            <div id="${turnId}-actions" class="flex items-center justify-between my-2.5 pt-2 border-t border-zinc-100 text-xs select-none">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-[11px] text-zinc-500 font-medium">View as:</span>
+                <div class="inline-flex bg-zinc-100 p-0.5 rounded-lg border border-zinc-200/80">
+                  <button type="button" data-chart-type="bar" onclick="switchWireframeChart('${turnId}', 'bar')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] ${initialType === 'bar' ? 'font-semibold bg-white text-zinc-900 shadow-2xs' : 'font-medium text-zinc-500 hover:text-zinc-900'} transition-all cursor-pointer" title="Switch to Bar chart">
+                    <span>📊</span><span>Bar</span>
+                  </button>
+                  <button type="button" data-chart-type="line" onclick="switchWireframeChart('${turnId}', 'line')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] ${initialType === 'line' ? 'font-semibold bg-white text-zinc-900 shadow-2xs' : 'font-medium text-zinc-500 hover:text-zinc-900'} transition-all cursor-pointer" title="Switch to Line chart">
+                    <span>📈</span><span>Line</span>
+                  </button>
+                  <button type="button" data-chart-type="donut" onclick="switchWireframeChart('${turnId}', 'donut')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] ${initialType === 'donut' ? 'font-semibold bg-white text-zinc-900 shadow-2xs' : 'font-medium text-zinc-500 hover:text-zinc-900'} transition-all cursor-pointer" title="Switch to Donut chart">
+                    <span>🍩</span><span>Donut</span>
+                  </button>
+                  <button type="button" data-chart-type="table" onclick="switchWireframeChart('${turnId}', 'table')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] ${initialType === 'table' ? 'font-semibold bg-white text-zinc-900 shadow-2xs' : 'font-medium text-zinc-500 hover:text-zinc-900'} transition-all cursor-pointer" title="Switch to Table view">
+                    <span>📋</span><span>Table</span>
+                  </button>
+                </div>
+              </div>
+              <span class="text-[10px] text-zinc-400 font-medium hidden sm:inline">4 Visual Perspectives</span>
+            </div>
+
+            <!-- Key Insight Banner -->
+            ${headline ? `
+              <div class="mt-2.5 p-3 rounded-lg bg-blue-50/80 border border-blue-200/80 text-xs text-blue-950 space-y-1">
+                <div class="font-bold text-[#1e295b] flex items-center gap-1.5">
+                  <span>💡</span>
+                  <span>${headline}</span>
+                </div>
+                <p class="text-blue-900 text-[11px] leading-relaxed">${narrative}</p>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function copyChartFinding(turnId, btn) {
+      const ds = window.chartDatasets[turnId];
+      if (!ds) return;
+      const text = `${ds.title} (${ds.metric}): ${ds.data.map(d => `${d.name}: ${d.value} ${ds.unit}`).join(', ')}`;
+      navigator.clipboard.writeText(text);
+      const span = btn.querySelector('.finding-copy-text');
+      if (span) {
+        span.innerText = 'Copied!';
+        setTimeout(() => { span.innerText = 'Copy Finding'; }, 2000);
+      }
+    }
+
+    function pinChartPreview(turnId) {
+      alert('Chart successfully pinned to your Superset Dashboard!');
+    }
+
+    function openCanvasPreview(turnId) {
+      alert('Opening visual artifact in Canvas Studio!');
+    }
+
     function sendQuestion(q) {
       const target = document.getElementById('chatMessagesTarget');
       const lower = q.toLowerCase();
+      const turnId = 'turn-' + Date.now();
+      const escapedQ = q.replace(/'/g, "\\'");
       let htmlResponse = '';
 
       if (lower.includes('standup') || lower.includes('prep me') || lower.includes('meeting prep')) {
@@ -777,8 +1290,26 @@
             </div>
           </div>
         `;
-      } else if (lower.includes('nintendo') && (lower.includes('dominance') || lower.includes('driver'))) {
+      } else if (lower.includes('nintendo') && (lower.includes('dominance') || lower.includes('driver') || lower.includes('publisher'))) {
+        const chartHtml = renderInteractiveChartHtml(
+          turnId,
+          "Top 5 Publishers by Global Revenue ($M)",
+          "SUM(global_sales)",
+          [
+            { name: "Nintendo", value: 1786 },
+            { name: "Electronic Arts", value: 1110 },
+            { name: "Activision", value: 727 },
+            { name: "Sony", value: 607 },
+            { name: "Ubisoft", value: 347 }
+          ],
+          "$M",
+          "Nintendo captures 39.1% of top 5 publisher revenues ($1,786M)",
+          "Nintendo exceeds nearest peer Electronic Arts by +60.9%, powered by proprietary first-party titles across Wii, DS, and Game Boy platforms.",
+          'bar'
+        );
+
         htmlResponse = `
+          ${chartHtml}
           <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5">
             <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">Top 3 Drivers of Nintendo's Market Dominance</h4>
             <div class="space-y-2">
@@ -798,7 +1329,23 @@
           </div>
         `;
       } else if (lower.includes('handheld') || lower.includes('ds / gba') || lower.includes('home console')) {
+        const chartHtml = renderInteractiveChartHtml(
+          turnId,
+          "Handheld vs Home Console Sales ($M)",
+          "SUM(global_sales)",
+          [
+            { name: "Home Consoles", value: 5125 },
+            { name: "Handhelds", value: 1712 },
+            { name: "PC / Other", value: 2083 }
+          ],
+          "$M",
+          "Home consoles drove 57.4% of catalog volume; Handhelds delivered higher unit margin stability",
+          "Handhelds (Nintendo DS, GBA, 3DS, PSP) generated $1,712M across 4,892 catalog titles with low production overhead.",
+          'bar'
+        );
+
         htmlResponse = `
+          ${chartHtml}
           <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5 text-xs text-zinc-800">
             <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">Handheld vs. Home Console Strategic Comparison</h4>
             <div class="space-y-2">
@@ -817,8 +1364,27 @@
             </div>
           </div>
         `;
-      } else if (lower.includes('decline') || lower.includes('2008') || lower.includes('peak')) {
+      } else if (lower.includes('decline') || lower.includes('2008') || lower.includes('peak') || lower.includes('trend')) {
+        const chartHtml = renderInteractiveChartHtml(
+          turnId,
+          "Historical Sales Trajectory (1995–2016, $M)",
+          "SUM(global_sales)",
+          [
+            { name: "1995", value: 88 },
+            { name: "2000", value: 202 },
+            { name: "2005", value: 460 },
+            { name: "2008", value: 679 },
+            { name: "2012", value: 364 },
+            { name: "2016", value: 130 }
+          ],
+          "$M",
+          "Revenues peaked at $678.9M in 2008 before contracting 80.8% by 2016",
+          "The post-2008 contraction reflects macroeconomic recession pressures, late 7th-generation hardware saturation, and explosive smartphone digital migration.",
+          'line'
+        );
+
         htmlResponse = `
+          ${chartHtml}
           <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5">
             <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">3 Structural Drivers of the Post-2008 Contraction</h4>
             <div class="space-y-2">
@@ -837,8 +1403,25 @@
             </div>
           </div>
         `;
-      } else if (lower.includes('outside north america') || lower.includes('exposure')) {
+      } else if (lower.includes('outside north america') || lower.includes('exposure') || lower.includes('region')) {
+        const chartHtml = renderInteractiveChartHtml(
+          turnId,
+          "Regional Revenue Distribution ($M)",
+          "SUM(regional_sales)",
+          [
+            { name: "North America", value: 4393 },
+            { name: "Europe", value: 2434 },
+            { name: "Japan", value: 1291 },
+            { name: "Other", value: 798 }
+          ],
+          "$M",
+          "North America represents 49.2% of lifetime catalog revenue ($4,392.9M)",
+          "International markets deliver $4,527.5M (50.8%), led by European consumer demand on PlayStation and Japanese handheld dominance.",
+          'donut'
+        );
+
         htmlResponse = `
+          ${chartHtml}
           <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 space-y-2.5 text-xs text-zinc-800">
             <h4 class="text-xs font-bold text-[#1e295b] uppercase tracking-wide border-b border-zinc-100 pb-1">International Market Exposure ($4,527.5M non-NA Revenue / 50.8%)</h4>
             <div class="space-y-2">
@@ -862,79 +1445,101 @@
           </div>
         `;
       } else {
+        const chartHtml = renderInteractiveChartHtml(
+          turnId,
+          "Global Sales by Top Genres ($M)",
+          "SUM(global_sales)",
+          [
+            { name: "Action", value: 1751 },
+            { name: "Sports", value: 1331 },
+            { name: "Shooter", value: 1037 },
+            { name: "Role-Playing", value: 928 },
+            { name: "Platform", value: 831 }
+          ],
+          "$M",
+          "Action and Sports drive 34.7% ($3.08B) of all catalog sales",
+          "Action leads at $1,751M followed by Sports at $1,331M across 16,598 titles synthesized from live Superset metadata.",
+          'bar'
+        );
+
         htmlResponse = `
+          ${chartHtml}
           <div class="bg-white rounded-xl border border-zinc-200 shadow-xs p-3.5 mb-3 text-xs text-zinc-800">
             Factual analysis for <strong>${q}</strong> synthesized across all 9 dashboard visual slices from live catalog metadata.
           </div>
         `;
       }
 
-      const escapedQ = q.replace(/'/g, "\\'");
+      const rawSteps = [
+        "Planned the data checks",
+        "Understand available time coverage and confirm columns (genre, platform, sales)",
+        "Identify which dimensions contributed most to variance and compute delta values",
+        "Chose a chart approach",
+        "Created chart preview & analytical summary",
+        "Completed data investigation"
+      ];
+
+      // Hide starter workspace when conversation starts
+      const starter = document.getElementById('starterWorkspace');
+      if (starter) starter.innerHTML = '';
+
+      // Append user bubble and the animated live reasoning container
       target.innerHTML += `
         <div class="p-2.5 rounded-lg bg-zinc-100 text-zinc-900 text-xs font-medium ml-6 mb-3 text-right">${q}</div>
         
-        <!-- Reasoning Process trace matching media_1789991062233.png -->
-        <div class="mb-3 rounded-xl border border-slate-200/80 bg-[#f8f9fb] p-3.5 select-none transition-all shadow-2xs">
+        <!-- Live Animated Reasoning Process -->
+        <div id="${turnId}-reasoning" class="reasoning-container mb-3 rounded-xl border border-slate-200/80 bg-[#f8f9fb] p-3.5 select-none transition-all shadow-2xs">
           <div class="flex items-center justify-between cursor-pointer" onclick="toggleReasoningBox(this)">
             <div class="flex items-center gap-2">
               <span class="text-xs font-semibold text-[#3b4263]">Reasoning process</span>
-              <span class="text-[11px] text-slate-400 font-normal">(6 steps completed)</span>
+              <div id="${turnId}-status" class="flex items-center gap-1.5 text-[11px] text-blue-700 font-medium">
+                <span class="inline-block w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></span>
+                <span id="${turnId}-status-text">Thinking... (1/${rawSteps.length})</span>
+              </div>
             </div>
-            <span class="text-slate-400 text-xs transform transition-transform reasoning-chevron">▴</span>
+            <div class="flex items-center gap-1 text-slate-400">
+              <span class="text-[10px] text-slate-400 mr-1 reasoning-toggle-label">Hide</span>
+              <span class="text-slate-400 text-xs transform transition-transform reasoning-chevron">▴</span>
+            </div>
           </div>
-          <div class="reasoning-steps-body mt-2.5 pt-2 border-t border-slate-200/60 space-y-2 text-xs">
-            <div class="flex items-start gap-2.5">
-              <div class="w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]">✓</div>
-              <span class="text-slate-700 leading-snug">Planned the data checks</span>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <div class="w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]">✓</div>
-              <span class="text-slate-700 leading-snug">Understand available time coverage and confirm existence of required columns (year, country, sales, product_line) for analysis.</span>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <div class="w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]">✓</div>
-              <span class="text-slate-700 leading-snug">Identify which dimensions contributed most to variance by computing delta and contribution values.</span>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <div class="w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]">✓</div>
-              <span class="text-slate-700 leading-snug">Chose a chart approach</span>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <div class="w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]">✓</div>
-              <span class="text-slate-700 leading-snug">Created chart preview & analytical summary</span>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <div class="w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]">✓</div>
-              <span class="text-slate-700 leading-snug">Completed data investigation</span>
-            </div>
+          <div id="${turnId}-steps" class="reasoning-steps-body mt-2.5 pt-2 border-t border-slate-200/60 space-y-2 text-xs">
+            ${rawSteps.map((s, idx) => `
+              <div id="${turnId}-step-${idx}" class="flex items-start gap-2.5">
+                <div class="step-icon w-4 h-4 rounded-full ${idx === 0 ? 'bg-blue-100 ring-2 ring-blue-300/60' : 'border border-slate-300 bg-white'} flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px]">
+                  ${idx === 0 ? '<span class="inline-block w-2.5 h-2.5 border-2 border-blue-700 border-t-transparent rounded-full animate-spin"></span>' : ''}
+                </div>
+                <span class="step-label ${idx === 0 ? 'text-slate-900 font-semibold' : 'text-slate-400'} leading-snug">${s}</span>
+              </div>
+            `).join('')}
           </div>
         </div>
 
-        ${htmlResponse}
-        <div class="sql-wrapper mt-2 mb-3 text-xs select-none">
-          <div class="flex items-center gap-2 flex-wrap">
-            <button onclick="togglePreviewSql(this)" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 hover:border-zinc-300 transition-all shadow-2xs">
-              <span class="text-zinc-500 font-mono text-[10px]">{ }</span>
-              <span>View SQL Query (Dropdown if required)</span>
-              <span class="text-[10px] text-zinc-400 font-mono">(34.2ms)</span>
-              <span class="text-zinc-400 text-[10px]">▾</span>
-            </button>
-            <span class="text-[10px] text-zinc-400 hidden sm:inline">• Inspect query logic if required, else discard</span>
-          </div>
-          <div class="sql-box hidden mt-2 rounded-xl border border-zinc-200 overflow-hidden bg-white shadow-xs">
-            <div class="px-3.5 py-2 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <div class="w-4 h-4 rounded bg-[#1e295b] text-white flex items-center justify-center font-mono text-[9px] font-bold">SQL</div>
-                <span class="font-semibold text-zinc-800 text-[11px]">Certified Superset Semantic Model Query</span>
-                <span class="text-[9px] font-mono bg-zinc-200/70 text-zinc-700 px-1.5 py-0.5 rounded">Trino SQL</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <button onclick="copyInnerSql(this)" class="px-2 py-0.5 rounded border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-[10px] font-medium transition-colors shadow-2xs">Copy SQL</button>
-                <button onclick="closePreviewSql(this)" class="px-2 py-0.5 rounded bg-zinc-200/60 hover:bg-zinc-200 text-zinc-600 text-[10px] font-medium transition-colors">Discard</button>
-              </div>
+        <div id="${turnId}-content" class="hidden">
+          ${htmlResponse}
+          <div class="sql-wrapper mt-2 mb-3 text-xs select-none">
+            <div class="flex items-center gap-2 flex-wrap">
+              <button onclick="togglePreviewSql(this)" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 hover:border-zinc-300 transition-all shadow-2xs cursor-pointer">
+                <span class="text-zinc-500 font-mono text-[10px]">{ }</span>
+                <span>View SQL Query (Dropdown if required)</span>
+                <span class="text-[10px] text-zinc-400 font-mono">(34.2ms)</span>
+                <span class="text-zinc-400 text-[10px]">▾</span>
+              </button>
+              <span class="text-[10px] text-zinc-400 hidden sm:inline">• Inspect query logic if required, else discard</span>
             </div>
-            <div class="p-3 bg-zinc-950 font-mono text-[11px] text-zinc-100 overflow-x-auto border-b border-zinc-800">
-              <pre><code>-- Certified Superset Query for "${q}"
+            <div class="sql-box hidden mt-2 rounded-xl border border-zinc-200 overflow-hidden bg-white shadow-xs">
+              <div class="px-3.5 py-2 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-4 h-4 rounded bg-[#1e295b] text-white flex items-center justify-center font-mono text-[9px] font-bold">SQL</div>
+                  <span class="font-semibold text-zinc-800 text-[11px]">Certified Superset Semantic Model Query</span>
+                  <span class="text-[9px] font-mono bg-zinc-200/70 text-zinc-700 px-1.5 py-0.5 rounded">Trino SQL</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="copyInnerSql(this)" class="px-2 py-0.5 rounded border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-[10px] font-medium transition-colors shadow-2xs cursor-pointer">Copy SQL</button>
+                  <button onclick="closePreviewSql(this)" class="px-2 py-0.5 rounded bg-zinc-200/60 hover:bg-zinc-200 text-zinc-600 text-[10px] font-medium transition-colors cursor-pointer">Discard</button>
+                </div>
+              </div>
+              <div class="p-3 bg-zinc-950 font-mono text-[11px] text-zinc-100 overflow-x-auto border-b border-zinc-800">
+                <pre><code>-- Certified Superset Query for "${q}"
 SELECT 
     name, 
     platform, 
@@ -946,92 +1551,125 @@ WHERE global_sales > 0
 GROUP BY 1, 2, 3
 ORDER BY 4 DESC
 LIMIT 25;</code></pre>
-            </div>
-            <div class="px-3.5 py-1.5 bg-zinc-50 flex items-center justify-between text-[10px] text-zinc-500">
-              <span>✓ Verified query • 34.2ms • Semantic Model: video_game_sales</span>
-              <button onclick="closePreviewSql(this)" class="text-zinc-500 hover:text-zinc-900 font-medium hover:underline">Discard / Close ✕</button>
+              </div>
+              <div class="px-3.5 py-1.5 bg-zinc-50 flex items-center justify-between text-[10px] text-zinc-500">
+                <span>✓ Verified query • 34.2ms • Semantic Engine: Verified Query</span>
+                <button onclick="closePreviewSql(this)" class="text-zinc-500 hover:text-zinc-900 font-medium hover:underline cursor-pointer">Discard / Close ✕</button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Action Pills & Token Consumption telemetry -->
-        <div class="mt-2.5 mb-5 flex items-center justify-between text-xs text-zinc-500 select-none flex-wrap gap-2">
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="copyResponsePill(this)" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-all shadow-2xs">
-              <span>Copy</span>
-            </button>
-            <button onclick="togglePillFeedback(this, true)" class="p-1.5 px-2.5 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-xs transition-all shadow-2xs text-zinc-600">👍</button>
-            <button onclick="togglePillFeedback(this, false)" class="p-1.5 px-2.5 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-xs transition-all shadow-2xs text-zinc-600">👎</button>
-            <button onclick="sendQuestion('${escapedQ}')" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-all shadow-2xs">
-              <span>Regenerate</span>
-            </button>
-          </div>
+          <!-- Action Pills & Token Consumption telemetry -->
+          <div class="mt-2.5 mb-5 flex items-center justify-between text-xs text-zinc-500 select-none flex-wrap gap-2">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button onclick="copyResponsePill(this)" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-all shadow-2xs cursor-pointer">
+                <span>Copy</span>
+              </button>
+              <button onclick="togglePillFeedback(this, true)" class="p-1.5 px-2.5 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-xs transition-all shadow-2xs text-zinc-600 cursor-pointer">👍</button>
+              <button onclick="togglePillFeedback(this, false)" class="p-1.5 px-2.5 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-xs transition-all shadow-2xs text-zinc-600 cursor-pointer">👎</button>
+              <button onclick="sendQuestion('${escapedQ}')" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-all shadow-2xs cursor-pointer">
+                <span>Regenerate</span>
+              </button>
+            </div>
 
-          <!-- Token Consumption Telemetry Pill -->
-          <div class="relative inline-block">
-            <button onclick="toggleTokenPopover(this)" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 text-zinc-700 text-xs font-mono transition-all shadow-2xs cursor-pointer">
+            <!-- Token Consumption Telemetry Badge (Direct Display, No Popover) -->
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200 text-zinc-700 text-xs font-mono shadow-2xs select-none" title="1,248 tokens (412 in · 836 out) • 2.8s">
               <span class="text-amber-500 font-bold">⚡</span>
               <span class="font-semibold text-zinc-800">1,248 tokens</span>
               <span class="text-zinc-400 font-sans text-[11px] hidden sm:inline">(412 in · 836 out)</span>
               <span class="text-zinc-300 font-sans">•</span>
-              <span class="text-zinc-500 text-[11px]">1.3s</span>
-              <span class="text-zinc-400 text-[10px]">▾</span>
-            </button>
-            <div class="token-popover hidden absolute right-0 bottom-full mb-2 w-80 sm:w-96 rounded-xl border border-zinc-200 bg-white shadow-xl p-4 z-50 text-xs">
-              <div class="flex items-center justify-between pb-2.5 border-b border-zinc-100">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-lg bg-[#1e295b] text-white flex items-center justify-center font-bold text-[11px]">⚙</div>
-                  <div>
-                    <h4 class="font-bold text-zinc-900 leading-tight">Token Consumption</h4>
-                    <p class="text-[10px] text-zinc-400 font-mono">Resource & execution telemetry</p>
-                  </div>
-                </div>
-                <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-semibold font-mono">Ask AI Semantic Engine</span>
-              </div>
-              <div class="grid grid-cols-3 gap-2 my-3">
-                <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200/80">
-                  <span class="text-[10px] text-zinc-500 block font-medium">Input (Prompt)</span>
-                  <span class="text-sm font-bold text-zinc-900 font-mono mt-0.5 block">412</span>
-                  <span class="text-[9px] text-zinc-400 block mt-0.5">Schema + Filters</span>
-                </div>
-                <div class="p-2.5 rounded-lg bg-zinc-50 border border-zinc-200/80">
-                  <span class="text-[10px] text-zinc-500 block font-medium">Output (Answer)</span>
-                  <span class="text-sm font-bold text-zinc-900 font-mono mt-0.5 block">836</span>
-                  <span class="text-[9px] text-zinc-400 block mt-0.5">Reasoning + SQL</span>
-                </div>
-                <div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-200/80">
-                  <span class="text-[10px] text-blue-700 block font-medium">Total Consumed</span>
-                  <span class="text-sm font-bold text-[#1e295b] font-mono mt-0.5 block">1,248</span>
-                  <span class="text-[9px] text-blue-600 block mt-0.5">~$0.0019</span>
-                </div>
-              </div>
-              <div class="space-y-1.5 bg-zinc-50/80 p-2.5 rounded-lg border border-zinc-100 text-[11px] font-mono text-zinc-600 mb-3">
-                <div class="flex items-center justify-between"><span class="font-sans text-zinc-500">Generation Speed:</span><span class="font-semibold text-zinc-800">~634 tok/s</span></div>
-                <div class="flex items-center justify-between"><span class="font-sans text-zinc-500">Execution Latency:</span><span class="font-semibold text-zinc-800">1.32s (34ms Trino SQL + 1.2s AI)</span></div>
-                <div class="flex items-center justify-between"><span class="font-sans text-zinc-500">Context Window Used:</span><span class="font-semibold text-emerald-700">~0.6% of 200k</span></div>
-              </div>
-              <div class="p-2.5 rounded-lg bg-indigo-50/70 border border-indigo-100 text-[11px] text-indigo-950 flex items-start gap-2">
-                <span class="text-indigo-600 font-bold">ℹ</span>
-                <div><strong>How query processing works:</strong> Dataset schema & active slice filters are injected as prompt tokens. The Ask AI Semantic Engine then reasons over data checks to synthesize deterministic Trino SQL & executive answers.</div>
-              </div>
-              <div class="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between text-[10px] text-zinc-400">
-                <span>Deterministic Trino + Ask AI telemetry</span>
-                <button onclick="this.closest('.token-popover').classList.add('hidden')" class="text-zinc-600 hover:text-zinc-900 font-medium hover:underline">Close ✕</button>
-              </div>
+              <span class="text-zinc-500 text-[11px]">2.8s</span>
             </div>
           </div>
         </div>
       `;
+
       const scroll = document.getElementById('aiTranscriptScroll');
-      scroll.scrollTop = scroll.scrollHeight;
+      if (scroll) scroll.scrollTop = scroll.scrollHeight;
+
+      // Realistic authentic reasoning progression: ~480ms per step
+      const stepDelay = 480;
+      for (let i = 0; i < rawSteps.length; i++) {
+        setTimeout(() => {
+          // Mark previous step completed
+          if (i > 0) {
+            const prevRow = document.getElementById(`${turnId}-step-${i-1}`);
+            if (prevRow) {
+              const prevIcon = prevRow.querySelector('.step-icon');
+              const prevLabel = prevRow.querySelector('.step-label');
+              if (prevIcon) prevIcon.className = "step-icon w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]";
+              if (prevIcon) prevIcon.innerHTML = "✓";
+              if (prevLabel) prevLabel.className = "step-label text-slate-700 leading-snug";
+            }
+          }
+
+          // Mark current step active with spinner
+          const curRow = document.getElementById(`${turnId}-step-${i}`);
+          if (curRow) {
+            const curIcon = curRow.querySelector('.step-icon');
+            const curLabel = curRow.querySelector('.step-label');
+            if (curIcon) curIcon.className = "step-icon w-4 h-4 rounded-full bg-blue-100 text-[#1e295b] flex items-center justify-center flex-shrink-0 mt-0.5 ring-2 ring-blue-300/60";
+            if (curIcon) curIcon.innerHTML = '<span class="inline-block w-2.5 h-2.5 border-2 border-blue-700 border-t-transparent rounded-full animate-spin"></span>';
+            if (curLabel) curLabel.className = "step-label text-slate-900 font-semibold leading-snug";
+          }
+
+          const statusText = document.getElementById(`${turnId}-status-text`);
+          if (statusText) statusText.innerText = `Thinking... (${i + 1}/${rawSteps.length})`;
+
+          if (scroll) scroll.scrollTop = scroll.scrollHeight;
+        }, i * stepDelay);
+      }
+
+      // Step completion: auto-close dropdown and reveal synthesized answer
+      setTimeout(() => {
+        // Complete last step
+        const lastRow = document.getElementById(`${turnId}-step-${rawSteps.length - 1}`);
+        if (lastRow) {
+          const lastIcon = lastRow.querySelector('.step-icon');
+          const lastLabel = lastRow.querySelector('.step-label');
+          if (lastIcon) lastIcon.className = "step-icon w-4 h-4 rounded-full bg-[#1e295b] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-2xs font-bold text-[10px]";
+          if (lastIcon) lastIcon.innerHTML = "✓";
+          if (lastLabel) lastLabel.className = "step-label text-slate-700 leading-snug";
+        }
+
+        // Update header label: completed
+        const statusDiv = document.getElementById(`${turnId}-status`);
+        if (statusDiv) {
+          statusDiv.className = "text-[11px] text-slate-500 font-normal";
+          statusDiv.innerHTML = `(${rawSteps.length} steps completed • 2.8s)`;
+        }
+
+        // AUTO-CLOSE REASONING DROPDOWN ONCE DONE
+        const stepsBody = document.getElementById(`${turnId}-steps`);
+        if (stepsBody) stepsBody.classList.add('hidden');
+
+        const reasoningBox = document.getElementById(`${turnId}-reasoning`);
+        if (reasoningBox) {
+          const chevron = reasoningBox.querySelector('.reasoning-chevron');
+          const toggleLabel = reasoningBox.querySelector('.reasoning-toggle-label');
+          if (chevron) chevron.innerText = '▾';
+          if (toggleLabel) toggleLabel.innerText = 'Show';
+        }
+
+        // Reveal answer content and telemetry
+        const contentDiv = document.getElementById(`${turnId}-content`);
+        if (contentDiv) contentDiv.classList.remove('hidden');
+
+        if (scroll) scroll.scrollTop = scroll.scrollHeight;
+      }, rawSteps.length * stepDelay + 200);
     }
 
     function toggleReasoningBox(header) {
-      const box = header.closest('div');
+      const box = header.closest('.reasoning-container') || header.closest('div');
       const body = box.querySelector('.reasoning-steps-body');
       const chevron = box.querySelector('.reasoning-chevron');
-      if (body) body.classList.toggle('hidden');
-      if (chevron) chevron.innerText = body.classList.contains('hidden') ? '▾' : '▴';
+      const label = box.querySelector('.reasoning-toggle-label');
+      if (body) {
+        body.classList.toggle('hidden');
+        const isClosed = body.classList.contains('hidden');
+        if (chevron) chevron.innerText = isClosed ? '▾' : '▴';
+        if (label) label.innerText = isClosed ? 'Show' : 'Hide';
+      }
     }
 
     function copyResponsePill(btn) {
@@ -1048,11 +1686,6 @@ LIMIT 25;</code></pre>
     function togglePillFeedback(btn, isLike) {
       const activeClass = isLike ? 'text-blue-700 bg-blue-50 font-bold border-blue-300' : 'text-rose-700 bg-rose-50 font-bold border-rose-300';
       btn.className = `p-1.5 px-2.5 rounded-full border text-xs transition-all shadow-2xs ${activeClass}`;
-    }
-
-    function toggleTokenPopover(btn) {
-      const popover = btn.parentElement.querySelector('.token-popover');
-      if (popover) popover.classList.toggle('hidden');
     }
 
     function togglePreviewSql(btn) {
